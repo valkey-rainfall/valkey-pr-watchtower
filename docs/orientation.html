@@ -5,28 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PR Orientation — Valkey PR Watchtower</title>
   <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
 </head>
 <body>
 <div class="page-wrap">
 
-  <header role="banner">
-    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
-    <div class="site-subtitle"><a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a> — PR orientation</div>
-  </header>
+  <site-header></site-header>
 
-  <nav aria-label="Site navigation">
-    <span>→</span>
-    <a href="index.html">🏠 Home</a>
-    <a href="report.html">📊 Live Report</a>
-    <a href="analysis.html">🔍 Deep Analysis</a>
-    <a href="orientation.html">🧭 PR Orientation</a>
-    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
-  </nav>
+  <site-nav></site-nav>
 
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🧭 PR Orientation — My Personal Take</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>
@@ -46,7 +37,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>✅ What makes a PR land quickly</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <h3>Keep it small and focused</h3>
@@ -82,7 +73,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>⚠️ What makes a PR die quietly</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <h3>Going quiet after feedback</h3>
@@ -108,7 +99,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🟡 Understanding major-decision-pending</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>The <code>major-decision-pending</code> label means the community hasn't reached
@@ -131,7 +122,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🔍 Finding the right reviewer</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>There's no formal reviewer assignment for most PRs. Maintainers pick up
@@ -151,7 +142,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🌱 First contributions</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>The project is welcoming but bandwidth-constrained. Your first PR might take longer
@@ -168,10 +159,7 @@
     </div>
   </div>
 
-  <footer role="contentinfo">
-    <p>🗼 <strong>valkey-pr-watchtower</strong> &nbsp;·&nbsp; by <a href="https://github.com/rainsupreme">rainsupreme</a> &nbsp;·&nbsp; <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source</a></p>
-    <p style="margin-top:6px;">Personal project, not an official Valkey project. Opinions are the author's own.</p>
-  </footer>
+  <site-footer></site-footer>
 
 </div>
 </body>

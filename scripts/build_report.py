@@ -122,14 +122,14 @@ def fetch_prs_since(since_date):
 
 
 def patch_index_html(stats):
-    """Rewrite the counter placeholders in docs/index.html with live stats."""
-    index_path = os.path.join(os.path.dirname(__file__), "../docs/index.html")
-    index_path = os.path.normpath(index_path)
-    if not os.path.exists(index_path):
-        print(f"  index.html not found at {index_path}, skipping patch", file=sys.stderr)
+    """Rewrite the counter placeholders in docs/components.js with live stats."""
+    target_path = os.path.join(os.path.dirname(__file__), "../docs/components.js")
+    target_path = os.path.normpath(target_path)
+    if not os.path.exists(target_path):
+        print(f"  components.js not found at {target_path}, skipping patch", file=sys.stderr)
         return
 
-    with open(index_path) as f:
+    with open(target_path) as f:
         html = f.read()
 
     # Replace counter placeholders with live values
@@ -152,14 +152,14 @@ def patch_index_html(stats):
     )
     # Last updated
     html = re.sub(
-        r'(<span class="counter-last-updated">)[^<]*(</span>)',
+        r'(<span class="counter-last-updated"[^>]*>)[^<]*(</span>)',
         rf'\g<1>{stats["generated"]}\g<2>',
         html
     )
 
-    with open(index_path, "w") as f:
+    with open(target_path, "w") as f:
         f.write(html)
-    print(f"  Patched index.html counters.", file=sys.stderr)
+    print(f"  Patched components.js counters.", file=sys.stderr)
 
 
 def build_report(prs):

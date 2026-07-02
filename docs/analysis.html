@@ -5,28 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deep Analysis — Valkey PR Watchtower</title>
   <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
 </head>
 <body>
 <div class="page-wrap">
 
-  <header role="banner">
-    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
-    <div class="site-subtitle"><a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a> — deep analysis</div>
-  </header>
-
-  <nav aria-label="Site navigation">
-    <span>→</span>
-    <a href="index.html">🏠 Home</a>
-    <a href="report.html">📊 Live Report</a>
-    <a href="analysis.html">🔍 Deep Analysis</a>
-    <a href="orientation.html">🧭 PR Orientation</a>
-    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
-  </nav>
+  <site-header></site-header>
+  <site-nav></site-nav>
 
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🔍 Deep Analysis — 2026-07-02</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>A one-time deep dive into the Valkey PR backlog, combining live GitHub API data with AI interpretation.
@@ -38,7 +28,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>📊 By the Numbers</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <table>
@@ -63,7 +53,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>⚡ Immediate Actions</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <h3 class="ok">Merge Now (approved, CI green)</h3>
@@ -109,7 +99,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🟡 Decision Bottleneck (38 PRs)</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p>38 open PRs — <strong>14% of the backlog</strong> — are blocked on
@@ -135,7 +125,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🧑‍💻 Top Contributors by Open PR Count</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <table>
@@ -158,7 +148,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>⏳ Zero-Review PRs — Extreme Aging</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <p class="danger"><strong>500 days with no review is not a "stale PR" — it's a failed promise to contributors.</strong>
@@ -183,7 +173,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🔥 Flaky Tests &amp; CI Health</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <h3>CI Run Health (last 30 runs)</h3>
@@ -248,7 +238,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🧵 Systemic Issues &amp; Recommendations</span>
-      <span class="badge badge-ai">🤖 AI-generated</span>
+      <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
       <h3>1. Decision bottleneck is the primary drag</h3>
@@ -279,10 +269,7 @@
     </div>
   </div>
 
-  <footer role="contentinfo">
-    <p>🗼 <strong>valkey-pr-watchtower</strong> &nbsp;·&nbsp; by <a href="https://github.com/rainsupreme">rainsupreme</a> &nbsp;·&nbsp; <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source</a></p>
-    <p style="margin-top:6px;">Personal project, not an official Valkey project. Data from the GitHub API. Opinions are the author's own.</p>
-  </footer>
+  <site-footer></site-footer>
 
 </div>
 </body>

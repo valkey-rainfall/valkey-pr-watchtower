@@ -167,26 +167,16 @@ def build_report_html(prs, generated):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Report — Valkey PR Watchtower</title>
   <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
 </head>
 <body>
 <div class="page-wrap">
 
-  <header role="banner">
-    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
-    <div class="site-subtitle"><a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a> — live report</div>
-  </header>
-
-  <nav aria-label="Site navigation">
-    <span>→</span>
-    <a href="index.html">🏠 Home</a>
-    <a href="report.html">📊 Live Report</a>
-    <a href="analysis.html">🔍 Deep Analysis</a>
-    <a href="orientation.html">🧭 PR Orientation</a>
-    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
-  </nav>
+  <site-header></site-header>
+  <site-nav></site-nav>
 
   <div class="panel" style="margin-bottom:12px;">
-    <div class="panel-header"><span>📊 Live PR Health Report</span><span class="badge badge-ai">🤖 auto-generated daily at 06:00 UTC</span></div>
+    <div class="panel-header"><span>📊 Live PR Health Report</span><attr-badge type="ai"></attr-badge></div>
     <div class="panel-body">
       <p>Generated: <strong>{generated}</strong> from <a href="https://github.com/valkey-io/valkey/pulls" target="_blank" rel="noopener noreferrer">live GitHub API data</a>.
       Source: <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/scripts/build_report.py" target="_blank" rel="noopener noreferrer">build_report.py</a>.</p>
@@ -195,10 +185,7 @@ def build_report_html(prs, generated):
 
   {body}
 
-  <footer role="contentinfo">
-    <p>🗼 <strong>valkey-pr-watchtower</strong> · by <a href="https://github.com/rainsupreme">rainsupreme</a> · <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source</a></p>
-    <p style="margin-top:6px;">Personal project, not an official Valkey project. Data from the GitHub API. Opinions are the author\'s own.</p>
-  </footer>
+  <site-footer></site-footer>
 
 </div>
 </body>
