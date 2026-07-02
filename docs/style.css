@@ -271,7 +271,7 @@ code {
 /* Medium screens (tablets) */
 @media (min-width: 601px) and (max-width: 90rem) {
   .page-wrap { padding: 10px; }
-  .grid { grid-template-columns: 1fr 260px; }
+  .grid { grid-template-columns: 1fr 18rem; }
 }
 
 /* ── Index page components (shared for any page that uses them) ──────── */
@@ -364,7 +364,7 @@ code {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: 1fr 20rem;
   gap: 12px;
 }
 

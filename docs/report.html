@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Report — Valkey PR Watchtower</title>
   <link rel="stylesheet" href="style.css">
-  <!-- The live report is auto-generated as report.md by the daily workflow.
-       This page wraps it with site navigation. When the workflow updates
-       report.md, this iframe-style approach serves the content.
-       GitHub Pages renders report.md as HTML at report (no extension). -->
 </head>
 <body>
 <div class="page-wrap">
@@ -28,24 +24,145 @@
   </nav>
 
   <div class="panel" style="margin-bottom:12px;">
-    <div class="panel-header">
-      <span>📊 Live PR Health Report</span>
-      <span class="badge badge-ai">🤖 AI-generated — updated daily at 06:00 UTC</span>
-    </div>
+    <div class="panel-header"><span>📊 Live PR Health Report</span><span class="badge badge-ai">🤖 auto-generated daily at 06:00 UTC</span></div>
     <div class="panel-body">
-      <p>
-        Auto-generated daily by GitHub Actions from the live GitHub API.
-        No human in the loop — pure data. Source:
-        <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/scripts/build_report.py" target="_blank" rel="noopener noreferrer">build_report.py</a>.
-      </p>
-      <p style="margin-top:6px;">
-        <a href="report" style="color:var(--accent2); font-weight:bold;">→ View the raw report (report.md rendered by GitHub Pages)</a>
-      </p>
-      <p style="margin-top:4px; font-size:0.82em; color:var(--muted);">
-        (Opens the GitHub Pages markdown rendering of report.md)
-      </p>
+      <p>Generated: <strong>2026-07-02 23:12 UTC</strong> from <a href="https://github.com/valkey-io/valkey/pulls" target="_blank" rel="noopener noreferrer">live GitHub API data</a>.
+      Source: <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/scripts/build_report.py" target="_blank" rel="noopener noreferrer">build_report.py</a>.</p>
     </div>
   </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>📊 By the Numbers</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><table><thead><tr><th>Metric</th><th>Count</th></tr></thead><tbody><tr><td>Total open PRs</td><td><span class="num-badge warn">271</span></td></tr>
+<tr><td>Non-draft</td><td><span class="num-badge">241</span></td></tr>
+<tr><td>Draft</td><td><span class="num-badge">30</span></td></tr>
+<tr><td>Bot PRs (backports)</td><td><span class="num-badge">5</span></td></tr>
+<tr><td><code>major-decision-pending</code></td><td><span class="num-badge danger">37</span></td></tr>
+<tr><td><code>major-decision-approved</code></td><td><span class="num-badge ok">8</span></td></tr>
+<tr><td><code>major-decision-deferred</code></td><td><span class="num-badge warn">2</span></td></tr>
+<tr><td><code>to-be-merged</code></td><td><span class="num-badge warn">1</span></td></tr>
+<tr><td><code>to-be-closed</code></td><td><span class="num-badge warn">1</span></td></tr>
+<tr><td><code>stalled</code></td><td><span class="num-badge danger">2</span></td></tr>
+<tr><td><code>run-extra-tests</code></td><td><span class="num-badge warn">15</span></td></tr>
+<tr><td><code>needs-doc-pr</code></td><td><span class="num-badge warn">6</span></td></tr>
+</tbody></table></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>⚡ Immediate Actions</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><h3 class="ok">Merge Now (<code>to-be-merged</code>)</h3><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/3413" target="_blank" rel="noopener noreferrer">#3413</a></td><td>Optimize infoCommand with SDS pre-allocation</td><td>charsyam</td><td>3mo</td></tr>
+</tbody></table><h3 class="ok" style="margin-top:14px;">Community-Approved, Awaiting Merge</h3><p class="muted" style="font-size:0.85em;">Decision is made — just needs someone to click merge.</p><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/685" target="_blank" rel="noopener noreferrer">#685</a></td><td>Align the entry read and lag rules of the consumer group</td><td>artikell</td><td>2.0y</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/866" target="_blank" rel="noopener noreferrer">#866</a></td><td>New maxmemory-scripts config to limit all cached scripts (EVAL an</td><td>enjoy-binbin</td><td>1.9y</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2555" target="_blank" rel="noopener noreferrer">#2555</a></td><td>Use BIO thread for cluster config saving in cluster-config-save-b</td><td>enjoy-binbin</td><td>10mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2972" target="_blank" rel="noopener noreferrer">#2972</a></td><td>Add an optional parameter to SISMEMBER; return -1 if the key does</td><td>li-benson</td><td>6mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3050" target="_blank" rel="noopener noreferrer">#3050</a></td><td>Add support for CONFIG INFO <config> to display config type and v</td><td>nitaicaro</td><td>5mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3466" target="_blank" rel="noopener noreferrer">#3466</a></td><td>XACKDEL Command</td><td>nickiaq</td><td>2mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3467" target="_blank" rel="noopener noreferrer">#3467</a></td><td>XDELEX Command</td><td>nickiaq</td><td>2mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3522" target="_blank" rel="noopener noreferrer">#3522</a></td><td>Fail fast on empty CA directory at TLS config load</td><td>yang-z-o</td><td>2mo</td></tr>
+</tbody></table><h3 class="danger" style="margin-top:14px;">Close Now</h3><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th><th>Reason</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/3427" target="_blank" rel="noopener noreferrer">#3427</a></td><td>Windows native builds & tests (Microsoft Visual Studio </td><td>SamuelMarks</td><td>3mo</td><td><code>to-be-closed</code></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3558" target="_blank" rel="noopener noreferrer">#3558</a></td><td>hash: harden HRANDFIELD against expired-heavy hashes</td><td>charsyam</td><td>2mo</td><td><code>stalled</code></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/974" target="_blank" rel="noopener noreferrer">#974</a></td><td>Fix data loss when the old primary takes over the slots</td><td>enjoy-binbin</td><td>1.8y</td><td><code>stalled</code></td></tr>
+</tbody></table></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>🟡 Decision Bottleneck</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><p><strong>35 PRs</strong> blocked waiting for a community vote.</p><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th><th>Last update</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/962" target="_blank" rel="noopener noreferrer">#962</a></td><td>Add command "Client Capa subv2" to change behavior for SUBSC</td><td>hwware</td><td>1.8y</td><td>4w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/978" target="_blank" rel="noopener noreferrer">#978</a></td><td>Add last_fork_start_time to INFO STATS</td><td>enjoy-binbin</td><td>1.8y</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1151" target="_blank" rel="noopener noreferrer">#1151</a></td><td>Adding KEYINFO command to find out keys that have large numb</td><td>otheng03</td><td>1.7y</td><td>4w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1418" target="_blank" rel="noopener noreferrer">#1418</a></td><td>Add new SCRIPT STATS subcommand</td><td>artikell</td><td>1.6y</td><td>1.4y ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1444" target="_blank" rel="noopener noreferrer">#1444</a></td><td>Support empty set</td><td>sungming2</td><td>1.5y</td><td>2w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1672" target="_blank" rel="noopener noreferrer">#1672</a></td><td>Implementation of write throttling</td><td>lschmidtcavalcante-sc</td><td>1.4y</td><td>5mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1821" target="_blank" rel="noopener noreferrer">#1821</a></td><td>Enhance ACL WHOAMI command to display active ACL rules for t</td><td>hwware</td><td>1.3y</td><td>1d ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1964" target="_blank" rel="noopener noreferrer">#1964</a></td><td>Add sentinel failover SAFE option</td><td>li-benson</td><td>1.2y</td><td>4w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2157" target="_blank" rel="noopener noreferrer">#2157</a></td><td>Kill the busy script during failover to avoid data inconsist</td><td>enjoy-binbin</td><td>1.1y</td><td>5mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2167" target="_blank" rel="noopener noreferrer">#2167</a></td><td>Improve CLUSTER FLUSHSLOT routing and propagation</td><td>murphyjacob4</td><td>1.1y</td><td>5mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2204" target="_blank" rel="noopener noreferrer">#2204</a></td><td>Add cluster-replica-priority to allow better ranking in auto</td><td>enjoy-binbin</td><td>1.1y</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2275" target="_blank" rel="noopener noreferrer">#2275</a></td><td>Add keyspace-hits and keyspace-misses metrics under CLUSTER </td><td>enjoy-binbin</td><td>1.0y</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2331" target="_blank" rel="noopener noreferrer">#2331</a></td><td>Adding support for DumpSerializedValue API</td><td>cdorantes05</td><td>11mo</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2368" target="_blank" rel="noopener noreferrer">#2368</a></td><td>add parameter for initiating bgrewriteaof on exceeding thres</td><td>kronwerk</td><td>11mo</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2385" target="_blank" rel="noopener noreferrer">#2385</a></td><td>Allow dynamic modification of databases num if the db is not</td><td>enjoy-binbin</td><td>11mo</td><td>3w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2586" target="_blank" rel="noopener noreferrer">#2586</a></td><td>Fix two primaries scenario due to unknown shard_id</td><td>deepakrn</td><td>10mo</td><td>3mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2689" target="_blank" rel="noopener noreferrer">#2689</a></td><td>Fix #2678 don't add loadmodule when from config</td><td>remicollet</td><td>9mo</td><td>4w ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2891" target="_blank" rel="noopener noreferrer">#2891</a></td><td>Reset acl info fields with CONFIG RESETSTAT</td><td>enjoy-binbin</td><td>7mo</td><td>6mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2971" target="_blank" rel="noopener noreferrer">#2971</a></td><td>Add used_memory_overhead_human and used_memory_dataset_human</td><td>enjoy-binbin</td><td>6mo</td><td>5mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2978" target="_blank" rel="noopener noreferrer">#2978</a></td><td>Add XX option to ZRANGE commands for null/empty distinction</td><td>youngmore1024</td><td>6mo</td><td>3mo ago</td></tr>
+</tbody></table><p class="muted" style="font-size:0.85em; margin-top:6px;">…and 15 more</p></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>🧑‍💻 Top Contributors by Open PR Count</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><table><thead><tr><th>Author</th><th>Open PRs</th></tr></thead><tbody><tr><td><a href="https://github.com/enjoy-binbin" target="_blank" rel="noopener noreferrer">enjoy-binbin</a></td><td>18 <span class="danger">🚨</span></td></tr>
+<tr><td><a href="https://github.com/jsoref" target="_blank" rel="noopener noreferrer">jsoref</a></td><td>14 <span class="danger">🚨</span></td></tr>
+<tr><td><a href="https://github.com/charsyam" target="_blank" rel="noopener noreferrer">charsyam</a></td><td>8 <span class="danger">🚨</span></td></tr>
+<tr><td><a href="https://github.com/bandalgomsu" target="_blank" rel="noopener noreferrer">bandalgomsu</a></td><td>5 <span class="warn">⚠️</span></td></tr>
+<tr><td><a href="https://github.com/rainsupreme" target="_blank" rel="noopener noreferrer">rainsupreme</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/satheeshaGowda" target="_blank" rel="noopener noreferrer">satheeshaGowda</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/quanyeyang" target="_blank" rel="noopener noreferrer">quanyeyang</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/hpatro" target="_blank" rel="noopener noreferrer">hpatro</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/artikell" target="_blank" rel="noopener noreferrer">artikell</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/YiwenZhang12" target="_blank" rel="noopener noreferrer">YiwenZhang12</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/hwware" target="_blank" rel="noopener noreferrer">hwware</a></td><td>4</td></tr>
+<tr><td><a href="https://github.com/roshkhatri" target="_blank" rel="noopener noreferrer">roshkhatri</a></td><td>3</td></tr>
+<tr><td><a href="https://github.com/cjx-zar" target="_blank" rel="noopener noreferrer">cjx-zar</a></td><td>3</td></tr>
+<tr><td><a href="https://github.com/jjuleslasarte" target="_blank" rel="noopener noreferrer">jjuleslasarte</a></td><td>3</td></tr>
+<tr><td><a href="https://github.com/Taeknology" target="_blank" rel="noopener noreferrer">Taeknology</a></td><td>3</td></tr>
+</tbody></table></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>🕰 Long-Dormant PRs (90+ days)</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><p><strong>60 non-draft PRs</strong> haven't been updated in 90+ days.</p><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Created</th><th>Last update</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/1547" target="_blank" rel="noopener noreferrer">#1547</a></td><td>feat: stats and keyspace notifications about lazy expir</td><td>proost</td><td>1.5y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1418" target="_blank" rel="noopener noreferrer">#1418</a></td><td>Add new SCRIPT STATS subcommand</td><td>artikell</td><td>1.6y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1284" target="_blank" rel="noopener noreferrer">#1284</a></td><td>fix: readonly client moved inconsistency</td><td>proost</td><td>1.6y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/906" target="_blank" rel="noopener noreferrer">#906</a></td><td>Keep the log fd, don't re-open logfile in every logs</td><td>enjoy-binbin</td><td>1.9y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/363" target="_blank" rel="noopener noreferrer">#363</a></td><td>Add support for compiling with mimalloc </td><td>WM0323</td><td>2.2y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1689" target="_blank" rel="noopener noreferrer">#1689</a></td><td>Implementation of CPU throttling</td><td>lschmidtcavalcante-sc</td><td>1.4y</td><td><span class="danger">1.4y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1120" target="_blank" rel="noopener noreferrer">#1120</a></td><td>Add admin-port to let administrator connect to the serv</td><td>hwware</td><td>1.7y</td><td><span class="danger">1.3y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1909" target="_blank" rel="noopener noreferrer">#1909</a></td><td>Add cluster-non-random-gosip option</td><td>VyacheslavVanin</td><td>1.2y</td><td><span class="danger">1.2y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2183" target="_blank" rel="noopener noreferrer">#2183</a></td><td>Spelling</td><td>jsoref</td><td>1.1y</td><td><span class="danger">1.0y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2238" target="_blank" rel="noopener noreferrer">#2238</a></td><td>spelling: ; otherwise,</td><td>jsoref</td><td>1.0y</td><td><span class="danger">1.0y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2242" target="_blank" rel="noopener noreferrer">#2242</a></td><td>spelling: cannot</td><td>jsoref</td><td>1.0y</td><td><span class="danger">1.0y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2250" target="_blank" rel="noopener noreferrer">#2250</a></td><td>Spelling 14</td><td>jsoref</td><td>1.0y</td><td><span class="danger">1.0y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2248" target="_blank" rel="noopener noreferrer">#2248</a></td><td>spelling: otherwise,</td><td>jsoref</td><td>1.0y</td><td><span class="danger">1.0y ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2306" target="_blank" rel="noopener noreferrer">#2306</a></td><td>Unexpected variable overriding from .make-settings file</td><td>yzc-yzc</td><td>12mo</td><td><span class="danger">12mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2318" target="_blank" rel="noopener noreferrer">#2318</a></td><td>change check order for xautoclaim</td><td>charsyam</td><td>12mo</td><td><span class="danger">11mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2247" target="_blank" rel="noopener noreferrer">#2247</a></td><td>spelling: nonexistent</td><td>jsoref</td><td>1.0y</td><td><span class="danger">11mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2239" target="_blank" rel="noopener noreferrer">#2239</a></td><td>Spelling 2</td><td>jsoref</td><td>1.0y</td><td><span class="danger">11mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2551" target="_blank" rel="noopener noreferrer">#2551</a></td><td>Roll backward downgrade compatibility from Redis 7.2 an</td><td>satheeshaGowda</td><td>10mo</td><td><span class="danger">10mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/601" target="_blank" rel="noopener noreferrer">#601</a></td><td>add diskless-fallback option for repl-diskless-load con</td><td>advaMosh</td><td>2.1y</td><td><span class="danger">10mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2575" target="_blank" rel="noopener noreferrer">#2575</a></td><td>valkey-benchmark: Tests for ZSCORE, ZRANGE and SISMEMBE</td><td>ranshid</td><td>10mo</td><td><span class="danger">9mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2496" target="_blank" rel="noopener noreferrer">#2496</a></td><td>Add static specifier to the internal functions of HLL</td><td>yzc-yzc</td><td>10mo</td><td><span class="danger">7mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2795" target="_blank" rel="noopener noreferrer">#2795</a></td><td>updated modules examples to compile on Valkey 7.2 branc</td><td>dmitrypol</td><td>8mo</td><td><span class="danger">7mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2255" target="_blank" rel="noopener noreferrer">#2255</a></td><td>Accept socket judge fd overflow</td><td>kukey</td><td>1.0y</td><td><span class="danger">6mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/1455" target="_blank" rel="noopener noreferrer">#1455</a></td><td>Add GETPXT, MGETPXT (Get with millisecond expiration) c</td><td>arcivanov</td><td>1.5y</td><td><span class="danger">6mo ago</span></td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2891" target="_blank" rel="noopener noreferrer">#2891</a></td><td>Reset acl info fields with CONFIG RESETSTAT</td><td>enjoy-binbin</td><td>7mo</td><td><span class="danger">6mo ago</span></td></tr>
+</tbody></table><p class="muted" style="font-size:0.85em; margin-top:6px;">…and 35 more</p></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>🔥 Open Deflake / Test-Fix PRs</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><p class="muted" style="font-size:0.85em;">Merging these reduces CI noise for everyone.</p><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th><th>Last update</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/3049" target="_blank" rel="noopener noreferrer">#3049</a></td><td>Fix flaky test in manual-failover.tcl</td><td>Nikhil-Manglore</td><td>5mo</td><td>2mo ago</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3764" target="_blank" rel="noopener noreferrer">#3764</a></td><td>Deflake io-threads test by anchoring active-time bound to a </td><td>Taeknology</td><td>6w</td><td>3d ago</td></tr>
+</tbody></table></div>
+</div>
+<div class="panel" style="margin-bottom:12px;">
+  <div class="panel-header"><span>⏱ High CI Burden (run-extra-tests)</span><span class="badge badge-ai">🤖 auto-generated daily</span></div>
+  <div class="panel-body"><p><strong>13 PRs</strong> trigger extended CI runs.</p><table><thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th></tr></thead><tbody><tr><td><a href="https://github.com/valkey-io/valkey/pull/866" target="_blank" rel="noopener noreferrer">#866</a></td><td>New maxmemory-scripts config to limit all cached script</td><td>enjoy-binbin</td><td>1.9y</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2204" target="_blank" rel="noopener noreferrer">#2204</a></td><td>Add cluster-replica-priority to allow better ranking in</td><td>enjoy-binbin</td><td>1.1y</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2279" target="_blank" rel="noopener noreferrer">#2279</a></td><td>The smaller config epoch primary will become the replic</td><td>enjoy-binbin</td><td>1.0y</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/2555" target="_blank" rel="noopener noreferrer">#2555</a></td><td>Use BIO thread for cluster config saving in cluster-con</td><td>enjoy-binbin</td><td>10mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3335" target="_blank" rel="noopener noreferrer">#3335</a></td><td>Fix RDMA re-entrancy assertion and lost wakeup deadlock</td><td>quanyeyang</td><td>3mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3468" target="_blank" rel="noopener noreferrer">#3468</a></td><td>Ignore stale replica messages for failed primaries</td><td>sarthakaggarwal97</td><td>2mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3581" target="_blank" rel="noopener noreferrer">#3581</a></td><td>Add libbacktrace fallback for stack traces on musl/Alpi</td><td>hanxizh9910</td><td>2mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3589" target="_blank" rel="noopener noreferrer">#3589</a></td><td>ci: Add slow tag to fuzzer and expand libc-malloc CI to</td><td>jjuleslasarte</td><td>2mo</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3717" target="_blank" rel="noopener noreferrer">#3717</a></td><td>Add support for secondary certificates</td><td>pkhartsk</td><td>7w</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3833" target="_blank" rel="noopener noreferrer">#3833</a></td><td>Speed up split-vote elections with the new FAILOVER_AUT</td><td>enjoy-binbin</td><td>5w</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/3853" target="_blank" rel="noopener noreferrer">#3853</a></td><td>Streaming Compression support for Replication</td><td>roshkhatri</td><td>5w</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/4053" target="_blank" rel="noopener noreferrer">#4053</a></td><td>Optimize sendBulkToReplica to reduce lseek syscalls</td><td>enjoy-binbin</td><td>7d</td></tr>
+<tr><td><a href="https://github.com/valkey-io/valkey/pull/4072" target="_blank" rel="noopener noreferrer">#4072</a></td><td>Share pubsub pattern and watched key across clients</td><td>enjoy-binbin</td><td>2d</td></tr>
+</tbody></table></div>
+</div>
+
+  <footer role="contentinfo">
+    <p>🗼 <strong>valkey-pr-watchtower</strong> · by <a href="https://github.com/rainsupreme">rainsupreme</a> · <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source</a></p>
+    <p style="margin-top:6px;">Personal project, not an official Valkey project. Data from the GitHub API. Opinions are the author's own.</p>
+  </footer>
 
 </div>
 </body>

@@ -17,6 +17,8 @@ from collections import Counter, defaultdict
 import urllib.request
 import urllib.parse
 
+from html_report import build_report_html
+
 REPO = "valkey-io/valkey"
 BASE_URL = "https://api.github.com"
 TODAY = datetime.now(timezone.utc)
@@ -322,6 +324,7 @@ def build_report(prs):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", help="Output file (default: stdout)")
+    parser.add_argument("--html", help="Output HTML report file")
     args = parser.parse_args()
 
     prs = fetch_all_open_prs()
@@ -349,6 +352,13 @@ def main():
         print(f"Wrote {args.out}", file=sys.stderr)
     else:
         print(report)
+
+    # Generate HTML report
+    if args.html:
+        html_report = build_report_html(prs, generated)
+        with open(args.html, "w") as f:
+            f.write(html_report)
+        print(f"Wrote {args.html}", file=sys.stderr)
 
 
 if __name__ == "__main__":
