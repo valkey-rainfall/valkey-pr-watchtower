@@ -16,11 +16,16 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* Base font: 1.3125rem ≈ 21px at browser default (14px × 1.5).
+   Uses rem so it respects OS/browser font-size preferences (DPI-independent).
+   Everything else uses em so it scales proportionally from here. */
+html { font-size: 1.3125rem; }
+
 body {
   background: var(--bg);
   color: var(--text);
   font-family: "Courier New", Courier, monospace;
-  font-size: 14px;
+  font-size: 1rem;
   line-height: 1.6;
   min-height: 100vh;
 }
@@ -229,4 +234,39 @@ code {
   padding: 0 4px;
   border-radius: 3px;
   font-size: 0.9em;
+}
+
+/* ── Mobile responsiveness ─────────────────────────────────────────────────── */
+
+/* Tighten padding on small screens */
+@media (max-width: 600px) {
+  html { font-size: 1.1rem; } /* slightly smaller on phones to avoid horizontal scroll */
+
+  .page-wrap { padding: 8px; }
+
+  header { padding: 14px 12px 12px; }
+  .site-title { font-size: 1.4em; letter-spacing: 1px; }
+
+  nav { gap: 4px 10px; padding: 6px 10px; }
+
+  .panel-header { flex-direction: column; align-items: flex-start; gap: 4px; }
+
+  /* Make tables horizontally scrollable rather than breaking layout */
+  .panel-body { overflow-x: auto; padding: 10px; }
+
+  table { min-width: 500px; } /* forces scroll rather than squishing */
+
+  /* Stack the index page grid on mobile */
+  .grid { grid-template-columns: 1fr !important; }
+
+  /* Stat grid: 2 columns is fine on mobile */
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+
+  footer { font-size: 0.85em; padding: 12px; }
+}
+
+/* Medium screens (tablets) */
+@media (min-width: 601px) and (max-width: 860px) {
+  .page-wrap { padding: 10px; }
+  .grid { grid-template-columns: 1fr 220px; }
 }
