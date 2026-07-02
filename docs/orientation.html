@@ -16,7 +16,7 @@
 
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
-      <span>🧭 PR Orientation — My Personal Take</span>
+      <span>🧭 PR Orientation — My Subjective Take</span>
       <attr-badge type="ai"></attr-badge>
     </div>
     <div class="panel-body">
@@ -26,10 +26,50 @@
         Read that first.
       </p>
       <p style="margin-top:8px;">
-        What follows is my personal read on how the PR process actually works in practice — not rules,
+        What follows is my subjective read on how the PR process actually works in practice — not rules,
         just patterns I've observed as a contributor who cares about the project's health.
         I'm <a href="https://github.com/rainsupreme" target="_blank" rel="noopener noreferrer">rainsupreme</a>,
         a full-time engineer who works on Valkey. These are my opinions, not the project's.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🌱 First contributions</span>
+      <attr-badge type="ai"></attr-badge>
+    </div>
+    <div class="panel-body">
+      <p>The project is welcoming but bandwidth-constrained. Your first PR might take longer
+      than you expect. That's not a signal about the quality of your work.</p>
+      <p style="margin-top:8px;">
+        A good first PR to build trust: fix a real bug (not a typo), keep it under 100 lines,
+        include a test. Show you understand the codebase conventions before proposing bigger changes.
+      </p>
+      <p style="margin-top:8px;">
+        The <code>quick-win</code> or <code>good first issue</code> labels (if they exist)
+        are worth looking at for ideas. Small fixes with CI-green status are the fastest path
+        to getting your name known in the project.
+      </p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🔍 Finding the right reviewer</span>
+      <attr-badge type="ai"></attr-badge>
+    </div>
+    <div class="panel-body">
+      <p>There's no formal reviewer assignment for most PRs. Maintainers pick up
+      what they have context on. If your PR sits 3+ weeks with no activity, a polite ping is appropriate.</p>
+      <p style="margin-top:8px;">
+        To find who to ping: <code>git log --follow -n 20 -- path/to/file.c</code> shows who
+        recently touched the files you changed. Cross-reference that with who's been active
+        recently (reviewing, commenting on other PRs).
+      </p>
+      <p style="margin-top:8px;">
+        Don't tag someone who committed to that file 2 years ago and hasn't been seen since.
+        Active reviewers are worth more than domain experts who've moved on.
       </p>
     </div>
   </div>
@@ -115,46 +155,6 @@
         What can help: if there's a public discussion thread, contribute to it thoughtfully.
         Real-world use cases and data are more persuasive than enthusiasm.
         If there's no thread, starting one in GitHub Discussions can sometimes unblock things.
-      </p>
-    </div>
-  </div>
-
-  <div class="panel" style="margin-bottom:12px;">
-    <div class="panel-header">
-      <span>🔍 Finding the right reviewer</span>
-      <attr-badge type="ai"></attr-badge>
-    </div>
-    <div class="panel-body">
-      <p>There's no formal reviewer assignment for most PRs. Maintainers pick up
-      what they have context on. If your PR sits 3+ weeks with no activity, a polite ping is appropriate.</p>
-      <p style="margin-top:8px;">
-        To find who to ping: <code>git log --follow -n 20 -- path/to/file.c</code> shows who
-        recently touched the files you changed. Cross-reference that with who's been active
-        recently (reviewing, commenting on other PRs).
-      </p>
-      <p style="margin-top:8px;">
-        Don't tag someone who committed to that file 2 years ago and hasn't been seen since.
-        Active reviewers are worth more than domain experts who've moved on.
-      </p>
-    </div>
-  </div>
-
-  <div class="panel" style="margin-bottom:12px;">
-    <div class="panel-header">
-      <span>🌱 First contributions</span>
-      <attr-badge type="ai"></attr-badge>
-    </div>
-    <div class="panel-body">
-      <p>The project is welcoming but bandwidth-constrained. Your first PR might take longer
-      than you expect. That's not a signal about the quality of your work.</p>
-      <p style="margin-top:8px;">
-        A good first PR to build trust: fix a real bug (not a typo), keep it under 100 lines,
-        include a test. Show you understand the codebase conventions before proposing bigger changes.
-      </p>
-      <p style="margin-top:8px;">
-        The <code>quick-win</code> or <code>good first issue</code> labels (if they exist)
-        are worth looking at for ideas. Small fixes with CI-green status are the fastest path
-        to getting your name known in the project.
       </p>
     </div>
   </div>
