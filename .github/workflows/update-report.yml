@@ -4,6 +4,8 @@ on:
   schedule:
     # Run daily at 06:00 UTC
     - cron: '0 6 * * *'
+  push:
+    branches: [main]
   workflow_dispatch:  # Allow manual trigger
 
 permissions:
@@ -19,6 +21,8 @@ concurrency:
 jobs:
   update-and-deploy:
     runs-on: ubuntu-latest
+    # Don't re-run when the bot commits the updated report (prevents loop)
+    if: github.actor != 'github-actions[bot]'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
