@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-02 22:28 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-02 22:31 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 273 |
-| Non-draft | 243 |
+| Total open PRs | 272 |
+| Non-draft | 242 |
 | Draft | 30 |
 | Bot PRs (backports etc.) | 5 |
 | `major-decision-pending` | 38 |
@@ -103,8 +103,8 @@ _Decision is made — these just need someone to merge them._
 | [hwware](https://github.com/hwware) | 4 |
 | [roshkhatri](https://github.com/roshkhatri) | 3 |
 | [cjx-zar](https://github.com/cjx-zar) | 3 |
-| [AlisinaDevelo](https://github.com/AlisinaDevelo) | 3 |
 | [jjuleslasarte](https://github.com/jjuleslasarte) | 3 |
+| [Taeknology](https://github.com/Taeknology) | 3 |
 
 
 ## 🕰 Long-Dormant PRs (90+ days since last update)
