@@ -12,7 +12,7 @@ A personal tool that generates automated health reports on the Valkey PR backlog
 
 Reports are regenerated daily by GitHub Actions and published to GitHub Pages. No human needed in the loop for the data — just data → analysis → page.
 
-> **Disclaimer:** This is a personal project maintained by [@rainsupreme](https://github.com/rainsupreme), a Valkey contributor. It is not affiliated with or endorsed by the Valkey project or Amazon. The analysis and opinions here are my own.
+> **Disclaimer:** This is a personal project maintained by [@rainsupreme](https://github.com/rainsupreme), a Valkey contributor, not an official Valkey project representative. The analysis and opinions here are my own.
 
 ---
 
