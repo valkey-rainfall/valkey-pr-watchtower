@@ -10,6 +10,7 @@ Usage:
 import os
 import sys
 import json
+import re
 import argparse
 from datetime import datetime, timezone, timedelta
 from collections import Counter, defaultdict
@@ -105,6 +106,54 @@ def pr_row(pr, extra=""):
     if extra:
         row += f" {extra} |"
     return row
+
+
+def fetch_prs_since(since_date):
+    """Count PRs opened on valkey-io/valkey since a given ISO date string."""
+    print(f"Fetching PRs since {since_date}...", file=sys.stderr)
+    # GitHub search API: issues/PRs created after date
+    result = gh_get("/search/issues", {
+        "q": f"repo:{REPO} is:pr created:>={since_date}",
+        "per_page": 1
+    })
+    return result.get("total_count", 0)
+
+
+def patch_index_html(stats):
+    """Rewrite the counter placeholders in docs/index.html with live stats."""
+    index_path = os.path.join(os.path.dirname(__file__), "../docs/index.html")
+    index_path = os.path.normpath(index_path)
+    if not os.path.exists(index_path):
+        print(f"  index.html not found at {index_path}, skipping patch", file=sys.stderr)
+        return
+
+    with open(index_path) as f:
+        html = f.read()
+
+    # Replace counter placeholders with live values
+    # Visitor counter: keep as 000001 (static joke)
+    # PR count watched (open)
+    html = re.sub(
+        r'(<span class="counter-prs-open">)[^<]*(</span>)',
+        rf'\g<1>{stats["open_prs"]:,}\g<2>',
+        html
+    )
+    # PRs since launch
+    html = re.sub(
+        r'(<span class="counter-prs-since">)[^<]*(</span>)',
+        rf'\g<1>{stats["prs_since_launch"]:,}\g<2>',
+        html
+    )
+    # Last updated
+    html = re.sub(
+        r'(<span class="counter-last-updated">)[^<]*(</span>)',
+        rf'\g<1>{stats["generated"]}\g<2>',
+        html
+    )
+
+    with open(index_path, "w") as f:
+        f.write(html)
+    print(f"  Patched index.html counters.", file=sys.stderr)
 
 
 def build_report(prs):
@@ -272,6 +321,22 @@ def main():
     args = parser.parse_args()
 
     prs = fetch_all_open_prs()
+
+    # Fetch PRs-since-launch count (site went live 2026-07-02)
+    LAUNCH_DATE = "2026-07-02"
+    prs_since = fetch_prs_since(LAUNCH_DATE)
+
+    generated = TODAY.strftime("%Y-%m-%d %H:%M UTC")
+    stats = {
+        "generated": generated,
+        "open_prs": len(prs),
+        "prs_since_launch": prs_since,
+        "launch_date": LAUNCH_DATE,
+    }
+
+    # Patch live counters into index.html
+    patch_index_html(stats)
+
     report = build_report(prs)
 
     if args.out:
