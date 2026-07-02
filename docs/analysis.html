@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Analysis — Valkey PR Watchtower</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page-wrap">
+
+  <header role="banner">
+    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
+    <div class="site-subtitle"><a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a> — deep analysis</div>
+  </header>
+
+  <nav aria-label="Site navigation">
+    <span>→</span>
+    <a href="index.html">🏠 Home</a>
+    <a href="report.html">📊 Live Report</a>
+    <a href="analysis.html">🔍 Deep Analysis</a>
+    <a href="orientation.html">🧭 PR Orientation</a>
+    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
+  </nav>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🔍 Deep Analysis — 2026-07-02</span>
+      <span class="badge badge-approved">✅ AI-drafted, human-approved</span>
+    </div>
+    <div class="panel-body">
+      <p>A one-time deep dive into the Valkey PR backlog, combining live GitHub API data with AI interpretation.
+      Generated 2026-07-02 using parallel subagent analysis across contributor patterns, CI health, aging, and duplicates.</p>
+    </div>
+  </div>
+
+  <!-- Numbers -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>📊 By the Numbers</span>
+      <span class="badge badge-ai">🤖 AI-generated</span>
+    </div>
+    <div class="panel-body">
+      <table>
+        <thead><tr><th>Metric</th><th>Count</th></tr></thead>
+        <tbody>
+          <tr><td>Total open PRs</td><td><span class="num-badge warn">273</span></td></tr>
+          <tr><td>Draft PRs</td><td><span class="num-badge">~35</span></td></tr>
+          <tr><td><code>major-decision-pending</code></td><td><span class="num-badge danger">38</span></td></tr>
+          <tr><td><code>major-decision-approved</code> (awaiting merge)</td><td><span class="num-badge ok">8</span></td></tr>
+          <tr><td>PRs opened in 2024, still open</td><td><span class="num-badge danger">17</span></td></tr>
+          <tr><td>PRs with 500+ days since last update</td><td><span class="num-badge danger">6+</span></td></tr>
+          <tr><td>Confirmed duplicate/competing pairs</td><td><span class="num-badge warn">5</span></td></tr>
+          <tr><td>Open deflake/test-fix PRs</td><td><span class="num-badge warn">4</span></td></tr>
+          <tr><td>Bot-filed CI failure issues (last 5 weeks)</td><td><span class="num-badge danger">12</span></td></tr>
+          <tr><td>jsoref spelling PRs (13mo, zero merged)</td><td><span class="num-badge warn">14</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Merge + Close -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>⚡ Immediate Actions</span>
+      <span class="badge badge-ai">🤖 AI-generated</span>
+    </div>
+    <div class="panel-body">
+      <h3 class="ok">Merge Now (approved, CI green)</h3>
+      <table>
+        <thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3413" target="_blank" rel="noopener noreferrer">#3413</a></td><td>Optimize infoCommand with SDS pre-allocation</td><td>charsyam</td><td class="warn">97d — <code>to-be-merged</code> 3mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/685" target="_blank" rel="noopener noreferrer">#685</a></td><td>Align entry read/lag rules of consumer group</td><td>artikell</td><td class="danger">~2y</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/866" target="_blank" rel="noopener noreferrer">#866</a></td><td>New maxmemory-scripts config</td><td>enjoy-binbin</td><td class="danger">~23mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/2555" target="_blank" rel="noopener noreferrer">#2555</a></td><td>Use BIO thread for cluster config saving</td><td>enjoy-binbin</td><td>~10mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3050" target="_blank" rel="noopener noreferrer">#3050</a></td><td>Add CONFIG INFO display config type/values</td><td>nitaicaro</td><td>~6mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3466" target="_blank" rel="noopener noreferrer">#3466</a></td><td>XACKDEL Command</td><td>nickiaq</td><td>~3mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3467" target="_blank" rel="noopener noreferrer">#3467</a></td><td>XDELEX Command</td><td>nickiaq</td><td>~3mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3522" target="_blank" rel="noopener noreferrer">#3522</a></td><td>Fail fast on empty CA directory at TLS config load</td><td>yang-z-o</td><td>~2.5mo</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="warn" style="margin-top:14px;">Fix Then Merge (CI failing)</h3>
+      <table>
+        <thead><tr><th>PR</th><th>Title</th><th>Issue</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/4083" target="_blank" rel="noopener noreferrer">#4083</a></td><td>Implement transfer leadership before forgetting current leader</td><td class="danger">3 CI checks failing</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="danger" style="margin-top:14px;">Close Now</h3>
+      <table>
+        <thead><tr><th>PR</th><th>Title</th><th>Reason</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3427" target="_blank" rel="noopener noreferrer">#3427</a></td><td>Windows native builds (MSVC 2026)</td><td>Labeled <code>to-be-closed</code></td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/974" target="_blank" rel="noopener noreferrer">#974</a></td><td>Fix data loss when old primary takes over slots</td><td>Labeled <code>stalled</code>, 23mo old</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3558" target="_blank" rel="noopener noreferrer">#3558</a></td><td>hash: harden HRANDFIELD against expired-heavy hashes</td><td>Labeled <code>stalled</code></td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3493" target="_blank" rel="noopener noreferrer">#3493</a></td><td>fix: reject bare "(" in ZRANGEBYSCORE</td><td>Superseded by #3810 + #4054</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3508" target="_blank" rel="noopener noreferrer">#3508</a></td><td>Fix TLS infinite busy loop</td><td>Exact duplicate of #3510</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3211" target="_blank" rel="noopener noreferrer">#3211</a></td><td>config: validate cluster-announce-ip</td><td>Superseded by #4055</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/2965" target="_blank" rel="noopener noreferrer">#2965</a></td><td>Hotkey detection function</td><td>Dormant Dec 2025; #3708 has maintainer engagement</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Decision bottleneck -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🟡 Decision Bottleneck (38 PRs)</span>
+      <span class="badge badge-approved">✅ AI-drafted, human-approved</span>
+    </div>
+    <div class="panel-body">
+      <p>38 open PRs — <strong>14% of the backlog</strong> — are blocked on
+        <code>major-decision-pending</code>. The label flags them; the missing piece is a
+        scheduled moment to vote. Even "not now, deferred" is better than silence.</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>PR</th><th>Title</th><th>Age</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/978" target="_blank" rel="noopener noreferrer">#978</a></td><td>Add last_fork_start_time to INFO STATS</td><td class="danger">~22mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/2275" target="_blank" rel="noopener noreferrer">#2275</a></td><td>Add keyspace-hits/misses to CLUSTER SLOT-STATS</td><td class="danger">~12mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/2385" target="_blank" rel="noopener noreferrer">#2385</a></td><td>Allow dynamic modification of databases num</td><td class="warn">~11mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3068" target="_blank" rel="noopener noreferrer">#3068</a></td><td>Cleanup around FAST command flag</td><td class="warn">~6mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3253" target="_blank" rel="noopener noreferrer">#3253</a></td><td>Add NX/XX/EX/PX to INCR/DECR commands</td><td class="warn">~5mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3381" target="_blank" rel="noopener noreferrer">#3381</a></td><td>Write-behind log for async AOF durability</td><td>~4mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3438" target="_blank" rel="noopener noreferrer">#3438</a></td><td>Cluster Bus IO offload</td><td>~3mo</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3708" target="_blank" rel="noopener noreferrer">#3708</a></td><td>Add server-side hot key detection</td><td>~7w</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Contributors -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🧑‍💻 Top Contributors by Open PR Count</span>
+      <span class="badge badge-ai">🤖 AI-generated</span>
+    </div>
+    <div class="panel-body">
+      <table>
+        <thead><tr><th>Author</th><th>Open PRs</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/enjoy-binbin" target="_blank" rel="noopener noreferrer">enjoy-binbin</a></td><td><span class="num-badge danger">19</span></td><td>High quality; some 1+ yr old. Reviewer bottleneck, not contributor problem.</td></tr>
+          <tr><td><a href="https://github.com/jsoref" target="_blank" rel="noopener noreferrer">jsoref</a></td><td><span class="num-badge warn">14</span></td><td>All spelling fixes — open since Jun 2025. Zero merged in 13 months.</td></tr>
+          <tr><td><a href="https://github.com/charsyam" target="_blank" rel="noopener noreferrer">charsyam</a></td><td><span class="num-badge">8</span></td><td>Mix of perf, bugfix, feature.</td></tr>
+          <tr><td><a href="https://github.com/hpatro" target="_blank" rel="noopener noreferrer">hpatro</a></td><td><span class="num-badge">7</span></td><td>Cluster/performance.</td></tr>
+          <tr><td><a href="https://github.com/rainsupreme" target="_blank" rel="noopener noreferrer">rainsupreme</a></td><td><span class="num-badge">7</span></td><td>Perf, B+tree series, drafts. (that's me!)</td></tr>
+          <tr><td><a href="https://github.com/hwware" target="_blank" rel="noopener noreferrer">hwware</a></td><td><span class="num-badge">7</span></td><td>Mix; some 500+ days dormant.</td></tr>
+          <tr><td><a href="https://github.com/murphyjacob4" target="_blank" rel="noopener noreferrer">murphyjacob4</a></td><td><span class="num-badge">6</span></td><td>Cluster, ACL, replication.</td></tr>
+          <tr><td><a href="https://github.com/bandalgomsu" target="_blank" rel="noopener noreferrer">bandalgomsu</a></td><td><span class="num-badge">5</span></td><td>Cluster/command features.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Zero-review PRs -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>⏳ Zero-Review PRs — Extreme Aging</span>
+      <span class="badge badge-approved">✅ AI-drafted, human-approved</span>
+    </div>
+    <div class="panel-body">
+      <p class="danger"><strong>500 days with no review is not a "stale PR" — it's a failed promise to contributors.</strong>
+      Most of these authors haven't submitted again. The pattern matches contributor burnout: one attempt, no response, gone.</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Dormant</th></tr></thead>
+        <tbody>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/1547" target="_blank" rel="noopener noreferrer">#1547</a></td><td>stats and keyspace notifications about lazy expiration</td><td>proost</td><td class="danger">~537d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3153" target="_blank" rel="noopener noreferrer">#3153</a></td><td>add warning log when certs are expired/not yet valid</td><td>YiwenZhang12</td><td class="danger">~515d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/1689" target="_blank" rel="noopener noreferrer">#1689</a></td><td>Implementation of CPU throttling</td><td>lschmidtcavalcante-sc</td><td class="danger">~512d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3210" target="_blank" rel="noopener noreferrer">#3210</a></td><td>tests: make test_entryUpdate allocator-agnostic</td><td>seonghoj-bright</td><td class="danger">~504d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3296" target="_blank" rel="noopener noreferrer">#3296</a></td><td>External data (tiered storage) core with tests</td><td>kronwerk</td><td class="danger">~486d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/3305" target="_blank" rel="noopener noreferrer">#3305</a></td><td>empty kvstore when it has empty allocated hashtables</td><td>aradz44</td><td class="danger">~485d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/1909" target="_blank" rel="noopener noreferrer">#1909</a></td><td>Add cluster-non-random-gossip option</td><td>VyacheslavVanin</td><td class="warn">~458d</td></tr>
+          <tr><td><a href="https://github.com/valkey-io/valkey/pull/2221" target="_blank" rel="noopener noreferrer">#2221</a></td><td>fix: incomplete printing of buffer on protocol error</td><td>wstar05</td><td class="warn">~380d</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Flaky tests -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🔥 Flaky Tests &amp; CI Health</span>
+      <span class="badge badge-ai">🤖 AI-generated</span>
+    </div>
+    <div class="panel-body">
+      <h3>CI Run Health (last 30 runs)</h3>
+      <p>✅ Success: 22 &nbsp;|&nbsp; ❌ Failure: 2 &nbsp;|&nbsp; ⏳ In-progress: 3 &nbsp;|&nbsp; Cancelled: 1</p>
+      <p class="muted" style="font-size:0.85em;">~93% pass rate on surface — does not capture within-run retry noise.</p>
+
+      <h3 style="margin-top:12px;">Bot-Filed Test Failures — Last 5 Weeks (12 issues)</h3>
+      <table>
+        <thead><tr><th>Area</th><th>Issues</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Cluster failover/migration</td><td><span class="num-badge danger">4</span></td><td>failover2.tcl, replica-redirect.tcl — timing-sensitive</td></tr>
+          <tr><td>Replication</td><td><span class="num-badge warn">3</span></td><td>dual-channel, replica output bytes</td></tr>
+          <tr><td>Active defrag</td><td><span class="num-badge warn">2</span></td><td>memefficiency.tcl (cluster mode)</td></tr>
+          <tr><td>IO threads</td><td><span class="num-badge">1</span></td><td>io-threads active time</td></tr>
+          <tr><td>Sentinel</td><td><span class="num-badge">1</span></td><td>sentinel/12-primary-reboot.tcl</td></tr>
+          <tr><td>Streams</td><td><span class="num-badge">1</span></td><td>Various</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:12px;">Open Deflake PRs</h3>
+      <table>
+        <thead><tr><th>PR</th><th>Title</th><th>Author</th><th>Age</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/valkey-io/valkey/pull/3764" target="_blank" rel="noopener noreferrer">#3764</a></td>
+            <td>Deflake io-threads test (active-time baseline)</td>
+            <td>Taeknology</td>
+            <td class="danger">~7w</td>
+            <td class="danger">🔴 High</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/valkey-io/valkey/pull/3969" target="_blank" rel="noopener noreferrer">#3969</a></td>
+            <td>Test framework: avoid stale tmpdir reuse on PID collision</td>
+            <td>zuiderkwast</td>
+            <td>~3w (draft)</td>
+            <td class="danger">🔴 High</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/valkey-io/valkey/pull/3049" target="_blank" rel="noopener noreferrer">#3049</a></td>
+            <td>Fix flaky test in manual-failover.tcl</td>
+            <td>Nikhil-Manglore</td>
+            <td class="warn">172d (stale)</td>
+            <td class="warn">🟡 Medium</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/valkey-io/valkey/pull/3465" target="_blank" rel="noopener noreferrer">#3465</a></td>
+            <td>fix: update maxmemory test for SDS pre-allocation</td>
+            <td>djk1027</td>
+            <td class="warn">85d</td>
+            <td class="warn">🟡 Medium</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px; font-size:0.85em;">
+        The bot is tracking the symptom; these PRs fix the cause.
+        <strong>#3764</strong> is highest priority — io-threads test failure affects almost every IO-related PR's CI.
+      </p>
+    </div>
+  </div>
+
+  <!-- Systemic issues -->
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🧵 Systemic Issues &amp; Recommendations</span>
+      <span class="badge badge-approved">✅ AI-drafted, human-approved</span>
+    </div>
+    <div class="panel-body">
+      <h3>1. Decision bottleneck is the primary drag</h3>
+      <p>38 PRs with no cadence to call the vote. <strong>Suggestion:</strong> Monthly "decision day" — top 5 oldest <code>major-decision-pending</code> get an explicit verdict: approved, deferred, or closed. Even "not now" is better than silence.</p>
+
+      <h3 style="margin-top:12px;">2. Good-faith contributors are being ghosted — and leaving</h3>
+      <p>500-day zero-review PRs. 14 spelling PRs open 13 months. 19 PRs from enjoy-binbin with some from 2024.
+      <strong>Suggestion:</strong> Time-based SLA — first response within 4 weeks or auto-labeled <code>needs-triage</code>.</p>
+
+      <h3 style="margin-top:12px;">3. Same bug fixed independently multiple times</h3>
+      <p>5 duplicate pairs, including 3 PRs for one zrangebyscore bug. Root cause: inactive PRs look abandoned.
+      <strong>Suggestion:</strong> PR template prompt + proactive cross-references when a newer PR covers the same ground.</p>
+
+      <h3 style="margin-top:12px;">4. Deflake work stalled while failures accumulate</h3>
+      <p>4 open deflake PRs, 12 bot-filed failures in 5 weeks. <strong>Deflake PRs should get priority review</strong> — each one merged reduces CI noise for every future PR.</p>
+
+      <h3 style="margin-top:12px;">5. Multi-PR feature chains are opaque</h3>
+      <p>Streaming compression, Raft cluster, B+tree ZSET — reviewers don't know where to start.
+      <strong>Suggestion:</strong> Feature series PRs should include an explicit review order comment.</p>
+
+      <h3 style="margin-top:12px;">6. Labels exist but don't trigger action</h3>
+      <p><code>to-be-merged</code> on #3413 for 3 months. <code>major-decision-approved</code> on #685 for 2 years.
+      <strong>Suggestion:</strong> Weekly automation pinging maintainers when a <code>to-be-merged</code> or approved non-draft PR hasn't merged in 2 weeks.</p>
+
+      <h3 style="margin-top:12px;">7. Quick wins are buried under complexity</h3>
+      <p>5 tiny/small PRs (#3973, #3971, #3739, #3985, #3984) with CI green, each reviewable in under 30 minutes.
+      No mechanism surfaces these. <strong>Suggestion:</strong> A <code>quick-win</code> label for PRs under ~100 lines with green CI.</p>
+    </div>
+  </div>
+
+  <footer role="contentinfo">
+    <p>🗼 <strong>valkey-pr-watchtower</strong> &nbsp;·&nbsp; by <a href="https://github.com/rainsupreme">rainsupreme</a> &nbsp;·&nbsp; <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source</a></p>
+    <p style="margin-top:6px;">Not affiliated with the Valkey project or Amazon. Data from the GitHub API. Opinions are the author's own.</p>
+  </footer>
+
+</div>
+</body>
+</html>

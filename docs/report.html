@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Report — Valkey PR Watchtower</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- The live report is auto-generated as report.md by the daily workflow.
+       This page wraps it with site navigation. When the workflow updates
+       report.md, this iframe-style approach serves the content.
+       GitHub Pages renders report.md as HTML at report (no extension). -->
+  <style>
+    .report-frame {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+    /* GitHub Pages markdown rendering overrides */
+    .report-frame h1, .report-frame h2, .report-frame h3 {
+      color: var(--accent2);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 4px;
+      margin: 12px 0 6px;
+    }
+    .report-frame h1 { color: var(--gold); }
+    .report-frame a { color: var(--accent); }
+    .report-frame code {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 0 4px;
+      border-radius: 3px;
+    }
+    .report-frame table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+    }
+    .report-frame th {
+      background: var(--bg2);
+      color: var(--accent3);
+      padding: 5px 8px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-frame td {
+      padding: 5px 8px;
+      border-bottom: 1px solid rgba(42,42,90,0.4);
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header role="banner">
+    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
+    <div class="site-subtitle"><a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a> — live report</div>
+  </header>
+
+  <nav aria-label="Site navigation">
+    <span>→</span>
+    <a href="index.html">🏠 Home</a>
+    <a href="report.html">📊 Live Report</a>
+    <a href="analysis.html">🔍 Deep Analysis</a>
+    <a href="orientation.html">🧭 PR Orientation</a>
+    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
+  </nav>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>📊 Live PR Health Report</span>
+      <span class="badge badge-ai">🤖 AI-generated — updated daily at 06:00 UTC</span>
+    </div>
+    <div class="panel-body">
+      <p>
+        Auto-generated daily by GitHub Actions from the live GitHub API.
+        No human in the loop — pure data. Source:
+        <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/scripts/build_report.py" target="_blank" rel="noopener noreferrer">build_report.py</a>.
+      </p>
+      <p style="margin-top:6px;">
+        <a href="report" style="color:var(--accent2); font-weight:bold;">→ View the raw report (report.md rendered by GitHub Pages)</a>
+      </p>
+      <p style="margin-top:4px; font-size:0.82em; color:var(--muted);">
+        (Opens the GitHub Pages markdown rendering of report.md)
+      </p>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valkey PR Watchtower 🗼 — rainsupreme's corner</title>
+  <link rel="stylesheet" href="style.css">
+  <style>/* index-specific extras */
+    :root {
+      --bg: #0a0a1a;
+      --bg2: #111128;
+      --card: #16163a;
+      --border: #2a2a5a;
+      --text: #d4d4f0;
+      --muted: #7878aa;
+      --accent: #7b68ee;
+      --accent2: #ff69b4;
+      --accent3: #00ced1;
+      --ok: #50fa7b;
+      --warn: #ffb86c;
+      --danger: #ff5555;
+      --gold: #ffd700;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Courier New", Courier, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── starfield background ── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 45%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 65%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 10%, rgba(255,255,255,0.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 55%, rgba(255,255,255,0.5) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    /* ── header ── */
+    header {
+      background: var(--card);
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      padding: 20px 24px 16px;
+      margin-bottom: 12px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(123,104,238,0.03) 2px,
+        rgba(123,104,238,0.03) 4px
+      );
+      pointer-events: none;
+    }
+
+    .site-title {
+      font-size: 2em;
+      font-weight: bold;
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255,215,0,0.5), 0 0 20px rgba(255,215,0,0.3);
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .site-subtitle {
+      color: var(--accent3);
+      font-size: 0.85em;
+      margin-bottom: 12px;
+    }
+
+    .visitor-counter {
+      display: inline-block;
+      background: #000;
+      border: 1px solid var(--border);
+      padding: 2px 10px;
+      color: var(--ok);
+      font-size: 0.8em;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    /* ── nav ── */
+    nav {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 16px;
+      align-items: center;
+    }
+
+    nav span {
+      color: var(--muted);
+      font-size: 0.8em;
+    }
+
+    nav a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-size: 0.9em;
+      padding: 2px 0;
+      border-bottom: 1px dotted transparent;
+    }
+
+    nav a:hover {
+      border-bottom-color: var(--accent2);
+    }
+
+    /* ── layout ── */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── panels ── */
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 6px 12px;
+      font-size: 0.8em;
+      color: var(--accent);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-body {
+      padding: 12px;
+    }
+
+    /* ── attribution badges ── */
+    .badge {
+      display: inline-block;
+      font-size: 0.7em;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    .badge-ai    { background: #1a1a4a; color: #9090ff; border: 1px solid #3030aa; }
+    .badge-approved { background: #1a3a1a; color: #70e070; border: 1px solid #307030; }
+    .badge-human { background: #3a1a1a; color: #ff9090; border: 1px solid #aa3030; }
+
+    /* ── links ── */
+    a { color: var(--accent); }
+    a:hover { color: var(--accent2); }
+
+    /* ── tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85em;
+      margin: 8px 0;
+    }
+    th {
+      background: var(--bg2);
+      color: var(--accent3);
+      text-align: left;
+      padding: 5px 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8em;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    td {
+      padding: 5px 8px;
+      border-bottom: 1px solid rgba(42,42,90,0.5);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(123,104,238,0.05); }
+
+    .num-badge {
+      display: inline-block;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 0 5px;
+      font-size: 0.85em;
+      color: var(--accent3);
+      min-width: 28px;
+      text-align: center;
+    }
+
+    /* ── status colors ── */
+    .ok    { color: var(--ok); }
+    .warn  { color: var(--warn); }
+    .danger{ color: var(--danger); }
+    .muted { color: var(--muted); }
+    .gold  { color: var(--gold); }
+
+    /* ── sections ── */
+    h2 {
+      font-size: 1em;
+      color: var(--accent2);
+      margin: 14px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h3 {
+      font-size: 0.9em;
+      color: var(--accent3);
+      margin: 10px 0 6px;
+    }
+
+    p { margin: 6px 0; font-size: 0.9em; }
+    ul { margin: 6px 0 6px 18px; font-size: 0.9em; }
+    li { margin: 3px 0; }
+
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--border);
+      margin: 12px 0;
+    }
+
+    /* ── sidebar ── */
+    .sidebar > * + * { margin-top: 12px; }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .stat-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 1.5em;
+      font-weight: bold;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.7em;
+      color: var(--muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ── action list ── */
+    .action-item {
+      display: flex;
+      gap: 8px;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(42,42,90,0.4);
+      font-size: 0.85em;
+      align-items: flex-start;
+    }
+    .action-item:last-child { border-bottom: none; }
+    .action-num {
+      flex-shrink: 0;
+      width: 22px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.85em;
+      padding-top: 1px;
+    }
+
+    /* ── footer ── */
+    footer {
+      text-align: center;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 0.78em;
+      margin-top: 16px;
+      border-top: 1px dashed var(--border);
+    }
+
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--accent); }
+
+    .blink {
+      animation: blink 1.2s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── accessibility ── */
+    :focus-visible {
+      outline: 2px solid var(--accent2);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header role="banner">
+    <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
+    <div class="site-subtitle">project-wide health monitoring for <a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a></div>
+    <div class="visitor-counter" role="img" aria-label="You are visitor number one million">
+      VISITOR: <span aria-hidden="true">1&#11044;&#11044;&#11044;&#11044;&#11044;&#11044;</span>
+    </div>
+    <div style="font-size:0.75em; color:var(--muted); margin-top:4px;">
+      a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>
+      &nbsp;·&nbsp; not affiliated with the Valkey project or Amazon
+    </div>
+  </header>
+
+  <nav aria-label="Site navigation">
+    <span>→</span>
+    <a href="index.html">🏠 Home</a>
+    <a href="report.html">📊 Live Report</a>
+    <a href="analysis.html">🔍 Deep Analysis</a>
+    <a href="orientation.html">🧭 PR Orientation</a>
+    <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
+  </nav>
+
+  <div class="grid">
+    <!-- ── main column ── -->
+    <main>
+
+      <div class="panel">
+        <div class="panel-header">
+          <span>📡 About This Site</span>
+          <span class="badge badge-approved">✅ AI-drafted, human-approved</span>
+        </div>
+        <div class="panel-body">
+          <p>
+            This is my personal dashboard for keeping an eye on the
+            <a href="https://github.com/valkey-io/valkey">valkey-io/valkey</a>
+            PR backlog. I'm a contributor working toward committer status, and I
+            built this to help me (and hopefully others) understand where attention
+            is most needed.
+          </p>
+          <hr class="divider">
+          <h2>What's here</h2>
+          <ul>
+            <li><a href="report.html">📊 Live Report</a> — auto-generated daily from the GitHub API. Shows merge-ready PRs, decision bottlenecks, aging, deflake work, and contributor load.</li>
+            <li><a href="analysis.html">🔍 Deep Analysis</a> — a one-time deep dive from 2026-07-02. Includes duplicate PR pairs, zero-review PRs, CI health, and systemic recommendations.</li>
+            <li><a href="orientation.html">🧭 PR Orientation</a> — my personal read on how the Valkey PR process works in practice. Not official docs — just what I've observed.</li>
+          </ul>
+          <hr class="divider">
+          <h2>Attribution</h2>
+          <p>I believe in being transparent about what was written by AI vs. humans. Every page and section on this site carries one of these labels:</p>
+          <ul>
+            <li><span class="badge badge-ai">🤖 AI-generated</span> — automated output, no human review of the content itself</li>
+            <li><span class="badge badge-approved">✅ AI-drafted, human-approved</span> — AI wrote it, I read it, vouched for accuracy, and chose to publish it</li>
+            <li><span class="badge badge-human">✍️ Human-authored</span> — I wrote it (possibly with AI editing assistance)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:12px;">
+        <div class="panel-header">
+          <span>⚡ Quick Action List</span>
+          <span class="badge badge-ai">🤖 AI-generated</span>
+        </div>
+        <div class="panel-body">
+          <p style="color:var(--muted); font-size:0.8em; margin-bottom:8px;">
+            High-confidence immediate actions — no new decisions needed.
+          </p>
+
+          <h3 class="ok">Merge Now (community-approved, CI green)</h3>
+          <div class="action-item"><span class="action-num">#3413</span><span><a href="https://github.com/valkey-io/valkey/pull/3413" target="_blank" rel="noopener noreferrer">Optimize infoCommand with SDS pre-allocation</a> <span class="muted">— labeled <code>to-be-merged</code> for 3 months</span></span></div>
+          <div class="action-item"><span class="action-num">#685</span><span><a href="https://github.com/valkey-io/valkey/pull/685" target="_blank" rel="noopener noreferrer">Align entry read/lag rules of consumer group</a> <span class="danger">— approved 2+ years ago</span></span></div>
+          <div class="action-item"><span class="action-num">#866</span><span><a href="https://github.com/valkey-io/valkey/pull/866" target="_blank" rel="noopener noreferrer">New maxmemory-scripts config</a> <span class="danger">— approved 23 months ago</span></span></div>
+          <div class="action-item"><span class="action-num">#2555</span><span><a href="https://github.com/valkey-io/valkey/pull/2555" target="_blank" rel="noopener noreferrer">Use BIO thread for cluster config saving</a></span></div>
+          <div class="action-item"><span class="action-num">#3050</span><span><a href="https://github.com/valkey-io/valkey/pull/3050" target="_blank" rel="noopener noreferrer">Add CONFIG INFO display config type/values</a></span></div>
+          <div class="action-item"><span class="action-num">#3466</span><span><a href="https://github.com/valkey-io/valkey/pull/3466" target="_blank" rel="noopener noreferrer">XACKDEL Command</a></span></div>
+          <div class="action-item"><span class="action-num">#3467</span><span><a href="https://github.com/valkey-io/valkey/pull/3467" target="_blank" rel="noopener noreferrer">XDELEX Command</a></span></div>
+          <div class="action-item"><span class="action-num">#3522</span><span><a href="https://github.com/valkey-io/valkey/pull/3522" target="_blank" rel="noopener noreferrer">Fail fast on empty CA directory at TLS config load</a></span></div>
+
+          <hr class="divider">
+
+          <h3 class="warn">Prioritize Review (deflake — affects all CI)</h3>
+          <div class="action-item"><span class="action-num">#3764</span><span><a href="https://github.com/valkey-io/valkey/pull/3764" target="_blank" rel="noopener noreferrer">Deflake io-threads test</a> <span class="danger">— open 7 weeks, no review</span></span></div>
+          <div class="action-item"><span class="action-num">#3969</span><span><a href="https://github.com/valkey-io/valkey/pull/3969" target="_blank" rel="noopener noreferrer">Test framework: avoid stale tmpdir reuse on PID collision</a> <span class="muted">— draft, zuiderkwast</span></span></div>
+
+          <hr class="divider">
+
+          <h3 class="danger">Close (duplicates / superseded / stalled)</h3>
+          <div class="action-item"><span class="action-num">#3508</span><span>Exact duplicate of <a href="https://github.com/valkey-io/valkey/pull/3510" target="_blank" rel="noopener noreferrer">#3510</a> — TLS busy loop</span></div>
+          <div class="action-item"><span class="action-num">#3493</span><span>Superseded by <a href="https://github.com/valkey-io/valkey/pull/3810" target="_blank" rel="noopener noreferrer">#3810</a> / <a href="https://github.com/valkey-io/valkey/pull/4054" target="_blank" rel="noopener noreferrer">#4054</a> — zrangebyscore (3 open PRs for 1 bug)</span></div>
+          <div class="action-item"><span class="action-num">#3211</span><span>Superseded by <a href="https://github.com/valkey-io/valkey/pull/4055" target="_blank" rel="noopener noreferrer">#4055</a> — cluster-announce-ip validation</span></div>
+          <div class="action-item"><span class="action-num">#3427</span><span>Labeled <code>to-be-closed</code> — Windows native builds</span></div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ── sidebar ── -->
+    <aside class="sidebar" aria-label="Stats and links">
+
+      <div class="panel">
+        <div class="panel-header">
+          <span>📊 Snapshot</span>
+          <span class="badge badge-ai">🤖</span>
+        </div>
+        <div class="panel-body">
+          <div class="stat-grid">
+            <div class="stat-box">
+              <span class="stat-number warn">273</span>
+              <span class="stat-label">open PRs</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number danger">38</span>
+              <span class="stat-label">decision-pending</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number ok">8</span>
+              <span class="stat-label">approved, unmerged</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number danger">17</span>
+              <span class="stat-label">PRs from 2024</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number warn">5</span>
+              <span class="stat-label">duplicate pairs</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-number danger">12</span>
+              <span class="stat-label">bot CI issues / 5wk</span>
+            </div>
+          </div>
+          <p style="font-size:0.72em; color:var(--muted); margin-top:8px; text-align:center;">
+            As of 2026-07-02 · <a href="report.html">live report →</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">🔗 Quick Links</div>
+        <div class="panel-body">
+          <ul style="list-style:none; padding:0; margin:0;">
+            <li style="padding:4px 0; border-bottom:1px solid var(--border)"><a href="https://github.com/valkey-io/valkey/pulls" target="_blank" rel="noopener noreferrer">All open PRs ↗</a></li>
+            <li style="padding:4px 0; border-bottom:1px solid var(--border)"><a href="https://github.com/valkey-io/valkey/pulls?q=is%3Apr+is%3Aopen+label%3Amajor-decision-pending" target="_blank" rel="noopener noreferrer">Decision-pending ↗</a></li>
+            <li style="padding:4px 0; border-bottom:1px solid var(--border)"><a href="https://github.com/valkey-io/valkey/pulls?q=is%3Apr+is%3Aopen+label%3Amajor-decision-approved" target="_blank" rel="noopener noreferrer">Approved, unmerged ↗</a></li>
+            <li style="padding:4px 0; border-bottom:1px solid var(--border)"><a href="https://github.com/valkey-io/valkey/blob/unstable/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md ↗</a></li>
+            <li style="padding:4px 0;"><a href="https://github.com/valkey-rainfall/valkey-pr-watchtower" target="_blank" rel="noopener noreferrer">This site's source ↗</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">🏗 What's Planned</div>
+        <div class="panel-body" style="font-size:0.82em;">
+          <ul style="padding-left:14px;">
+            <li>First-contribution welcome bot</li>
+            <li>Reviewer affinity scoring</li>
+            <li>Automated reviewer suggestions</li>
+            <li>Flaky test issue tracker</li>
+          </ul>
+          <p style="margin-top:8px; color:var(--muted); font-size:0.85em;">
+            Contributions welcome! <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/issues">Open an issue ↗</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">✉️ Best viewed in</div>
+        <div class="panel-body" style="text-align:center; font-size:0.8em; color:var(--muted);">
+          <p>Netscape Navigator 4.0</p>
+          <p style="font-size:1.5em; margin:6px 0;">🖥️</p>
+          <p>800×600 resolution</p>
+          <p style="margin-top:6px; color:var(--accent3);">
+            (jk, any modern browser is fine)
+          </p>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <footer role="contentinfo">
+    <p>
+      🗼 <strong>valkey-pr-watchtower</strong> &nbsp;·&nbsp;
+      by <a href="https://github.com/rainsupreme">rainsupreme</a> &nbsp;·&nbsp;
+      <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source on GitHub</a>
+    </p>
+    <p style="margin-top:6px;">
+      Not affiliated with the Valkey project or Amazon. &nbsp;
+      Data from the GitHub API. &nbsp;
+      Opinions are the author's own.
+    </p>
+    <p style="margin-top:6px;">
+      <span class="blink">★</span>
+      Sign my guestbook!
+      <span class="blink">★</span>
+      &nbsp;(just kidding, there is no guestbook)
+    </p>
+  </footer>
+
+</div>
+</body>
+</html>
