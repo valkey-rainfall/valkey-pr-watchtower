@@ -11,7 +11,6 @@
 <div class="page-wrap">
 
   <site-header></site-header>
-
   <site-nav></site-nav>
 
   <div class="panel" style="margin-bottom:12px;">
@@ -42,14 +41,30 @@
     <div class="panel-body">
       <p>The project is welcoming but bandwidth-constrained. Your first PR might take longer
       than you expect. That's not a signal about the quality of your work.</p>
+
+      <h3 style="margin-top:12px;">Join the Slack</h3>
+      <p>The Valkey community Slack is a great way to get to know people, find potential reviewers,
+      and get a feel for what's being worked on. It's much easier to get reviewer attention when
+      people know your name from conversation.</p>
+
+      <h3 style="margin-top:12px;">Introduce yourself through reviews and discussion</h3>
+      <p>You don't have to open a PR to contribute. Reviewing other people's code and participating
+      in issue discussions is a great way to build familiarity with the codebase and become a known
+      face. When you do open your own PR later, people already know you.</p>
+
+      <h3 style="margin-top:12px;">Start small and real</h3>
+      <p>A good first PR: fix a real bug (not a typo), keep it under 100 lines,
+      include a test. Show you understand the codebase conventions before proposing bigger changes.
+      The <code>good first issue</code> label is worth looking at for ideas.</p>
+
+      <h3 style="margin-top:12px;">Use Draft PR until CI is green</h3>
+      <p>Open your PR as a <strong>Draft</strong> until CI passes. This signals to reviewers
+      that you're still working on it and saves them from reviewing something that might change.
+      Once green, mark it ready for review.</p>
       <p style="margin-top:8px;">
-        A good first PR to build trust: fix a real bug (not a typo), keep it under 100 lines,
-        include a test. Show you understand the codebase conventions before proposing bigger changes.
-      </p>
-      <p style="margin-top:8px;">
-        The <code>quick-win</code> or <code>good first issue</code> labels (if they exist)
-        are worth looking at for ideas. Small fixes with CI-green status are the fastest path
-        to getting your name known in the project.
+        <strong>Be aware:</strong> some tests are flaky and may fail for reasons unrelated to your change.
+        Check the <a href="https://rainsupreme.github.io/valkey-daily-dashboard/" target="_blank" rel="noopener noreferrer">daily test dashboard</a>
+        to see what's been flaky recently before assuming a failure is yours.
       </p>
     </div>
   </div>
@@ -62,15 +77,24 @@
     <div class="panel-body">
       <p>There's no formal reviewer assignment for most PRs. Maintainers pick up
       what they have context on. If your PR sits 3+ weeks with no activity, a polite ping is appropriate.</p>
-      <p style="margin-top:8px;">
-        To find who to ping: <code>git log --follow -n 20 -- path/to/file.c</code> shows who
-        recently touched the files you changed. Cross-reference that with who's been active
-        recently (reviewing, commenting on other PRs).
-      </p>
-      <p style="margin-top:8px;">
-        Don't tag someone who committed to that file 2 years ago and hasn't been seen since.
-        Active reviewers are worth more than domain experts who've moved on.
-      </p>
+
+      <h3 style="margin-top:12px;">The Slack channel</h3>
+      <p>Joining the Valkey community Slack is one of the best ways to find reviewers. You can ask
+      directly who has context on a particular subsystem, and people are generally helpful.</p>
+
+      <h3 style="margin-top:12px;">Check the issue</h3>
+      <p>If your PR fixes an issue, the issue discussion often has people who are interested in
+      the problem and likely to review a fix. Tag the issue in your PR with <code>#NNNN</code> so
+      it shows up in the issue's timeline — this naturally surfaces your PR to interested people.</p>
+
+      <h3 style="margin-top:12px;">Check git log</h3>
+      <p><code>git log --follow -n 20 -- path/to/file.c</code> shows who
+      recently touched the files you changed. Cross-reference that with who's been active
+      recently (reviewing, commenting on other PRs).</p>
+
+      <h3 style="margin-top:12px;">Don't tag inactive people</h3>
+      <p>Don't tag someone who committed to that file 2 years ago and hasn't been seen since.
+      Active reviewers are worth more than domain experts who've moved on.</p>
     </div>
   </div>
 
@@ -85,28 +109,20 @@
       sits for months. If you have a big change, ask yourself: can I split this into a preparatory
       refactor + the actual change? Usually yes, and both halves move faster as separate PRs.</p>
 
-      <h3 style="margin-top:12px;">CI green before requesting review</h3>
-      <p>Broken CI is an immediate context-switch cost for reviewers. They open the PR,
-      see red, and move on. Fix it first. If CI is flaky (and it is — see the
-      <a href="analysis.html">analysis page</a>), explicitly note "this failure is pre-existing
-      flakiness in X test, unrelated to my change" with evidence.</p>
-
       <h3 style="margin-top:12px;">Write a clear description</h3>
       <p>Answer three questions: what changes, why this change is correct,
       and how to verify it. Don't make the reviewer reverse-engineer your intent.
       A good PR description is a gift to the reviewer.</p>
 
-      <h3 style="margin-top:12px;">Link to prior context</h3>
-      <p>For anything non-trivial: is there an open issue? A prior discussion thread?
-      "Continues discussion from #NNNN" or "Fixes the bug described in #NNNN" tells reviewers
-      there's context they can read. It also shows you did your homework.</p>
+      <h3 style="margin-top:12px;">Tag the issue</h3>
+      <p>If your PR fixes or relates to an existing issue, always reference it with
+      <code>Fixes #NNNN</code> or <code>Relates to #NNNN</code> in the PR description.
+      This links the PR to the issue, shows you did your homework, and helps potential
+      reviewers discover your PR from the issue page.</p>
 
-      <h3 style="margin-top:12px;">Add the release-notes label yourself</h3>
-      <p>The bot will block your PR if it doesn't have either <code>release-notes</code>
-      or <code>no-release-notes</code>. Just add it yourself when you open the PR.
-      Bugfixes and user-facing changes get <code>release-notes</code>.
-      Refactors, test fixes, and internal plumbing changes get <code>no-release-notes</code>.
-      When in doubt, add <code>release-notes</code>.</p>
+      <h3 style="margin-top:12px;">Link to prior context</h3>
+      <p>For anything non-trivial: is there a prior discussion thread?
+      A mailing list post? A design doc? Link it. Context helps reviewers make decisions faster.</p>
     </div>
   </div>
 
@@ -130,9 +146,6 @@
       <p>Search before submitting. <code>gh search prs --repo valkey-io/valkey --state open "your keywords"</code>
       takes 30 seconds. The zrangebyscore bug had 3 open PRs simultaneously — none of them got
       extra attention for it, they just fragmented reviewer energy.</p>
-
-      <h3 style="margin-top:12px;">Missing the release-notes label</h3>
-      <p>See above. The bot will block it and it'll sit in a gray state until someone notices.</p>
     </div>
   </div>
 
