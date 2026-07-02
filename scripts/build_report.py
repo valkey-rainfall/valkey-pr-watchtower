@@ -132,16 +132,16 @@ def patch_index_html(stats):
 
     # Replace counter placeholders with live values
     # Visitor counter: keep as 000001 (static joke)
-    # PR count watched (open)
+    # PR count watched (open) — zero-padded to 4 digits
     html = re.sub(
         r'(<span class="counter-prs-open">)[^<]*(</span>)',
-        rf'\g<1>{stats["open_prs"]:,}\g<2>',
+        rf'\g<1>{stats["open_prs"]:04d}\g<2>',
         html
     )
-    # PRs since launch
+    # PRs since launch — zero-padded to 4 digits
     html = re.sub(
         r'(<span class="counter-prs-since">)[^<]*(</span>)',
-        rf'\g<1>{stats["prs_since_launch"]:,}\g<2>',
+        rf'\g<1>{stats["prs_since_launch"]:04d}\g<2>',
         html
     )
     # Last updated
