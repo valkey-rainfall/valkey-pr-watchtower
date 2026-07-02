@@ -132,16 +132,20 @@ def patch_index_html(stats):
 
     # Replace counter placeholders with live values
     # Visitor counter: keep as 000001 (static joke)
+    # Total PRs gazed upon = open at time of report + new ones since launch
+    # This is "all PRs that have existed during the watchtower's watch"
+    total_gazed = stats["open_prs"] + stats["prs_since_launch"]
+
     # PR count watched (open) — zero-padded to 4 digits
     html = re.sub(
         r'(<span class="counter-prs-open">)[^<]*(</span>)',
         rf'\g<1>{stats["open_prs"]:04d}\g<2>',
         html
     )
-    # PRs since launch — zero-padded to 4 digits
+    # Total PRs gazed upon — zero-padded to 4 digits
     html = re.sub(
         r'(<span class="counter-prs-since">)[^<]*(</span>)',
-        rf'\g<1>{stats["prs_since_launch"]:04d}\g<2>',
+        rf'\g<1>{total_gazed:04d}\g<2>',
         html
     )
     # Last updated

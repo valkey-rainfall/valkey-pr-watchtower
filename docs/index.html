@@ -368,13 +368,30 @@
       <div class="visitor-counter" aria-label="Open PRs being tracked">
         WATCHING: <span class="counter-prs-open">0271</span> OPEN PRS
       </div>
-      <div class="visitor-counter" aria-label="PRs opened since site launch">
-        SINCE LAUNCH: <span class="counter-prs-since">0005</span> NEW PRS
+      <div class="visitor-counter" aria-label="PRs that have passed under this watchtower's gaze">
+        GAZED UPON: <span class="counter-prs-since">0276</span> PRS
       </div>
       <div class="visitor-counter" aria-label="Last updated">
-        UPDATED: <span class="counter-last-updated">2026-07-02 22:49 UTC</span>
+        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-02 22:49 UTC</span>
       </div>
     </div>
+    <script>
+      // Reformat the UTC timestamp into the visitor's local timezone
+      (function() {
+        var el = document.getElementById('last-updated-utc');
+        if (!el) return;
+        try {
+          var raw = el.textContent.trim(); // e.g. "2026-07-02 22:49 UTC"
+          var iso = raw.replace(' UTC','Z').replace(' ','T');
+          var d = new Date(iso);
+          if (isNaN(d)) return;
+          el.textContent = d.toLocaleString(undefined, {
+            month: 'short', day: 'numeric', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
+          });
+        } catch(e) {}
+      })();
+    </script>
     <div style="font-size:0.75em; color:var(--muted); margin-top:4px;">
       a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>
       &nbsp;·&nbsp; a personal project, not an official Valkey project
