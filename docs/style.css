@@ -49,7 +49,10 @@ body::before {
 .page-wrap {
   position: relative;
   z-index: 1;
-  max-width: 1200px;
+  /* rem-based width: scales with font size, works on 1080p and 4K alike.
+     At our base (1.3125rem ≈ 21px), 90rem ≈ 1890px — comfortable on 4K,
+     constrained by viewport on 1080p so it never overflows. */
+  max-width: 90rem;
   margin: 0 auto;
   padding: 12px;
 }
@@ -266,7 +269,7 @@ code {
 }
 
 /* Medium screens (tablets) */
-@media (min-width: 601px) and (max-width: 1200px) {
+@media (min-width: 601px) and (max-width: 90rem) {
   .page-wrap { padding: 10px; }
   .grid { grid-template-columns: 1fr 260px; }
 }
