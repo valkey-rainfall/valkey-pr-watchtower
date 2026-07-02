@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-02 22:31 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-02 22:36 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,11 +8,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 272 |
-| Non-draft | 242 |
+| Total open PRs | 271 |
+| Non-draft | 241 |
 | Draft | 30 |
 | Bot PRs (backports etc.) | 5 |
-| `major-decision-pending` | 38 |
+| `major-decision-pending` | 37 |
 | `major-decision-approved` | 8 |
 | `major-decision-deferred` | 2 |
 | `to-be-merged` | 1 |
@@ -59,7 +59,7 @@ _Decision is made — these just need someone to merge them._
 
 ## 🟡 Decision Bottleneck (`major-decision-pending`)
 
-**36 PRs** blocked waiting for a community vote.
+**35 PRs** blocked waiting for a community vote.
 
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
@@ -83,7 +83,7 @@ _Decision is made — these just need someone to merge them._
 | [2891](https://github.com/valkey-io/valkey/pull/2891) | Reset acl info fields with CONFIG RESETSTAT | enjoy-binbin | 7mo old | 6mo ago |
 | [2971](https://github.com/valkey-io/valkey/pull/2971) | Add used_memory_overhead_human and used_memory_dataset_human info fiel… | enjoy-binbin | 6mo old | 5mo ago |
 | [2978](https://github.com/valkey-io/valkey/pull/2978) | Add XX option to ZRANGE commands for null/empty distinction | youngmore1024 | 6mo old | 3mo ago |
-| … | *16 more* | | | |
+| … | *15 more* | | | |
 
 
 ## 🧑‍💻 Top Contributors by Open PR Count
