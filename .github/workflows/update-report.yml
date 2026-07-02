@@ -8,10 +8,21 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+# Only one deployment at a time
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  update-report:
+  update-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -26,7 +37,7 @@ jobs:
         run: |
           python scripts/build_report.py --out docs/report.md
 
-      - name: Commit and push if changed
+      - name: Commit updated report to repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -38,3 +49,15 @@ jobs:
             git commit -m "chore: update PR health report [${TIMESTAMP}]"
             git push
           fi
+
+      - name: Add .nojekyll (suppress Jekyll processing)
+        run: touch docs/.nojekyll
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
