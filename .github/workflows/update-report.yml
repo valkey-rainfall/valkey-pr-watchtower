@@ -45,7 +45,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/report.md docs/report.html docs/index.html docs/components.js
+          git add docs/report.md docs/report.html docs/index.html docs/components.js data/
           if git diff --staged --quiet; then
             echo "No changes to report."
           else

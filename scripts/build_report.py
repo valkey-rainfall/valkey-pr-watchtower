@@ -25,6 +25,7 @@ TODAY = datetime.now(timezone.utc)
 
 
 def gh_get(path, params=None):
+    import time as _time
     token = os.environ.get("GITHUB_TOKEN", "")
     url = f"{BASE_URL}{path}"
     if params:
@@ -34,8 +35,17 @@ def gh_get(path, params=None):
     req.add_header("Accept", "application/vnd.github+json")
     req.add_header("X-GitHub-Api-Version", "2022-11-28")
     req.add_header("User-Agent", "valkey-pr-watchtower/1.0")
-    with urllib.request.urlopen(req) as resp:
-        return json.loads(resp.read())
+    for attempt in range(3):
+        try:
+            with urllib.request.urlopen(req) as resp:
+                return json.loads(resp.read())
+        except urllib.error.HTTPError as e:
+            if e.code in (403, 429) and attempt < 2:
+                wait = int(e.headers.get("Retry-After", 30))
+                print(f"  Rate limited ({e.code}), waiting {wait}s... (attempt {attempt+1})", file=sys.stderr)
+                _time.sleep(wait)
+            else:
+                raise
 
 
 def gh_paginate(path, params=None):
@@ -84,6 +94,93 @@ def fetch_all_open_prs():
     prs = gh_paginate(f"/repos/{REPO}/pulls", {"state": "open"})
     print(f"  {len(prs)} open PRs fetched.", file=sys.stderr)
     return prs
+
+
+def fetch_weekly_activity():
+    """Fetch merged and closed PR counts for the past 8 weeks."""
+    import time
+    weeks = []
+    for w in range(8):
+        end = TODAY - timedelta(weeks=w)
+        start = end - timedelta(weeks=1)
+        start_str = start.strftime("%Y-%m-%d")
+        end_str = end.strftime("%Y-%m-%d")
+        try:
+            # Use search API for merged count
+            merged = gh_get("/search/issues", {
+                "q": f"repo:{REPO} is:pr is:merged merged:{start_str}..{end_str}",
+                "per_page": 1
+            }).get("total_count", 0)
+            time.sleep(2)  # respect secondary rate limit
+            # Opened
+            opened = gh_get("/search/issues", {
+                "q": f"repo:{REPO} is:pr created:{start_str}..{end_str}",
+                "per_page": 1
+            }).get("total_count", 0)
+            time.sleep(2)
+        except Exception as e:
+            print(f"  Rate limited at week {start_str}, stopping: {e}", file=sys.stderr)
+            break
+        weeks.append({
+            "week_start": start_str,
+            "week_end": end_str,
+            "opened": opened,
+            "merged": merged,
+        })
+        print(f"  Week {start_str}: opened={opened} merged={merged}", file=sys.stderr)
+    weeks.reverse()  # chronological order
+    return weeks
+
+
+def fetch_pr_ci_status(pr_numbers):
+    """Fetch CI status and mergeability for specific PRs (individual API calls)."""
+    results = {}
+    for num in pr_numbers:
+        pr_detail = gh_get(f"/repos/{REPO}/pulls/{num}")
+        # Get check runs for head SHA
+        sha = pr_detail.get("head", {}).get("sha", "")
+        checks = {"total": 0, "success": 0, "failure": 0, "pending": 0}
+        if sha:
+            check_data = gh_get(f"/repos/{REPO}/commits/{sha}/check-runs", {"per_page": 100})
+            for run in check_data.get("check_runs", []):
+                checks["total"] += 1
+                if run["conclusion"] == "success":
+                    checks["success"] += 1
+                elif run["conclusion"] in ("failure", "timed_out"):
+                    checks["failure"] += 1
+                elif run["status"] != "completed":
+                    checks["pending"] += 1
+        results[num] = {
+            "mergeable": pr_detail.get("mergeable"),
+            "mergeable_state": pr_detail.get("mergeable_state"),
+            "checks": checks,
+        }
+    print(f"  Fetched CI status for {len(results)} PRs.", file=sys.stderr)
+    return results
+
+
+def save_history(stats, weeks):
+    """Append today's snapshot to data/history.json."""
+    history_path = os.path.join(os.path.dirname(__file__), "../data/history.json")
+    history_path = os.path.normpath(history_path)
+    history = []
+    if os.path.exists(history_path):
+        with open(history_path) as f:
+            history = json.loads(f.read())
+    # Append today's entry (deduplicate by date)
+    today_str = TODAY.strftime("%Y-%m-%d")
+    history = [h for h in history if h.get("date") != today_str]
+    history.append({
+        "date": today_str,
+        "open_prs": stats["open_prs"],
+        "weekly_activity": weeks,
+    })
+    # Keep last 90 days
+    history = history[-90:]
+    with open(history_path, "w") as f:
+        f.write(json.dumps(history, indent=2))
+    print(f"  Saved history ({len(history)} entries).", file=sys.stderr)
+    return history
 
 
 def fetch_labeled_prs(label):
@@ -333,6 +430,10 @@ def main():
     LAUNCH_DATE = "2026-07-02"
     prs_since = fetch_prs_since(LAUNCH_DATE)
 
+    # Fetch weekly activity (opened/merged/closed per week, last 12 weeks)
+    print("Fetching weekly activity...", file=sys.stderr)
+    weeks = fetch_weekly_activity()
+
     generated = TODAY.strftime("%Y-%m-%d %H:%M UTC")
     stats = {
         "generated": generated,
@@ -340,6 +441,19 @@ def main():
         "prs_since_launch": prs_since,
         "launch_date": LAUNCH_DATE,
     }
+
+    # Save historical data
+    save_history(stats, weeks)
+
+    # Fetch CI status for actionable PRs (approved + to-be-merged)
+    non_draft = [p for p in prs if not p.get("draft")]
+    actionable_nums = [
+        p["number"] for p in non_draft
+        if any(l["name"] in ("to-be-merged", "major-decision-approved")
+               for l in p.get("labels", []))
+    ]
+    print(f"Fetching CI status for {len(actionable_nums)} actionable PRs...", file=sys.stderr)
+    ci_status = fetch_pr_ci_status(actionable_nums) if actionable_nums else {}
 
     # Patch live counters into index.html
     patch_index_html(stats)
@@ -355,7 +469,7 @@ def main():
 
     # Generate HTML report
     if args.html:
-        html_report = build_report_html(prs, generated)
+        html_report = build_report_html(prs, generated, weeks=weeks, ci_status=ci_status)
         with open(args.html, "w") as f:
             f.write(html_report)
         print(f"Wrote {args.html}", file=sys.stderr)

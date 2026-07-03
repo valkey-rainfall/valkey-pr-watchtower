@@ -44,7 +44,133 @@ def _panel(title, badge_text, content):
 </div>'''
 
 
-def build_report_html(prs, generated):
+def _ci_badge(ci_info):
+    """Render a CI status badge from ci_status dict entry."""
+    if not ci_info:
+        return '<span class="muted">—</span>'
+    checks = ci_info.get("checks", {})
+    total = checks.get("total", 0)
+    success = checks.get("success", 0)
+    failure = checks.get("failure", 0)
+    mergeable = ci_info.get("mergeable")
+
+    if total == 0:
+        ci_text = '<span class="muted">no checks</span>'
+    elif failure > 0:
+        ci_text = f'<span class="danger">❌ {failure}/{total} failing</span>'
+    elif success == total:
+        ci_text = f'<span class="ok">✅ {total}/{total}</span>'
+    else:
+        ci_text = f'<span class="warn">⏳ {success}/{total}</span>'
+
+    merge_text = ""
+    if mergeable is True:
+        merge_text = ' · <span class="ok">no conflicts</span>'
+    elif mergeable is False:
+        merge_text = ' · <span class="danger">conflicts</span>'
+
+    return ci_text + merge_text
+
+
+def _build_charts(prs, non_draft, weeks):
+    """Generate Chart.js HTML for PR age histogram and weekly activity."""
+    import json as _json
+
+    # PR Age Histogram buckets
+    buckets = {"0-2w": 0, "2-4w": 0, "1-3mo": 0, "3-6mo": 0, "6-12mo": 0, "1y+": 0}
+    for pr in non_draft:
+        days = _age_days(pr["created_at"])
+        if days <= 14:
+            buckets["0-2w"] += 1
+        elif days <= 28:
+            buckets["2-4w"] += 1
+        elif days <= 90:
+            buckets["1-3mo"] += 1
+        elif days <= 180:
+            buckets["3-6mo"] += 1
+        elif days <= 365:
+            buckets["6-12mo"] += 1
+        else:
+            buckets["1y+"] += 1
+
+    labels_hist = _json.dumps(list(buckets.keys()))
+    data_hist = _json.dumps(list(buckets.values()))
+
+    # Weekly activity chart
+    if weeks:
+        week_labels = _json.dumps([w["week_start"] for w in weeks])
+        opened_data = _json.dumps([w["opened"] for w in weeks])
+        merged_data = _json.dumps([w["merged"] for w in weeks])
+    else:
+        week_labels = "[]"
+        opened_data = "[]"
+        merged_data = "[]"
+
+    return f'''
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+  <div>
+    <h3 style="margin-bottom:8px;">PR Age Distribution (non-draft)</h3>
+    <canvas id="ageChart" style="max-height:250px;"></canvas>
+  </div>
+  <div>
+    <h3 style="margin-bottom:8px;">Weekly Activity (last 8 weeks)</h3>
+    <canvas id="activityChart" style="max-height:250px;"></canvas>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+(function() {{
+  // Age histogram
+  new Chart(document.getElementById('ageChart'), {{
+    type: 'bar',
+    data: {{
+      labels: {labels_hist},
+      datasets: [{{
+        label: 'Open PRs',
+        data: {data_hist},
+        backgroundColor: ['#50fa7b','#50fa7b','#ffb86c','#ffb86c','#ff5555','#ff5555'],
+        borderColor: '#2a2a5a',
+        borderWidth: 1
+      }}]
+    }},
+    options: {{
+      responsive: true,
+      plugins: {{ legend: {{ display: false }} }},
+      scales: {{
+        y: {{ beginAtZero: true, ticks: {{ color: '#7878aa' }}, grid: {{ color: '#2a2a5a' }} }},
+        x: {{ ticks: {{ color: '#7878aa' }}, grid: {{ display: false }} }}
+      }}
+    }}
+  }});
+  // Weekly activity
+  new Chart(document.getElementById('activityChart'), {{
+    type: 'line',
+    data: {{
+      labels: {week_labels},
+      datasets: [
+        {{ label: 'Opened', data: {opened_data}, borderColor: '#ffb86c', backgroundColor: 'rgba(255,184,108,0.1)', tension: 0.3, fill: true }},
+        {{ label: 'Merged', data: {merged_data}, borderColor: '#50fa7b', backgroundColor: 'rgba(80,250,123,0.1)', tension: 0.3, fill: true }}
+      ]
+    }},
+    options: {{
+      responsive: true,
+      plugins: {{ legend: {{ labels: {{ color: '#d4d4f0' }} }} }},
+      scales: {{
+        y: {{ beginAtZero: true, ticks: {{ color: '#7878aa' }}, grid: {{ color: '#2a2a5a' }} }},
+        x: {{ ticks: {{ color: '#7878aa', maxRotation: 45 }}, grid: {{ display: false }} }}
+      }}
+    }}
+  }});
+}})();
+</script>'''
+
+
+def build_report_html(prs, generated, weeks=None, ci_status=None):
+    if weeks is None:
+        weeks = []
+    if ci_status is None:
+        ci_status = {}
+
     non_draft = [p for p in prs if not p.get("draft")]
     draft = [p for p in prs if p.get("draft")]
     bot_prs = [p for p in prs if p.get("user", {}).get("login", "").endswith("[bot]")]
@@ -81,14 +207,16 @@ def build_report_html(prs, generated):
     if tbm:
         rows = []
         for pr in sorted(tbm, key=lambda p: p["created_at"]):
-            rows.append([_pr_link(pr), pr["title"][:65], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"]))])
-        action_html += f'<h3 class="ok">Merge Now (<code>to-be-merged</code>)</h3>{_table(["PR", "Title", "Author", "Age"], rows)}'
+            ci = _ci_badge(ci_status.get(pr["number"]))
+            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), ci])
+        action_html += f'<h3 class="ok">Merge Now (<code>to-be-merged</code>)</h3>{_table(["PR", "Title", "Author", "Age", "CI + Merge"], rows)}'
 
     if approved:
         rows = []
         for pr in sorted(approved, key=lambda p: p["created_at"]):
-            rows.append([_pr_link(pr), pr["title"][:65], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"]))])
-        action_html += f'<h3 class="ok" style="margin-top:14px;">Community-Approved, Awaiting Merge</h3><p class="muted" style="font-size:0.85em;">Decision is made — just needs someone to click merge.</p>{_table(["PR", "Title", "Author", "Age"], rows)}'
+            ci = _ci_badge(ci_status.get(pr["number"]))
+            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), ci])
+        action_html += f'<h3 class="ok" style="margin-top:14px;">Community-Approved, Awaiting Merge</h3><p class="muted" style="font-size:0.85em;">Decision is made — just needs someone to click merge.</p>{_table(["PR", "Title", "Author", "Age", "CI + Merge"], rows)}'
 
     if tbc or stalled:
         rows = []
@@ -157,6 +285,24 @@ def build_report_html(prs, generated):
             rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"]))])
         content = f'<p><strong>{len(run_extra)} PRs</strong> trigger extended CI runs.</p>{_table(["PR", "Title", "Author", "Age"], rows)}'
         sections.append(_panel("⏱ High CI Burden (run-extra-tests)", "🤖 auto-generated daily", content))
+
+    # ── First-Time Contributors
+    first_timers = [p for p in non_draft
+                    if p.get("author_association") in ("FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE")
+                    and not p.get("user", {}).get("login", "").endswith("[bot]")]
+    if first_timers:
+        rows = []
+        for pr in sorted(first_timers, key=lambda p: p["created_at"], reverse=True)[:20]:
+            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"),
+                         _age_str(_age_days(pr["created_at"])),
+                         pr.get("author_association", "?").replace("_", " ").lower()])
+        content = f'<p>PRs from contributors with no prior merged PRs in this repo ({len(first_timers)} total). These deserve extra attention — a response now may retain a future regular contributor.</p>{_table(["PR", "Title", "Author", "Age", "Association"], rows)}'
+        sections.append(_panel("🌱 First-Time Contributors", "🤖 auto-generated daily", content))
+
+    # ── Charts: PR Age Histogram + Weekly Activity
+    chart_html = _build_charts(prs, non_draft, weeks)
+    if chart_html:
+        sections.append(_panel("📈 Charts", "🤖 auto-generated daily", chart_html))
 
     # ── Assemble page
     body = "\n".join(sections)
