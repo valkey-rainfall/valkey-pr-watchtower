@@ -36,7 +36,7 @@ class SiteHeader extends HTMLElement {
         GAZED UPON: <span class="counter-prs-since">0276</span> PRS
       </div>
       <div class="visitor-counter" aria-label="Last updated">
-        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-03 00:23 UTC</span>
+        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-03 00:28 UTC</span>
       </div>
     </div>
     <script>
