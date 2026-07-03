@@ -236,6 +236,17 @@ td {
 }
 tr:last-child td { border-bottom: none; }
 tr:hover td { background: rgba(123,104,238,0.05); }
+tr:nth-child(even) td { background: rgba(123,104,238,0.02); }
+tr:nth-child(even):hover td { background: rgba(123,104,238,0.07); }
+
+/* Light theme zebra stripe */
+[data-theme="light"] tr:nth-child(even) td { background: rgba(108,92,231,0.04); }
+[data-theme="light"] tr:hover td { background: rgba(108,92,231,0.08); }
+[data-theme="light"] tr:nth-child(even):hover td { background: rgba(108,92,231,0.1); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) tr:nth-child(even) td { background: rgba(108,92,231,0.04); }
+  :root:not([data-theme]) tr:hover td { background: rgba(108,92,231,0.08); }
+}
 
 .num-badge {
   display: inline-block;

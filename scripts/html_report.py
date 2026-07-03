@@ -234,11 +234,10 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
     pending = [p for p in non_draft if "major-decision-pending" in _label_names(p)]
     if pending:
         rows = []
-        for pr in sorted(pending, key=lambda p: p["created_at"])[:20]:
+        for pr in sorted(pending, key=lambda p: p["created_at"]):
             rows.append([_pr_link(pr), pr["title"][:60], pr.get("user", {}).get("login", "?"),
                          _age_str(_age_days(pr["created_at"])), _age_str(_age_days(pr["updated_at"])) + " ago"])
-        extra = f'<p class="muted" style="font-size:0.85em; margin-top:6px;">…and {len(pending) - 20} more</p>' if len(pending) > 20 else ""
-        content = f'<p><strong>{len(pending)} PRs</strong> blocked waiting for a community vote.</p>{_table(["PR", "Title", "Author", "Age", "Last update"], rows)}{extra}'
+        content = f'<p><strong>{len(pending)} PRs</strong> blocked waiting for a community vote.</p>{_table(["PR", "Title", "Author", "Age", "Last update"], rows)}'
         sections.append(_panel("🟡 Decision Bottleneck", "🤖 auto-generated daily", content, scroll=True))
 
     # ── Top Contributors
@@ -260,11 +259,10 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
     dormant.sort(key=lambda p: p["updated_at"])
     if dormant:
         rows = []
-        for pr in dormant[:25]:
+        for pr in dormant:
             rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"),
                          _age_str(_age_days(pr["created_at"])), f'<span class="danger">{_age_str(_age_days(pr["updated_at"]))} ago</span>'])
-        extra = f'<p class="muted" style="font-size:0.85em; margin-top:6px;">…and {len(dormant) - 25} more</p>' if len(dormant) > 25 else ""
-        content = f'<p><strong>{len(dormant)} non-draft PRs</strong> haven\'t been updated in 90+ days.</p>{_table(["PR", "Title", "Author", "Created", "Last update"], rows)}{extra}'
+        content = f'<p><strong>{len(dormant)} non-draft PRs</strong> haven\'t been updated in 90+ days.</p>{_table(["PR", "Title", "Author", "Created", "Last update"], rows)}'
         sections.append(_panel("🕰 Long-Dormant PRs (90+ days)", "🤖 auto-generated daily", content, scroll=True))
 
     # ── Deflake PRs
@@ -293,7 +291,7 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
                     and not p.get("user", {}).get("login", "").endswith("[bot]")]
     if first_timers:
         rows = []
-        for pr in sorted(first_timers, key=lambda p: p["created_at"], reverse=True)[:20]:
+        for pr in sorted(first_timers, key=lambda p: p["created_at"], reverse=True):
             rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"),
                          _age_str(_age_days(pr["created_at"])),
                          pr.get("author_association", "?").replace("_", " ").lower()])
