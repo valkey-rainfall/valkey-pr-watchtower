@@ -22,14 +22,14 @@
   --card: #ffffff;
   --border: #d4ccf0;
   --text: #2d2b55;
-  --muted: #7a72a8;
+  --muted: #8a80b8;
   --accent: #6c5ce7;
   --accent2: #e84393;
   --accent3: #00b894;
-  --ok: #00b894;
-  --warn: #e17055;
-  --danger: #d63031;
-  --gold: #fdcb6e;
+  --ok: #2eae7a;
+  --warn: #d4804a;
+  --danger: #cc5050;
+  --gold: #c49520;
 }
 
 /* Follow system preference by default (no data-theme set) */
@@ -40,14 +40,14 @@
     --card: #ffffff;
     --border: #d4ccf0;
     --text: #2d2b55;
-    --muted: #7a72a8;
+    --muted: #8a80b8;
     --accent: #6c5ce7;
     --accent2: #e84393;
     --accent3: #00b894;
-    --ok: #00b894;
-    --warn: #e17055;
-    --danger: #d63031;
-    --gold: #fdcb6e;
+    --ok: #2eae7a;
+    --warn: #d4804a;
+    --danger: #cc5050;
+    --gold: #c49520;
   }
 }
 
@@ -204,40 +204,24 @@ nav a:hover { border-bottom-color: var(--accent2); }
 [data-theme="light"] .badge-approved{ background: #e8faf0; color: #1e8c5a; border-color: #a0dbb8; }
 [data-theme="light"] .badge-human   { background: #ffeef0; color: #c44058; border-color: #f0b0b8; }
 
-/* Light theme: softer panel headers and status colors */
+/* Light theme: softer panel headers */
 [data-theme="light"] .panel-header { color: #7c6bc4; background: #f3f0ff; border-color: #e0daff; }
-[data-theme="light"] .ok    { color: #1e9e6d; }
-[data-theme="light"] .warn  { color: #c45e2a; }
-[data-theme="light"] .danger{ color: #c0392b; }
-[data-theme="light"] .gold  { color: #b8860b; }
-[data-theme="light"] .muted { color: #8a80b8; }
 [data-theme="light"] .num-badge { background: #f3f0ff; border-color: #d4ccf0; color: #6c5ce7; }
-[data-theme="light"] .num-badge.ok    { color: #1e9e6d; border-color: #a8e6cf; background: #e8faf0; }
-[data-theme="light"] .num-badge.warn  { color: #c45e2a; border-color: #ffd0b8; background: #fff3ec; }
-[data-theme="light"] .num-badge.danger{ color: #c0392b; border-color: #f8b0b0; background: #ffeaea; }
+[data-theme="light"] .num-badge.ok    { color: #2eae7a; border-color: #a8e6cf; background: #e8faf0; }
+[data-theme="light"] .num-badge.warn  { color: #d4804a; border-color: #ffd0b8; background: #fff3ec; }
+[data-theme="light"] .num-badge.danger{ color: #cc5050; border-color: #f8b0b0; background: #ffeaea; }
 [data-theme="light"] th { background: #f3f0ff; color: #6c5ce7; }
-[data-theme="light"] .stat-number.ok    { color: #1e9e6d; }
-[data-theme="light"] .stat-number.warn  { color: #c45e2a; }
-[data-theme="light"] .stat-number.danger{ color: #c0392b; }
 
 @media (prefers-color-scheme: light) {
   :root:not([data-theme]) .badge-ai      { background: #eeeaff; color: #5b4fc7; border-color: #b8b0e0; }
   :root:not([data-theme]) .badge-approved{ background: #e8faf0; color: #1e8c5a; border-color: #a0dbb8; }
   :root:not([data-theme]) .badge-human   { background: #ffeef0; color: #c44058; border-color: #f0b0b8; }
   :root:not([data-theme]) .panel-header  { color: #7c6bc4; background: #f3f0ff; border-color: #e0daff; }
-  :root:not([data-theme]) .ok    { color: #1e9e6d; }
-  :root:not([data-theme]) .warn  { color: #c45e2a; }
-  :root:not([data-theme]) .danger{ color: #c0392b; }
-  :root:not([data-theme]) .gold  { color: #b8860b; }
-  :root:not([data-theme]) .muted { color: #8a80b8; }
   :root:not([data-theme]) .num-badge { background: #f3f0ff; border-color: #d4ccf0; color: #6c5ce7; }
-  :root:not([data-theme]) .num-badge.ok    { color: #1e9e6d; border-color: #a8e6cf; background: #e8faf0; }
-  :root:not([data-theme]) .num-badge.warn  { color: #c45e2a; border-color: #ffd0b8; background: #fff3ec; }
-  :root:not([data-theme]) .num-badge.danger{ color: #c0392b; border-color: #f8b0b0; background: #ffeaea; }
+  :root:not([data-theme]) .num-badge.ok    { color: #2eae7a; border-color: #a8e6cf; background: #e8faf0; }
+  :root:not([data-theme]) .num-badge.warn  { color: #d4804a; border-color: #ffd0b8; background: #fff3ec; }
+  :root:not([data-theme]) .num-badge.danger{ color: #cc5050; border-color: #f8b0b0; background: #ffeaea; }
   :root:not([data-theme]) th { background: #f3f0ff; color: #6c5ce7; }
-  :root:not([data-theme]) .stat-number.ok    { color: #1e9e6d; }
-  :root:not([data-theme]) .stat-number.warn  { color: #c45e2a; }
-  :root:not([data-theme]) .stat-number.danger{ color: #c0392b; }
 }
 
 a { color: var(--accent); }
