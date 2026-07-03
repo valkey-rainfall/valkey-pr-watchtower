@@ -37,10 +37,11 @@ def _table(headers, rows):
     return f"<table><thead><tr>{h}</tr></thead><tbody>{body}</tbody></table>"
 
 
-def _panel(title, badge_text, content):
+def _panel(title, badge_text, content, scroll=False):
+    body_cls = "panel-body-scroll" if scroll else "panel-body"
     return f'''<div class="panel" style="margin-bottom:12px;">
   <div class="panel-header"><span>{title}</span><span class="badge badge-ai">{badge_text}</span></div>
-  <div class="panel-body">{content}</div>
+  <div class="{body_cls}">{content}</div>
 </div>'''
 
 
@@ -238,7 +239,7 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
                          _age_str(_age_days(pr["created_at"])), _age_str(_age_days(pr["updated_at"])) + " ago"])
         extra = f'<p class="muted" style="font-size:0.85em; margin-top:6px;">…and {len(pending) - 20} more</p>' if len(pending) > 20 else ""
         content = f'<p><strong>{len(pending)} PRs</strong> blocked waiting for a community vote.</p>{_table(["PR", "Title", "Author", "Age", "Last update"], rows)}{extra}'
-        sections.append(_panel("🟡 Decision Bottleneck", "🤖 auto-generated daily", content))
+        sections.append(_panel("🟡 Decision Bottleneck", "🤖 auto-generated daily", content, scroll=True))
 
     # ── Top Contributors
     author_counts = Counter(
@@ -264,7 +265,7 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
                          _age_str(_age_days(pr["created_at"])), f'<span class="danger">{_age_str(_age_days(pr["updated_at"]))} ago</span>'])
         extra = f'<p class="muted" style="font-size:0.85em; margin-top:6px;">…and {len(dormant) - 25} more</p>' if len(dormant) > 25 else ""
         content = f'<p><strong>{len(dormant)} non-draft PRs</strong> haven\'t been updated in 90+ days.</p>{_table(["PR", "Title", "Author", "Created", "Last update"], rows)}{extra}'
-        sections.append(_panel("🕰 Long-Dormant PRs (90+ days)", "🤖 auto-generated daily", content))
+        sections.append(_panel("🕰 Long-Dormant PRs (90+ days)", "🤖 auto-generated daily", content, scroll=True))
 
     # ── Deflake PRs
     deflake = [p for p in non_draft
@@ -284,7 +285,7 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
         for pr in sorted(run_extra, key=lambda p: p["created_at"]):
             rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"]))])
         content = f'<p><strong>{len(run_extra)} PRs</strong> trigger extended CI runs.</p>{_table(["PR", "Title", "Author", "Age"], rows)}'
-        sections.append(_panel("⏱ High CI Burden (run-extra-tests)", "🤖 auto-generated daily", content))
+        sections.append(_panel("⏱ High CI Burden (run-extra-tests)", "🤖 auto-generated daily", content, scroll=True))
 
     # ── First-Time Contributors
     first_timers = [p for p in non_draft
@@ -297,7 +298,7 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
                          _age_str(_age_days(pr["created_at"])),
                          pr.get("author_association", "?").replace("_", " ").lower()])
         content = f'<p>PRs from contributors with no prior merged PRs in this repo ({len(first_timers)} total). These deserve extra attention — a response now may retain a future regular contributor.</p>{_table(["PR", "Title", "Author", "Age", "Association"], rows)}'
-        sections.append(_panel("🌱 First-Time Contributors", "🤖 auto-generated daily", content))
+        sections.append(_panel("🌱 First-Time Contributors", "🤖 auto-generated daily", content, scroll=True))
 
     # ── Charts: PR Age Histogram + Weekly Activity
     chart_html = _build_charts(prs, non_draft, weeks)
