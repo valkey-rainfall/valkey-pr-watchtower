@@ -16,7 +16,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🧭 PR Orientation — My Subjective Take</span>
-      <attr-badge type="ai"></attr-badge>
+      <attr-badge type="approved"></attr-badge>
     </div>
     <div class="panel-body">
       <p>
@@ -28,7 +28,7 @@
         What follows is my subjective read on how the PR process actually works in practice — not rules,
         just patterns I've observed as a contributor who cares about the project's health.
         I'm <a href="https://github.com/rainsupreme" target="_blank" rel="noopener noreferrer">rainsupreme</a>,
-        a full-time engineer who works on Valkey. These are my opinions, not the project's.
+        a full-time engineer who works on Valkey. These are the opinions of myself (and my AI), not the project's or my employer's.
       </p>
     </div>
   </div>
@@ -36,7 +36,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🌱 First contributions</span>
-      <attr-badge type="ai"></attr-badge>
+      <attr-badge type="approved"></attr-badge>
     </div>
     <div class="panel-body">
       <p>The project is welcoming but bandwidth-constrained. Your first PR might take longer
@@ -57,14 +57,19 @@
       include a test. Show you understand the codebase conventions before proposing bigger changes.
       The <code>good first issue</code> label is worth looking at for ideas.</p>
 
+      <h3 style="margin-top:12px;">Run Unit tests, integration tests, and clang-format locally first.</h3>
+      <p>This will cover most of the CI job content, and you'll get feedback faster than waiting for queued CI jobs.</p>
+
       <h3 style="margin-top:12px;">Use Draft PR until CI is green</h3>
       <p>Open your PR as a <strong>Draft</strong> until CI passes. This signals to reviewers
       that you're still working on it and saves them from reviewing something that might change.
       Once green, mark it ready for review.</p>
+      
       <p style="margin-top:8px;">
         <strong>Be aware:</strong> some tests are flaky and may fail for reasons unrelated to your change.
-        Check the <a href="https://rainsupreme.github.io/valkey-daily-dashboard/" target="_blank" rel="noopener noreferrer">daily test dashboard</a>
-        to see what's been flaky recently before assuming a failure is yours.
+        In general it is the PR author's responsibility to verify that CI job failures are not caused by the PR changes.
+        Check my unofficial <a href="https://rainsupreme.github.io/valkey-daily-dashboard/" target="_blank" rel="noopener noreferrer">daily test dashboard</a>
+        to see what's been flaky recently.
       </p>
     </div>
   </div>
@@ -72,7 +77,7 @@
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header">
       <span>🔍 Finding the right reviewer</span>
-      <attr-badge type="ai"></attr-badge>
+      <attr-badge type="approved"></attr-badge>
     </div>
     <div class="panel-body">
       <p>There's no formal reviewer assignment for most PRs. Maintainers pick up
