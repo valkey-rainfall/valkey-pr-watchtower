@@ -58,11 +58,48 @@ class SiteHeader extends HTMLElement {
     <div style="font-size:0.75em; color:var(--muted); margin-top:4px;">
       a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>
       &nbsp;·&nbsp; a personal project, not an official Valkey project
+      &nbsp;·&nbsp; <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--muted);cursor:pointer;font-family:inherit;font-size:1em;">🌓 theme</button>
     </div>
   </header>`;
   }
 }
 customElements.define('site-header', SiteHeader);
+
+/* ── Theme toggle logic ────────────────────────────────────────────────── */
+function toggleTheme() {
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme');
+  let next;
+  if (current === 'dark') next = 'light';
+  else if (current === 'light') next = null; // system default
+  else next = 'dark'; // from system → force dark
+
+  if (next) {
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+  } else {
+    root.removeAttribute('data-theme');
+    localStorage.removeItem('theme');
+  }
+  updateToggleLabel();
+}
+
+function updateToggleLabel() {
+  const btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  const current = document.documentElement.getAttribute('data-theme');
+  if (current === 'dark') btn.textContent = '🌙 dark';
+  else if (current === 'light') btn.textContent = '☀️ light';
+  else btn.textContent = '🌓 auto';
+}
+
+// Apply saved preference on load
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+  // Update label after components render
+  setTimeout(updateToggleLabel, 50);
+})();
 
 /* ── <site-nav> ────────────────────────────────────────────────────────── */
 class SiteNav extends HTMLElement {
