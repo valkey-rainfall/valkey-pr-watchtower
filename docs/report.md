@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-03 00:41 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-03 00:43 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -74,7 +74,7 @@ _Decision is made — these just need someone to merge them._
 | [2157](https://github.com/valkey-io/valkey/pull/2157) | Kill the busy script during failover to avoid data inconsistency | enjoy-binbin | 1.1y old | 5mo ago |
 | [2167](https://github.com/valkey-io/valkey/pull/2167) | Improve CLUSTER FLUSHSLOT routing and propagation | murphyjacob4 | 1.1y old | 5mo ago |
 | [2204](https://github.com/valkey-io/valkey/pull/2204) | Add cluster-replica-priority to allow better ranking in auto failover | enjoy-binbin | 1.1y old | 2mo ago |
-| [2275](https://github.com/valkey-io/valkey/pull/2275) | Add keyspace-hits and keyspace-misses metrics under CLUSTER SLOT-STATS… | enjoy-binbin | 1.0y old | 2mo ago |
+| [2275](https://github.com/valkey-io/valkey/pull/2275) | Add keyspace-hits and keyspace-misses metrics under CLUSTER SLOT-STATS… | enjoy-binbin | 1.0y old | 3mo ago |
 | [2331](https://github.com/valkey-io/valkey/pull/2331) | Adding support for DumpSerializedValue API | cdorantes05 | 11mo old | 2mo ago |
 | [2368](https://github.com/valkey-io/valkey/pull/2368) | add parameter for initiating bgrewriteaof on exceeding threshold AOF s… | kronwerk | 11mo old | 2mo ago |
 | [2385](https://github.com/valkey-io/valkey/pull/2385) | Allow dynamic modification of databases num if the db is not been used | enjoy-binbin | 11mo old | 3w ago |
@@ -109,7 +109,7 @@ _Decision is made — these just need someone to merge them._
 
 ## 🕰 Long-Dormant PRs (90+ days since last update)
 
-**60 non-draft PRs** haven't been updated in 90+ days.
+**61 non-draft PRs** haven't been updated in 90+ days.
 
 | PR | Title | Author | Created | Last update |
 |----|-------|--------|---------|-------------|
@@ -138,7 +138,7 @@ _Decision is made — these just need someone to merge them._
 | [2255](https://github.com/valkey-io/valkey/pull/2255) | Accept socket judge fd overflow | kukey | 1.0y old | 6mo ago |
 | [1455](https://github.com/valkey-io/valkey/pull/1455) | Add GETPXT, MGETPXT (Get with millisecond expiration) commands | arcivanov | 1.5y old | 6mo ago |
 | [2891](https://github.com/valkey-io/valkey/pull/2891) | Reset acl info fields with CONFIG RESETSTAT | enjoy-binbin | 7mo old | 6mo ago |
-| … | *35 more* | | | |
+| … | *36 more* | | | |
 
 
 ## 🔥 Open Deflake / Test-Fix PRs
