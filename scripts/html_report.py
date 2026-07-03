@@ -322,6 +322,9 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
   <site-header></site-header>
   <site-nav></site-nav>
 
+  <div class="grid">
+  <main>
+
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header"><span>📊 Live PR Health Report</span><attr-badge type="ai"></attr-badge></div>
     <div class="panel-body">
@@ -331,6 +334,10 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
   </div>
 
   {body}
+
+  </main>
+  <site-sidebar></site-sidebar>
+  </div>
 
   <site-footer></site-footer>
 
