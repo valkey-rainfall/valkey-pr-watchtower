@@ -121,6 +121,12 @@ def _build_charts(prs, non_draft, weeks):
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function() {{
+  // Read theme colors from CSS custom properties
+  var style = getComputedStyle(document.documentElement);
+  var textColor = style.getPropertyValue('--text').trim() || '#d4d4f0';
+  var mutedColor = style.getPropertyValue('--muted').trim() || '#7878aa';
+  var borderColor = style.getPropertyValue('--border').trim() || '#2a2a5a';
+
   // Age histogram
   new Chart(document.getElementById('ageChart'), {{
     type: 'bar',
@@ -130,7 +136,7 @@ def _build_charts(prs, non_draft, weeks):
         label: 'Open PRs',
         data: {data_hist},
         backgroundColor: ['#50fa7b','#50fa7b','#ffb86c','#ffb86c','#ff5555','#ff5555'],
-        borderColor: '#2a2a5a',
+        borderColor: borderColor,
         borderWidth: 1
       }}]
     }},
@@ -138,8 +144,8 @@ def _build_charts(prs, non_draft, weeks):
       responsive: true,
       plugins: {{ legend: {{ display: false }} }},
       scales: {{
-        y: {{ beginAtZero: true, ticks: {{ color: '#7878aa' }}, grid: {{ color: '#2a2a5a' }} }},
-        x: {{ ticks: {{ color: '#7878aa' }}, grid: {{ display: false }} }}
+        y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
+        x: {{ ticks: {{ color: mutedColor }}, grid: {{ display: false }} }}
       }}
     }}
   }});
@@ -155,10 +161,10 @@ def _build_charts(prs, non_draft, weeks):
     }},
     options: {{
       responsive: true,
-      plugins: {{ legend: {{ labels: {{ color: '#d4d4f0' }} }} }},
+      plugins: {{ legend: {{ labels: {{ color: textColor }} }} }},
       scales: {{
-        y: {{ beginAtZero: true, ticks: {{ color: '#7878aa' }}, grid: {{ color: '#2a2a5a' }} }},
-        x: {{ ticks: {{ color: '#7878aa', maxRotation: 45 }}, grid: {{ display: false }} }}
+        y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
+        x: {{ ticks: {{ color: mutedColor, maxRotation: 45 }}, grid: {{ display: false }} }}
       }}
     }}
   }});
