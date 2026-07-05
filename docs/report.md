@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-04 08:35 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-05 08:51 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 275 |
-| Non-draft | 247 |
+| Total open PRs | 276 |
+| Non-draft | 248 |
 | Draft | 28 |
 | Bot PRs (backports etc.) | 5 |
 | `major-decision-pending` | 37 |
@@ -43,8 +43,8 @@ _Decision is made — these just need someone to merge them._
 | [2555](https://github.com/valkey-io/valkey/pull/2555) | Use BIO thread for cluster config saving in cluster-config-save-behavi… | enjoy-binbin | 10mo old | 6w ago |
 | [2972](https://github.com/valkey-io/valkey/pull/2972) | Add an optional parameter to SISMEMBER; return -1 if the key does not… | li-benson | 6mo old | 5mo ago |
 | [3050](https://github.com/valkey-io/valkey/pull/3050) | Add support for CONFIG INFO <config> to display config type and valid … | nitaicaro | 5mo old | 2w ago |
-| [3466](https://github.com/valkey-io/valkey/pull/3466) | XACKDEL Command | nickiaq | 2mo old | 8d ago |
-| [3467](https://github.com/valkey-io/valkey/pull/3467) | XDELEX Command | nickiaq | 2mo old | 9d ago |
+| [3466](https://github.com/valkey-io/valkey/pull/3466) | XACKDEL Command | nickiaq | 2mo old | 9d ago |
+| [3467](https://github.com/valkey-io/valkey/pull/3467) | XDELEX Command | nickiaq | 2mo old | 10d ago |
 | [3522](https://github.com/valkey-io/valkey/pull/3522) | Fail fast on empty CA directory at TLS config load | yang-z-o | 2mo old | 2mo ago |
 
 
@@ -64,19 +64,19 @@ _Decision is made — these just need someone to merge them._
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
 | [962](https://github.com/valkey-io/valkey/pull/962) | Add command "Client Capa subv2" to change behavior for SUBSCRIBE and S… | hwware | 1.8y old | 4w ago |
-| [978](https://github.com/valkey-io/valkey/pull/978) | Add last_fork_start_time to INFO STATS | enjoy-binbin | 1.8y old | 2mo ago |
+| [978](https://github.com/valkey-io/valkey/pull/978) | Add last_fork_start_time to INFO STATS | enjoy-binbin | 1.8y old | 3mo ago |
 | [1151](https://github.com/valkey-io/valkey/pull/1151) | Adding KEYINFO command to find out keys that have large number of elem… | otheng03 | 1.7y old | 4w ago |
 | [1418](https://github.com/valkey-io/valkey/pull/1418) | Add new SCRIPT STATS subcommand | artikell | 1.6y old | 1.4y ago |
-| [1444](https://github.com/valkey-io/valkey/pull/1444) | Support empty set | sungming2 | 1.5y old | 2w ago |
+| [1444](https://github.com/valkey-io/valkey/pull/1444) | Support empty set | sungming2 | 1.6y old | 2w ago |
 | [1672](https://github.com/valkey-io/valkey/pull/1672) | Implementation of write throttling | lschmidtcavalcante-sc | 1.4y old | 5mo ago |
-| [1821](https://github.com/valkey-io/valkey/pull/1821) | Enhance ACL WHOAMI command to display active ACL rules for the current… | hwware | 1.3y old | 2d ago |
+| [1821](https://github.com/valkey-io/valkey/pull/1821) | Enhance ACL WHOAMI command to display active ACL rules for the current… | hwware | 1.3y old | 3d ago |
 | [1964](https://github.com/valkey-io/valkey/pull/1964) | Add sentinel failover SAFE option | li-benson | 1.2y old | 4w ago |
 | [2157](https://github.com/valkey-io/valkey/pull/2157) | Kill the busy script during failover to avoid data inconsistency | enjoy-binbin | 1.1y old | 5mo ago |
 | [2167](https://github.com/valkey-io/valkey/pull/2167) | Improve CLUSTER FLUSHSLOT routing and propagation | murphyjacob4 | 1.1y old | 5mo ago |
-| [2204](https://github.com/valkey-io/valkey/pull/2204) | Add cluster-replica-priority to allow better ranking in auto failover | enjoy-binbin | 1.1y old | 2mo ago |
+| [2204](https://github.com/valkey-io/valkey/pull/2204) | Add cluster-replica-priority to allow better ranking in auto failover | enjoy-binbin | 1.1y old | 3mo ago |
 | [2275](https://github.com/valkey-io/valkey/pull/2275) | Add keyspace-hits and keyspace-misses metrics under CLUSTER SLOT-STATS… | enjoy-binbin | 1.0y old | 3mo ago |
 | [2331](https://github.com/valkey-io/valkey/pull/2331) | Adding support for DumpSerializedValue API | cdorantes05 | 12mo old | 3mo ago |
-| [2368](https://github.com/valkey-io/valkey/pull/2368) | add parameter for initiating bgrewriteaof on exceeding threshold AOF s… | kronwerk | 11mo old | 2mo ago |
+| [2368](https://github.com/valkey-io/valkey/pull/2368) | add parameter for initiating bgrewriteaof on exceeding threshold AOF s… | kronwerk | 11mo old | 3mo ago |
 | [2385](https://github.com/valkey-io/valkey/pull/2385) | Allow dynamic modification of databases num if the db is not been used | enjoy-binbin | 11mo old | 3w ago |
 | [2586](https://github.com/valkey-io/valkey/pull/2586) | Fix two primaries scenario due to unknown shard_id | deepakrn | 10mo old | 3mo ago |
 | [2689](https://github.com/valkey-io/valkey/pull/2689) | Fix #2678 don't add loadmodule when from config | remicollet | 9mo old | 4w ago |
@@ -93,11 +93,11 @@ _Decision is made — these just need someone to merge them._
 | [enjoy-binbin](https://github.com/enjoy-binbin) | 20 🚨 |
 | [jsoref](https://github.com/jsoref) | 14 🚨 |
 | [charsyam](https://github.com/charsyam) | 8 🚨 |
+| [quanyeyang](https://github.com/quanyeyang) | 5 ⚠️ |
 | [hpatro](https://github.com/hpatro) | 5 ⚠️ |
 | [bandalgomsu](https://github.com/bandalgomsu) | 5 ⚠️ |
 | [rainsupreme](https://github.com/rainsupreme) | 4 |
 | [satheeshaGowda](https://github.com/satheeshaGowda) | 4 |
-| [quanyeyang](https://github.com/quanyeyang) | 4 |
 | [artikell](https://github.com/artikell) | 4 |
 | [YiwenZhang12](https://github.com/YiwenZhang12) | 4 |
 | [hwware](https://github.com/hwware) | 4 |
@@ -109,7 +109,7 @@ _Decision is made — these just need someone to merge them._
 
 ## 🕰 Long-Dormant PRs (90+ days since last update)
 
-**67 non-draft PRs** haven't been updated in 90+ days.
+**75 non-draft PRs** haven't been updated in 90+ days.
 
 | PR | Title | Author | Created | Last update |
 |----|-------|--------|---------|-------------|
@@ -126,7 +126,7 @@ _Decision is made — these just need someone to merge them._
 | [2242](https://github.com/valkey-io/valkey/pull/2242) | spelling: cannot | jsoref | 1.0y old | 1.0y ago |
 | [2250](https://github.com/valkey-io/valkey/pull/2250) | Spelling 14 | jsoref | 1.0y old | 1.0y ago |
 | [2248](https://github.com/valkey-io/valkey/pull/2248) | spelling: otherwise, | jsoref | 1.0y old | 1.0y ago |
-| [2306](https://github.com/valkey-io/valkey/pull/2306) | Unexpected variable overriding from .make-settings file | yzc-yzc | 12mo old | 12mo ago |
+| [2306](https://github.com/valkey-io/valkey/pull/2306) | Unexpected variable overriding from .make-settings file | yzc-yzc | 1.0y old | 12mo ago |
 | [2318](https://github.com/valkey-io/valkey/pull/2318) | change check order for xautoclaim | charsyam | 12mo old | 12mo ago |
 | [2247](https://github.com/valkey-io/valkey/pull/2247) | spelling: nonexistent | jsoref | 1.0y old | 11mo ago |
 | [2239](https://github.com/valkey-io/valkey/pull/2239) | Spelling 2 | jsoref | 1.0y old | 11mo ago |
@@ -138,7 +138,7 @@ _Decision is made — these just need someone to merge them._
 | [2255](https://github.com/valkey-io/valkey/pull/2255) | Accept socket judge fd overflow | kukey | 1.0y old | 6mo ago |
 | [1455](https://github.com/valkey-io/valkey/pull/1455) | Add GETPXT, MGETPXT (Get with millisecond expiration) commands | arcivanov | 1.5y old | 6mo ago |
 | [2891](https://github.com/valkey-io/valkey/pull/2891) | Reset acl info fields with CONFIG RESETSTAT | enjoy-binbin | 7mo old | 6mo ago |
-| … | *42 more* | | | |
+| … | *50 more* | | | |
 
 
 ## 🔥 Open Deflake / Test-Fix PRs
@@ -148,7 +148,7 @@ _Merging these reduces CI noise for everyone._
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
 | [3049](https://github.com/valkey-io/valkey/pull/3049) | Fix flaky test in manual-failover.tcl | Nikhil-Manglore | 5mo old | 2mo ago |
-| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 6w old | 4d ago |
+| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 6w old | 5d ago |
 
 
 ## ⏱ High CI Burden (`run-extra-tests`)
