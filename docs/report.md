@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-08 08:26 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-08 16:35 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 281 |
-| Non-draft | 254 |
+| Total open PRs | 283 |
+| Non-draft | 256 |
 | Draft | 27 |
 | Bot PRs (backports etc.) | 5 |
 | `major-decision-pending` | 36 |
@@ -54,7 +54,7 @@ _Decision is made — these just need someone to merge them._
 |----|-------|--------|-----|--------|
 | [3427](https://github.com/valkey-io/valkey/pull/3427) | Windows native builds & tests (Microsoft Visual Studio 2026) | SamuelMarks | 3mo | `to-be-closed` |
 | [3558](https://github.com/valkey-io/valkey/pull/3558) | hash: harden HRANDFIELD against expired-heavy hashes | charsyam | 2mo | `stalled` |
-| [974](https://github.com/valkey-io/valkey/pull/974) | Fix data loss when the old primary takes over the slots afte | enjoy-binbin | 1.8y | `stalled` |
+| [974](https://github.com/valkey-io/valkey/pull/974) | Fix data loss when the old primary takes over the slots afte | enjoy-binbin | 1.9y | `stalled` |
 
 
 ## 🟡 Decision Bottleneck (`major-decision-pending`)
@@ -90,7 +90,7 @@ _Decision is made — these just need someone to merge them._
 
 | Author | Open PRs |
 |--------|----------|
-| [enjoy-binbin](https://github.com/enjoy-binbin) | 20 🚨 |
+| [enjoy-binbin](https://github.com/enjoy-binbin) | 19 🚨 |
 | [jsoref](https://github.com/jsoref) | 14 🚨 |
 | [charsyam](https://github.com/charsyam) | 8 🚨 |
 | [rainsupreme](https://github.com/rainsupreme) | 5 ⚠️ |
@@ -98,13 +98,13 @@ _Decision is made — these just need someone to merge them._
 | [satheeshaGowda](https://github.com/satheeshaGowda) | 5 ⚠️ |
 | [quanyeyang](https://github.com/quanyeyang) | 5 ⚠️ |
 | [bandalgomsu](https://github.com/bandalgomsu) | 5 ⚠️ |
+| [cjx-zar](https://github.com/cjx-zar) | 4 |
 | [Taeknology](https://github.com/Taeknology) | 4 |
 | [hpatro](https://github.com/hpatro) | 4 |
 | [artikell](https://github.com/artikell) | 4 |
 | [YiwenZhang12](https://github.com/YiwenZhang12) | 4 |
 | [AlisinaDevelo](https://github.com/AlisinaDevelo) | 3 |
 | [roshkhatri](https://github.com/roshkhatri) | 3 |
-| [cjx-zar](https://github.com/cjx-zar) | 3 |
 
 
 ## 🕰 Long-Dormant PRs (90+ days since last update)
@@ -148,8 +148,8 @@ _Merging these reduces CI noise for everyone._
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
 | [3049](https://github.com/valkey-io/valkey/pull/3049) | Fix flaky test in manual-failover.tcl | Nikhil-Manglore | 5mo old | 2mo ago |
-| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 7w old | 1d ago |
-| [4102](https://github.com/valkey-io/valkey/pull/4102) | Deflake "Replica output bytes metric" by disabling periodic pings | Taeknology | 1d old | 1d ago |
+| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 7w old | 2d ago |
+| [4102](https://github.com/valkey-io/valkey/pull/4102) | Deflake "Replica output bytes metric" by disabling periodic pings | Taeknology | 2d old | 2d ago |
 
 
 ## ⏱ High CI Burden (`run-extra-tests`)
@@ -169,8 +169,8 @@ _Merging these reduces CI noise for everyone._
 | [3717](https://github.com/valkey-io/valkey/pull/3717) | Add support for secondary certificates | pkhartsk | 7w |
 | [3833](https://github.com/valkey-io/valkey/pull/3833) | Speed up split-vote elections with the new FAILOVER_AUTH_NAC | enjoy-binbin | 6w |
 | [3853](https://github.com/valkey-io/valkey/pull/3853) | Streaming Compression support for Replication | roshkhatri | 5w |
-| [4092](https://github.com/valkey-io/valkey/pull/4092) | Fix CLUSTER BUMPEPOCH getting stuck when a dead node holds a | enjoy-binbin | 4d |
-| [4104](https://github.com/valkey-io/valkey/pull/4104) | Avoid offloading writes to IO threads for the slot migration | satheeshaGowda | 1d |
+| [4092](https://github.com/valkey-io/valkey/pull/4092) | Fix CLUSTER BUMPEPOCH getting stuck when a dead node holds a | enjoy-binbin | 5d |
+| [4104](https://github.com/valkey-io/valkey/pull/4104) | Avoid offloading writes to IO threads for the slot migration | satheeshaGowda | 2d |
 
 ---
 
