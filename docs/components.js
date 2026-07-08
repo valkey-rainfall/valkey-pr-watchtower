@@ -110,6 +110,7 @@ class SiteNav extends HTMLElement {
     <a href="index.html">🏠 Home</a>
     <a href="report.html">📊 Live Report</a>
     <a href="analysis.html">🔍 Deep Analysis</a>
+    <a href="test-health.html">🧪 Test Health</a>
     <a href="orientation.html">🧭 PR Orientation</a>
     <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">⚙️ Source</a>
   </nav>`;

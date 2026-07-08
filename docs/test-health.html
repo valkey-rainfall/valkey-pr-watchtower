@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Health — Valkey PR Watchtower</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
+</head>
+<body>
+<div class="page-wrap">
+
+  <site-header></site-header>
+  <site-nav></site-nav>
+
+  <div class="grid">
+  <main>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>🧪 Test Health — Flaky-Test Deep Dive (2026-07-05)</span>
+      <attr-badge type="ai"></attr-badge>
+    </div>
+    <div class="panel-body">
+      <p>A one-time deep dive into flaky tests on the <code>unstable</code> branch of
+      <a href="https://github.com/valkey-io/valkey" target="_blank" rel="noopener noreferrer">valkey-io/valkey</a>,
+      built from the <a href="https://rainsupreme.github.io/valkey-daily-dashboard/" target="_blank" rel="noopener noreferrer">daily CI dashboard</a>
+      (466 daily-CI runs). Every tracked test was classified by failure mode and root cause —
+      5 parallel subagents read the actual <code>.tcl</code> test bodies — then cross-cut into patterns and fixes.
+      This complements the <a href="analysis.html">PR Deep Analysis</a>: same project-health theme, test-suite angle.</p>
+      <p style="margin-top:8px;" class="muted">Every headline figure is recomputed from the source dashboard JSON (26/26 automated checks pass).</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>🎯 The Headline</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p class="warn" style="font-size:1.05em;"><strong>~48% of all failure occurrences are the CI <em>environment</em>, not defective test logic.</strong>
+      This is a steady-state backlog, not a deteriorating fire — and mass gtest porting is a quality play, not the flakiness lever.</p>
+      <ul style="margin-top:8px;">
+        <li><strong>72 flaky</strong> (1–50% fail rate) + <strong>47 rare</strong> (&lt;1%) = 119 tracked tests.</li>
+        <li>Trend flat-to-improving: worsening=<strong>0</strong>, improving=2. <strong>113/119 stale</strong> (no failure in 30d); only <strong>6 active now</strong>.</li>
+        <li>Only <strong>1</strong> test is a clean unit-test port; <strong>13</strong> more are partial. Together ~12% of tests, near-zero impact on the top-2 pain buckets.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>📊 Where the Pain Actually Is (by failure occurrences)</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p>Counting <em>tests</em> misleads — a rare test and a chronic one count the same. Ranking by total failure occurrences shows the real cost:</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Failure mode</th><th>Hits</th><th>Tests</th><th>Nature</th></tr></thead>
+        <tbody>
+          <tr><td><code>resource-contention</code></td><td><span class="num-badge danger">247</span></td><td>21</td><td>CI env — sanitizer/large-memory OOM</td></tr>
+          <tr><td><code>cluster-convergence</code></td><td><span class="num-badge danger">161</span></td><td>31</td><td>inherent distributed timing</td></tr>
+          <tr><td><code>timeout-slow-runner</code></td><td><span class="num-badge warn">97</span></td><td>13</td><td>valgrind/sanitizer amplification</td></tr>
+          <tr><td><code>timing-race</code></td><td><span class="num-badge warn">66</span></td><td>14</td><td>fixable test-body race</td></tr>
+          <tr><td><code>assertion-value</code></td><td><span class="num-badge warn">60</span></td><td>3</td><td>over-tight numeric threshold</td></tr>
+          <tr><td><code>replication-sync-wait</code></td><td><span class="num-badge">37</span></td><td>14</td><td>tight wait budget</td></tr>
+          <tr><td><code>toolchain-infra</code></td><td><span class="num-badge">29</span></td><td>9</td><td>OS image / TLS / module load</td></tr>
+          <tr><td><code>crash-segv</code></td><td><span class="num-badge">9</span></td><td>6</td><td>real (rare) bug — keep</td></tr>
+          <tr><td><code>harness-process-state</code></td><td><span class="num-badge">7</span></td><td>6</td><td>test-harness lifecycle</td></tr>
+          <tr><td><code>keyspace-notification</code></td><td><span class="num-badge">5</span></td><td>2</td><td>event-ordering race</td></tr>
+        </tbody>
+        <tfoot><tr><td><strong>total</strong></td><td><strong>718</strong></td><td><strong>119</strong></td><td></td></tr></tfoot>
+      </table>
+      <p style="margin-top:8px; font-size:0.9em;"><code>resource-contention</code> (247) + <code>timeout-slow-runner</code> (97) = <strong>344 hits (~48%)</strong> are the CI environment.
+      <code>crash-segv</code> is small but is the <em>only</em> bucket you must never "fix" by loosening — those are real memory-safety bugs the sanitizers caught.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>⚠️ Anti-Patterns to Avoid</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <h3 style="margin-top:10px;">1. Fixed `after N` / SIGSTOP-SIGCONT timing instead of condition waits</h3>
+      <p><strong>Why it flakes:</strong> Races against async completion (RDB child, replica drain). Passes on fast runners, fails under load/valgrind.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>integration/replication.tcl (diskless rdb pipe)</code>, <code>io-threads.tcl</code>, <code>dual-channel-replication.tcl</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Replace with wait_for_condition / wait_for_ofs_sync / key-load-delay.</p>
+      <h3 style="margin-top:10px;">2. One hard-coded timeout regardless of build mode</h3>
+      <p><strong>Why it flakes:</strong> valgrind is 10-50x slower and ASan ~2-3x; a single fixed budget guarantees timeouts on instrumented jobs.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>memefficiency.tcl perform_defrag_test (fixed 30s = 150x200ms)</code>, <code>other.tcl io-threads runtime modifiable</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Scale timeout by $::valgrind, or gate with {needs:!valgrind}/{needs:speed}.</p>
+      <h3 style="margin-top:10px;">3. Exact numeric assertions on values that legitimately vary</h3>
+      <p><strong>Why it flakes:</strong> Allocator/platform/runner-noise makes exact equality or tight ranges flip nondeterministically.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>maxmemory.tcl slave buffer (cmd_count/2 delta)</code>, <code>memefficiency.tcl efficiency thresholds</code>, <code>cluster gossip count range</code>, <code>other.tcl used_active_time&lt;1s</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> assert_range with a tolerance floor; widen margins; assert monotonic direction not exact value.</p>
+      <h3 style="margin-top:10px;">4. Implicit cross-test state coupling without convergence guards</h3>
+      <p><strong>Why it flakes:</strong> A test assumes slot/cluster state propagated by a prior test is already visible; gossip lag breaks it.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>cluster/slot-migration.tcl</code>, <code>cluster/many-slot-migration.tcl</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Add explicit wait_for_slot_state / per-node cluster_state==ok guard before asserting.</p>
+      <h3 style="margin-top:10px;">5. `wait_for_log_messages` with single-shot (1 1) budget</h3>
+      <p><strong>Why it flakes:</strong> Checks once; misses if the log line has not flushed yet.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>dual-channel-replication.tcl</code>, <code>replication.tcl</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Give a real retry budget (e.g. 50 100ms) matching other waits.</p>
+      <h3 style="margin-top:10px;">6. Multi-node clusters with default spawn/node-timeout under sanitizer/TLS</h3>
+      <p><strong>Why it flakes:</strong> 5-10 node clusters + 1000ms node-timeout are too tight for instrumented CI; spawn timeouts.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>cluster/failover.tcl</code>, <code>cluster/failover2.tcl</code>, <code>faster-failover.tcl</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Raise node-timeout and harness spawn timeout for heavy (ASan/TLS) configs.</p>
+      <h3 style="margin-top:10px;">7. Unpinned rolling-release CI targets + no continue-on-error for known-unstable platforms</h3>
+      <p><strong>Why it flakes:</strong> Fedora Rawhide is a rolling release; it breaks unpredictably and is the only currently-ACTIVE toolchain failure.</p>
+      <p class="muted" style="font-size:0.9em;"><strong>Seen in:</strong> <code>test-fedorarawhide-tls-module</code>, <code>test-fedorarawhide-tls-module-no-tls</code></p>
+      <p class="ok" style="font-size:0.92em;"><strong>Fix:</strong> Pin the image digest, or mark continue-on-error:true so it informs without blocking.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>🧬 Could These Be gtest/C Unit Tests?</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p><strong>14 candidates</strong> (1 <span class="ok">yes</span>, 13 <span class="warn">partial</span>).
+      The other 105 are <span class="danger">no</span> — inherently distributed/timing
+      (replication sync, failover elections, IO-thread scheduling, real defrag) and cannot be made deterministic in-process.
+      All 13 partials share one shape: a deterministic accounting/logic core wrapped in an integration harness.</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Verdict</th><th>Rate</th><th>Hits</th><th>Test</th><th>Target to unit-test</th></tr></thead>
+        <tbody>
+          <tr><td class="ok">yes</td><td>1.7%</td><td>36</td><td>Memory efficiency with values in range $size_ran</td><td class="muted" style="font-size:0.88em;">Memory efficiency is fundamentally a unit-testable property of the storage encoding</td></tr>
+          <tr><td class="warn">partial</td><td>1.7%</td><td>128</td><td>slave buffer are counted correctly</td><td class="muted" style="font-size:0.88em;">The core logic under test is memory accounting arithmetic (used_memory - mem_not_counted</td></tr>
+          <tr><td class="warn">partial</td><td>2.8%</td><td>23</td><td>Gossip count scales with higher percentage of `c</td><td class="muted" style="font-size:0.88em;">The gossip slot-selection logic (clusterSetGossipEntry) could be unit-tested with a mock</td></tr>
+          <tr><td class="warn">partial</td><td>0.9%</td><td>6</td><td>Dual channel replication buffer memory fields</td><td class="muted" style="font-size:0.88em;">The memory accounting logic (mem_total_replication_buffers, mem_replicas_repl_buffer) co</td></tr>
+          <tr><td class="warn">partial</td><td>0.6%</td><td>6</td><td>Module commandresult - Multiple callbacks from d</td><td class="muted" style="font-size:0.88em;">The callback counting logic could be unit-tested by directly invoking the module&#x27;s comma</td></tr>
+          <tr><td class="warn">partial</td><td>0.6%</td><td>3</td><td>HGETEX EXAT keyspace notifications for active ex</td><td class="muted" style="font-size:0.88em;">The notification ordering logic in hashExpireCommand/activeExpireCycle could be unit-tes</td></tr>
+          <tr><td class="warn">partial</td><td>0.4%</td><td>2</td><td>Copy avoidance obuf tracking with IO threads</td><td class="muted" style="font-size:0.88em;">The output buffer accounting logic (tracking omem with copy-avoidance) in networking</td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>CLUSTERSCAN returns correct errors on cluster do</td><td class="muted" style="font-size:0.88em;">The CLUSTERSCAN error-response logic (checking slot assignment, cluster state) could be </td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>Test dual-channel-replication replica can lazyfr</td><td class="muted" style="font-size:0.88em;">The lazyfree logic itself (freeReplicationBacklogRefMemAsync -&gt; lazyfreed_objects++) is </td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>Replica output bytes metric</td><td class="muted" style="font-size:0.88em;">The metric accounting logic (incrementing total_net_repl_output_bytes on each replica wr</td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>Copy avoidance spill to reply list returns omem </td><td class="muted" style="font-size:0.88em;">The omem accounting logic (tracking that output memory returns to zero after drain) in n</td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>Hash is skipped when all fields are expired duri</td><td class="muted" style="font-size:0.88em;">The RDB load skip-empty-hash logic could be tested in a gtest by constructing a syntheti</td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>Hash with TTL fields migrates correctly between </td><td class="muted" style="font-size:0.88em;">The TTL preservation during RDB serialization/deserialization (MIGRATE uses RDB format) </td></tr>
+          <tr><td class="warn">partial</td><td>0.2%</td><td>1</td><td>GEOSEARCH fuzzy test - byradius</td><td class="muted" style="font-size:0.88em;">The geohash distance calculation (geohashGetDistance) could be unit-tested against known</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px; font-size:0.9em;"><strong>Caveat:</strong> migrating all 14 improves test <em>quality</em> and removes ~12% of flaky entries,
+      but touches <strong>0</strong> of the top-2 pain buckets. Do it opportunistically, not as the primary campaign.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>🧵 Recommendations (ranked by ROI)</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <h3 style="margin-top:10px;">Tier 1 — CI environment fixes (no test-body changes) — biggest hit reduction</h3>
+      <ul>
+        <li>Bump memory (or shard 2-3x) the 4 *-large-memory sanitizer jobs — ~82 hits, the single largest bucket.</li>
+        <li>Raise valgrind partition timeouts and/or shard the `test` partition — ~24 hits.</li>
+        <li>Pin Fedora Rawhide image digest or set continue-on-error — only currently-active toolchain failure.</li>
+      </ul>
+      <h3 style="margin-top:10px;">Tier 2 — Assertion-loosening (3 tests, ~60 hits, one-line diffs)</h3>
+      <ul>
+        <li>Memory efficiency: assert_range with a floor instead of hard threshold (~36 hits).</li>
+        <li>Gossip count scales: widen the accepted range (~23 hits).</li>
+        <li>slave buffer counted correctly: widen delta_max tolerance (128 cumulative, low-rate).</li>
+      </ul>
+      <h3 style="margin-top:10px;">Tier 3 — Harness/timing hardening (test-body edits)</h3>
+      <ul>
+        <li>Replace fixed after/SIGSTOP with wait_for_condition + key-load-delay (diskless, dual-channel).</li>
+        <li>valgrind-scale io-threads loop iterations / sleep, or gate with {needs:speed}.</li>
+        <li>Add explicit per-node convergence guards in slot-migration &amp; failover tests.</li>
+        <li>Add SIGKILL fallback in harness process-stop logic (fixes &#x27;process didn&#x27;t stop&#x27;).</li>
+      </ul>
+      <h3 style="margin-top:10px;">Tier 4 — gtest/unit-test migration (quality play, 14 tests) — not the flakiness lever</h3>
+      <ul>
+        <li>1 clear yes (Memory efficiency: encoding size classes deterministic).</li>
+        <li>13 partials: extract deterministic accounting core (networking.c obuf/omem x3, repl-buffer memory math x2, gossip slot-selection, RDB skip-empty-hash, geohashGetDistance, lazyfree counters) into src/unit gtests; keep a thin integration smoke test.</li>
+        <li>Reality check: covers ~11% of tests, ~0 impact on the top-2 pain buckets (resource-contention, cluster-convergence).</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>🍏 Low-Hanging Fruit (top 12 by impact)</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p>45 tests have a cheap, high-confidence fix. Top 12 by failure occurrences:</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Hits</th><th>Rate</th><th>Mode</th><th>Test</th><th>Suggested fix</th></tr></thead>
+        <tbody>
+          <tr><td>128</td><td>1.7%</td><td class="muted" style="font-size:0.85em;"><code>resource-contention</code></td><td>slave buffer are counted correctly</td><td style="font-size:0.88em;">Increase delta_max tolerance (cmd_count/2 is tight for 1M commands on noisy ru</td></tr>
+          <tr><td>56</td><td>6.2%</td><td class="muted" style="font-size:0.85em;"><code>timeout-slow-runner</code></td><td>test io-threads are runtime modifiable</td><td style="font-size:0.88em;">Add {needs:speed} tag or reduce loop iterations from 100 to 10 under valgrind </td></tr>
+          <tr><td>36</td><td>1.7%</td><td class="muted" style="font-size:0.85em;"><code>assertion-value</code></td><td>Memory efficiency with values in range $</td><td style="font-size:0.88em;">Lower thresholds by ~5% (e.g. 32→0.13, 64→0.22) or use assert_range with a flo</td></tr>
+          <tr><td>26</td><td>5.6%</td><td class="muted" style="font-size:0.85em;"><code>resource-contention</code></td><td>test-sanitizer-undefined-large-memory (c</td><td style="font-size:0.88em;">Increase runner memory allocation for large-memory sanitizer jobs or split int</td></tr>
+          <tr><td>23</td><td>2.8%</td><td class="muted" style="font-size:0.85em;"><code>assertion-value</code></td><td>Gossip count scales with higher percenta</td><td style="font-size:0.88em;">Widen the assert range (e.g. 5-10) to accommodate edge cases in gossip member </td></tr>
+          <tr><td>23</td><td>4.9%</td><td class="muted" style="font-size:0.85em;"><code>resource-contention</code></td><td>test-sanitizer-undefined-large-memory (g</td><td style="font-size:0.88em;">Increase runner memory allocation for large-memory sanitizer jobs or split int</td></tr>
+          <tr><td>22</td><td>2.4%</td><td class="muted" style="font-size:0.85em;"><code>cluster-convergence</code></td><td>The best replica can initiate an electio</td><td style="font-size:0.88em;">Increase retry attempts from 5 to 10, or increase cluster-ping-interval to acc</td></tr>
+          <tr><td>21</td><td>4.5%</td><td class="muted" style="font-size:0.85em;"><code>resource-contention</code></td><td>test-sanitizer-address-large-memory (cla</td><td style="font-size:0.88em;">Use a larger runner (16GB+) for ASan large-memory jobs, or split the large-mem</td></tr>
+          <tr><td>18</td><td>3.6%</td><td class="muted" style="font-size:0.85em;"><code>cluster-convergence</code></td><td>Primaries will not time out then they ar</td><td style="font-size:0.88em;">Increase wait_for_condition timeout from 1000x50ms to 2000x50ms, or add {needs</td></tr>
+          <tr><td>12</td><td>2.1%</td><td class="muted" style="font-size:0.85em;"><code>timing-race</code></td><td>diskless no replicas drop during rdb pip</td><td style="font-size:0.88em;">Increase the after delay or use key-load-delay consistently across subcases; w</td></tr>
+          <tr><td>12</td><td>2.1%</td><td class="muted" style="font-size:0.85em;"><code>timing-race</code></td><td>Force the use of IO threads and assert a</td><td style="font-size:0.88em;">Increase sleep_time_ms from 1000 to 3000 and adjust the assertion threshold pr</td></tr>
+          <tr><td>12</td><td>2.6%</td><td class="muted" style="font-size:0.85em;"><code>resource-contention</code></td><td>test-sanitizer-address-large-memory (gcc</td><td style="font-size:0.88em;">Same as clang variant — bump runner memory or shard the large-memory suite</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>🔬 Methodology &amp; Limitations</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p><strong>Pipeline:</strong> daily-dashboard JSON → consolidated per-test dataset → 5 parallel subagents deep-analyzed each test
+      (reading real <code>.tcl</code> bodies) → cross-cutting synthesis. Failure modes and gtest verdicts were assigned from the actual
+      test bodies, recent error text, and <em>which CI job</em> each test fails on (valgrind/sanitizer/TLS reveal the condition).</p>
+      <p style="margin-top:8px;"><strong>Limitations:</strong> rich error text existed for only the 12 tests active in the recent 14-day window;
+      older tests were classified from name + <code>.tcl</code> body + failing jobs. Blame/compare data was unavailable. Hit counts are
+      cumulative over 466 runs — a high absolute count at a low rate reflects long observation, not a hot fire.</p>
+      <p style="margin-top:8px;" class="muted">This page is entirely AI-generated from the dashboard data and Valkey source. Figures are verified;
+      interpretations are the author's AI's, not the project's.</p>
+    </div>
+  </div>
+
+  </main>
+  <site-sidebar></site-sidebar>
+  </div>
+
+  <site-footer></site-footer>
+
+</div>
+</body>
+</html>
