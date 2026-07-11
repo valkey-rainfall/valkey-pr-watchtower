@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-10 09:33 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-11 07:54 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 283 |
-| Non-draft | 257 |
+| Total open PRs | 287 |
+| Non-draft | 261 |
 | Draft | 26 |
 | Bot PRs (backports etc.) | 5 |
 | `major-decision-pending` | 36 |
@@ -18,7 +18,7 @@
 | `to-be-merged` | 3 |
 | `to-be-closed` | 1 |
 | `stalled` | 2 |
-| `run-extra-tests` | 14 |
+| `run-extra-tests` | 15 |
 | `needs-doc-pr` | 5 |
 
 
@@ -30,8 +30,8 @@
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
 | [3413](https://github.com/valkey-io/valkey/pull/3413) | Optimize infoCommand with SDS pre-allocation | charsyam | 3mo old | 3mo ago |
-| [3465](https://github.com/valkey-io/valkey/pull/3465) | fix: update maxmemory test to account for SDS pre-allocation memory | djk1027 | 3mo old | 1d ago |
-| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 7w old | 1d ago |
+| [3465](https://github.com/valkey-io/valkey/pull/3465) | fix: update maxmemory test to account for SDS pre-allocation memory | djk1027 | 3mo old | 2d ago |
+| [3491](https://github.com/valkey-io/valkey/pull/3491) | zset: add in-place fast path for score updates in listpack encoding | charsyam | 2mo old | 0d ago |
 
 
 ### Community-Approved, Awaiting Merge (`major-decision-approved`)
@@ -91,7 +91,7 @@ _Decision is made — these just need someone to merge them._
 
 | Author | Open PRs |
 |--------|----------|
-| [enjoy-binbin](https://github.com/enjoy-binbin) | 18 🚨 |
+| [enjoy-binbin](https://github.com/enjoy-binbin) | 19 🚨 |
 | [jsoref](https://github.com/jsoref) | 14 🚨 |
 | [charsyam](https://github.com/charsyam) | 8 🚨 |
 | [bandalgomsu](https://github.com/bandalgomsu) | 6 ⚠️ |
@@ -99,18 +99,18 @@ _Decision is made — these just need someone to merge them._
 | [omerrubi-amzn](https://github.com/omerrubi-amzn) | 5 ⚠️ |
 | [satheeshaGowda](https://github.com/satheeshaGowda) | 5 ⚠️ |
 | [quanyeyang](https://github.com/quanyeyang) | 5 ⚠️ |
+| [roshkhatri](https://github.com/roshkhatri) | 4 |
 | [AlisinaDevelo](https://github.com/AlisinaDevelo) | 4 |
 | [cjx-zar](https://github.com/cjx-zar) | 4 |
-| [Taeknology](https://github.com/Taeknology) | 4 |
 | [hpatro](https://github.com/hpatro) | 4 |
 | [artikell](https://github.com/artikell) | 4 |
 | [YiwenZhang12](https://github.com/YiwenZhang12) | 4 |
-| [roshkhatri](https://github.com/roshkhatri) | 3 |
+| [Taeknology](https://github.com/Taeknology) | 3 |
 
 
 ## 🕰 Long-Dormant PRs (90+ days since last update)
 
-**88 non-draft PRs** haven't been updated in 90+ days.
+**87 non-draft PRs** haven't been updated in 90+ days.
 
 | PR | Title | Author | Created | Last update |
 |----|-------|--------|---------|-------------|
@@ -139,7 +139,7 @@ _Decision is made — these just need someone to merge them._
 | [2255](https://github.com/valkey-io/valkey/pull/2255) | Accept socket judge fd overflow | kukey | 1.1y old | 6mo ago |
 | [1455](https://github.com/valkey-io/valkey/pull/1455) | Add GETPXT, MGETPXT (Get with millisecond expiration) commands | arcivanov | 1.6y old | 6mo ago |
 | [2891](https://github.com/valkey-io/valkey/pull/2891) | Reset acl info fields with CONFIG RESETSTAT | enjoy-binbin | 7mo old | 6mo ago |
-| … | *63 more* | | | |
+| … | *62 more* | | | |
 
 
 ## 🔥 Open Deflake / Test-Fix PRs
@@ -149,13 +149,13 @@ _Merging these reduces CI noise for everyone._
 | PR | Title | Author | Age | Last update |
 |----|-------|--------|-----|-------------|
 | [3049](https://github.com/valkey-io/valkey/pull/3049) | Fix flaky test in manual-failover.tcl | Nikhil-Manglore | 5mo old | 2mo ago |
-| [3764](https://github.com/valkey-io/valkey/pull/3764) | Deflake io-threads test by anchoring active-time bound to a per-reacti… | Taeknology | 7w old | 1d ago |
-| [4102](https://github.com/valkey-io/valkey/pull/4102) | Deflake "Replica output bytes metric" by disabling periodic pings | Taeknology | 3d old | 3d ago |
+| [4102](https://github.com/valkey-io/valkey/pull/4102) | Deflake "Replica output bytes metric" by disabling periodic pings | Taeknology | 4d old | 4d ago |
+| [4141](https://github.com/valkey-io/valkey/pull/4141) | Deflake dual-channel COB overrun before established psync test under v… | roshkhatri | 0d old | 0d ago |
 
 
 ## ⏱ High CI Burden (`run-extra-tests`)
 
-**13 PRs** trigger extended CI runs.
+**14 PRs** trigger extended CI runs.
 
 | PR | Title | Author | Age |
 |----|-------|--------|-----|
@@ -171,7 +171,8 @@ _Merging these reduces CI noise for everyone._
 | [3833](https://github.com/valkey-io/valkey/pull/3833) | Speed up split-vote elections with the new FAILOVER_AUTH_NAC | enjoy-binbin | 6w |
 | [3840](https://github.com/valkey-io/valkey/pull/3840) | ZSET B+ Tree PR 2: ordered index interface and full conversi | rainsupreme | 6w |
 | [3853](https://github.com/valkey-io/valkey/pull/3853) | Streaming Compression support for Replication | roshkhatri | 6w |
-| [4104](https://github.com/valkey-io/valkey/pull/4104) | Avoid offloading writes to IO threads for the slot migration | satheeshaGowda | 3d |
+| [4104](https://github.com/valkey-io/valkey/pull/4104) | Avoid offloading writes to IO threads for the slot migration | satheeshaGowda | 4d |
+| [4140](https://github.com/valkey-io/valkey/pull/4140) | Retry PSYNC on -BUSY error instead of downgrading to SYNC | enjoy-binbin | 0d |
 
 ---
 
