@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Articles — Valkey PR Watchtower</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
+  <style>
+    .tag-chip {
+      background: none; border: 1px solid var(--border); border-radius: 12px;
+      padding: 2px 10px; color: var(--muted); cursor: pointer;
+      font-family: inherit; font-size: 0.85em;
+    }
+    .tag-chip:hover { border-color: var(--accent3); color: var(--accent3); }
+    .tag-active { border-color: var(--accent3); color: var(--accent3); font-weight: bold; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <site-header></site-header>
+  <site-nav></site-nav>
+
+  <div class="grid">
+  <main>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>📰 All Articles</span></div>
+    <div class="panel-body">
+      <p>Everything published on the watchtower — deep dives, guides, and the auto-updated live report.
+      Filter by tag, newest first. Each article carries its own attribution badge.</p>
+    </div>
+  </div>
+
+  <article-list></article-list>
+
+  </main>
+  <site-sidebar></site-sidebar>
+  </div>
+
+  <site-footer></site-footer>
+
+</div>
+</body>
+</html>

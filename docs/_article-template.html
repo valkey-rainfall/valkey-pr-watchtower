@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+  TEMPLATE — how to add a new article:
+    1. cp _article-template.html your-slug.html and fill in TITLE / EMOJI / DATE / content panels.
+    2. Add an entry to articles.json "articles" (slug, title, emoji, date, updated, badge, summary, tags).
+    3. Add an entry to the top of articles.json "updates" (date, text, href).
+  That's it — the nav, articles page, and sidebar "Latest Updates" all read articles.json.
+  Badge types: ai | approved | human (see <attr-badge> in components.js).
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TITLE — Valkey PR Watchtower</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="components.js" defer></script>
+</head>
+<body>
+<div class="page-wrap">
+
+  <site-header></site-header>
+  <site-nav></site-nav>
+
+  <div class="grid">
+  <main>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header">
+      <span>EMOJI TITLE (DATE)</span>
+      <attr-badge type="ai"></attr-badge>
+    </div>
+    <div class="panel-body">
+      <p>Intro paragraph: what this article is and why it exists.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>Section title</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p>Section content.</p>
+    </div>
+  </div>
+
+  </main>
+  <site-sidebar></site-sidebar>
+  </div>
+
+  <site-footer></site-footer>
+
+</div>
+</body>
+</html>

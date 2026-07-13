@@ -1,0 +1,61 @@
+{
+  "articles": [
+    {
+      "slug": "report.html",
+      "title": "Live PR Health Report",
+      "emoji": "📊",
+      "date": "2026-07-02",
+      "updated": "auto",
+      "badge": "ai",
+      "summary": "Auto-regenerated daily: PR backlog aging, stalled decisions, duplicate PRs, contributor load, and triage recommendations from live GitHub data.",
+      "tags": ["prs", "auto-updated"]
+    },
+    {
+      "slug": "analysis.html",
+      "title": "PR Deep Analysis",
+      "emoji": "🔍",
+      "date": "2026-07-02",
+      "updated": "2026-07-02",
+      "badge": "ai",
+      "summary": "A one-time deep dive into the open-PR backlog: what is actually stuck, why, and which levers would move the most PRs.",
+      "tags": ["prs", "deep-dive"]
+    },
+    {
+      "slug": "orientation.html",
+      "title": "PR Orientation",
+      "emoji": "🧭",
+      "date": "2026-07-02",
+      "updated": "2026-07-02",
+      "badge": "ai",
+      "summary": "A new-contributor's map of the PR landscape: where to start, what review culture to expect, and how decisions get made.",
+      "tags": ["contributors", "guide"]
+    },
+    {
+      "slug": "test-health.html",
+      "title": "Test Health — Flaky-Test Deep Dive",
+      "emoji": "🧪",
+      "date": "2026-07-08",
+      "updated": "2026-07-13",
+      "badge": "ai",
+      "summary": "Every flaky test across 466 daily-CI runs classified by failure mode and root cause — plus a follow-up: 3 deflake PRs shipped upstream, and what the data got wrong.",
+      "tags": ["tests", "deep-dive"]
+    }
+  ],
+  "updates": [
+    {
+      "date": "2026-07-13",
+      "text": "Test Health follow-up: 3 deflake PRs shipped upstream (4156, 4157, 4158), verification methodology, and corrections",
+      "href": "test-health.html"
+    },
+    {
+      "date": "2026-07-08",
+      "text": "New article: Test Health — flaky-test deep dive across 466 daily-CI runs",
+      "href": "test-health.html"
+    },
+    {
+      "date": "2026-07-02",
+      "text": "Site launch: live report, PR deep analysis, and PR orientation",
+      "href": "index.html"
+    }
+  ]
+}

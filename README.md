@@ -27,10 +27,23 @@ scripts/
 docs/
   index.md               # landing page (static)
   report.md              # auto-generated daily PR health report
+  articles.json          # article manifest: metadata + "Latest Updates" feed
+  articles.html          # browse-all-articles page (reads articles.json)
+  _article-template.html # copy this to start a new article
 
 .github/workflows/
   update-report.yml      # daily cron: run build_report.py, commit, push
 ```
+
+---
+
+## Adding an article
+
+1. `cp docs/_article-template.html docs/your-slug.html` and fill in the title, date, and content panels.
+2. Add an entry to the `articles` array in `docs/articles.json` (slug, title, emoji, date, updated, badge, summary, tags).
+3. Add an entry to the **top** of the `updates` array in `docs/articles.json`.
+
+The nav, the Articles page, and the sidebar "Latest Updates" panel all read `articles.json` — no other file needs editing. Attribution badges: `ai`, `approved`, or `human` (see `<attr-badge>` in `components.js`).
 
 ---
 

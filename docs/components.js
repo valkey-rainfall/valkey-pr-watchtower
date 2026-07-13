@@ -109,6 +109,7 @@ class SiteNav extends HTMLElement {
     <span>→</span>
     <a href="index.html">🏠 Home</a>
     <a href="report.html">📊 Live Report</a>
+    <a href="articles.html">📰 Articles</a>
     <a href="analysis.html">🔍 Deep Analysis</a>
     <a href="test-health.html">🧪 Test Health</a>
     <a href="orientation.html">🧭 PR Orientation</a>
@@ -117,6 +118,92 @@ class SiteNav extends HTMLElement {
   }
 }
 customElements.define('site-nav', SiteNav);
+
+/* ── Articles manifest (shared fetch, cached) ─────────────────────────── */
+let _articlesPromise = null;
+function fetchArticles() {
+  if (!_articlesPromise) {
+    _articlesPromise = fetch('articles.json').then(r => {
+      if (!r.ok) throw new Error('articles.json ' + r.status);
+      return r.json();
+    });
+  }
+  return _articlesPromise;
+}
+
+/* ── <latest-updates> — sidebar panel driven by articles.json ─────────── */
+class LatestUpdates extends HTMLElement {
+  connectedCallback() {
+    const max = parseInt(this.getAttribute('max') || '4', 10);
+    fetchArticles().then(data => {
+      const items = (data.updates || []).slice(0, max).map(u => `
+            <li style="padding:5px 0; border-bottom:1px solid var(--border);">
+              <span class="muted" style="font-size:0.85em;">${u.date}</span><br>
+              <a href="${u.href}">${u.text}</a>
+            </li>`).join('');
+      this.innerHTML = `
+      <div class="panel">
+        <div class="panel-header">📰 Latest Updates</div>
+        <div class="panel-body" style="font-size:0.82em;">
+          <ul style="list-style:none; padding:0; margin:0;">${items}
+          </ul>
+          <p style="font-size:0.85em; margin-top:8px; text-align:center;">
+            <a href="articles.html">all articles →</a>
+          </p>
+        </div>
+      </div>`;
+    }).catch(() => { this.remove(); }); // degrade gracefully (e.g. file:// protocol)
+  }
+}
+customElements.define('latest-updates', LatestUpdates);
+
+/* ── <article-list> — full article browser driven by articles.json ────── */
+class ArticleList extends HTMLElement {
+  connectedCallback() {
+    fetchArticles().then(data => {
+      this._articles = (data.articles || []).slice().sort((a, b) => {
+        const ka = a.updated === 'auto' ? a.date : (a.updated || a.date);
+        const kb = b.updated === 'auto' ? b.date : (b.updated || b.date);
+        return kb.localeCompare(ka);
+      });
+      this._tag = null;
+      this.render();
+    }).catch(() => {
+      this.innerHTML = '<p class="muted">Could not load the article index (articles.json).</p>';
+    });
+  }
+  render() {
+    const tags = [...new Set(this._articles.flatMap(a => a.tags || []))].sort();
+    const chips = ['<button class="tag-chip' + (this._tag === null ? ' tag-active' : '') + '" data-tag="">all</button>']
+      .concat(tags.map(t => `<button class="tag-chip${this._tag === t ? ' tag-active' : ''}" data-tag="${t}">${t}</button>`)).join(' ');
+    const shown = this._tag ? this._articles.filter(a => (a.tags || []).includes(this._tag)) : this._articles;
+    const cards = shown.map(a => {
+      const upd = a.updated === 'auto' ? 'updated daily'
+        : (a.updated && a.updated !== a.date ? `updated ${a.updated}` : '');
+      return `
+      <div class="panel" style="margin-bottom:12px;">
+        <div class="panel-header">
+          <span>${a.emoji || '📄'} <a href="${a.slug}">${a.title}</a></span>
+          <attr-badge type="${a.badge || 'ai'}"></attr-badge>
+        </div>
+        <div class="panel-body">
+          <p class="muted" style="font-size:0.82em;">${a.date}${upd ? ' · ' + upd : ''}
+            ${(a.tags || []).map(t => `· <code>${t}</code>`).join(' ')}</p>
+          <p style="margin-top:6px;">${a.summary}</p>
+          <p style="margin-top:6px;"><a href="${a.slug}">read →</a></p>
+        </div>
+      </div>`;
+    }).join('');
+    this.innerHTML = `
+      <p style="margin-bottom:10px;">${chips}</p>
+      ${cards || '<p class="muted">No articles match this tag.</p>'}`;
+    this.querySelectorAll('.tag-chip').forEach(btn => btn.addEventListener('click', () => {
+      this._tag = btn.dataset.tag || null;
+      this.render();
+    }));
+  }
+}
+customElements.define('article-list', ArticleList);
 
 /* ── <site-sidebar> ────────────────────────────────────────────────────── */
 class SiteSidebar extends HTMLElement {
@@ -153,6 +240,8 @@ class SiteSidebar extends HTMLElement {
           </p>
         </div>
       </div>
+
+      <latest-updates max="4"></latest-updates>
 
       <div class="panel">
         <div class="panel-header">🔗 Quick Links</div>
