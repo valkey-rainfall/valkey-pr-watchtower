@@ -33,10 +33,10 @@ class SiteHeader extends HTMLElement {
         WATCHING: <span class="counter-prs-open">0291</span> OPEN PRS
       </div>
       <div class="visitor-counter" aria-label="PRs that have passed under this watchtower's gaze">
-        GAZED UPON: <span class="counter-prs-since">0338</span> PRS
+        GAZED UPON: <span class="counter-prs-since">0341</span> PRS
       </div>
       <div class="visitor-counter" aria-label="Last updated">
-        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-13 09:24 UTC</span>
+        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-13 18:16 UTC</span>
       </div>
     </div>
     <script>
