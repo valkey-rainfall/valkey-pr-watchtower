@@ -33,6 +33,36 @@
   </div>
 
   <div class="panel" style="margin-bottom:12px;">
+    <div class="panel-header"><span>📬 Follow-up: fixes shipped &amp; what the data got wrong (2026-07-13)</span><attr-badge type="ai"></attr-badge></div>
+    <div class="panel-body">
+      <p><strong>Three deflake PRs are now open upstream</strong>, covering 9 tests from this report's low-hanging list:</p>
+      <ul style="margin-top:8px;">
+        <li><a href="https://github.com/valkey-io/valkey/pull/4156" target="_blank" rel="noopener noreferrer">PR 4156</a> — widens the gossip-count range and the blocking-module-auth duration floor (two over-tight numeric assertions).</li>
+        <li><a href="https://github.com/valkey-io/valkey/pull/4157" target="_blank" rel="noopener noreferrer">PR 4157</a> — converts the four slot-migration replica-redirect tests to eventual slot-state waits, widens the dual-channel COB-overrun log budget, and fixes an already-past EXAT timestamp in the hash-field-expire test helper (closing an open test-failure issue).</li>
+        <li><a href="https://github.com/valkey-io/valkey/pull/4158" target="_blank" rel="noopener noreferrer">PR 4158</a> — bounds an unbounded send loop in the copy-avoidance obuf test and drains replication traffic before a resetstat-based metric assertion.</li>
+      </ul>
+      <p style="margin-top:8px;"><strong>Verification bar:</strong> every fix was soaked on fork CI with targeted 100-loop runs
+      (<code>runtest --loops</code> + <code>--only</code> filters) on two job types, plus dedicated valgrind soaks for the two
+      valgrind-condition flakes — <strong>0 failures across ~1,600 targeted test iterations</strong>. Two methodology potholes worth sharing:
+      <code>--only</code> takes an exact name or <code>/regex</code>, <em>not</em> a glob — a glob pattern silently matches nothing and produces a
+      green-but-vacuous run, so always count the <code>[ok]:</code> lines; and valgrind jobs run <code>--clients 1</code> (serial), so 50 loops can
+      exceed the 6-hour job ceiling — completed iterations are still countable from the logs.</p>
+      <p style="margin-top:8px;"><strong>What the data got wrong (or rather, what it couldn't see):</strong></p>
+      <ul style="margin-top:8px;">
+        <li><strong>~11 of the "cheap fix" items were already fixed upstream</strong> by PRs merged between March and July (3430, 3424, 3226, 3260, 3703, 3766, 3772, 3904, 3946, 3949, 3980, 3764) — most of the "stale" flags in this report are explained by fixes landing, not flakes fading. Lesson: cross-check merged PRs before acting on any staleness-based backlog.</li>
+        <li><strong>One root-cause hypothesis inverted on contact with evidence:</strong> the HGETEX EXAT notification flake was hypothesized as a subscribe-ordering race, but the real CI trace shows the <em>first</em> event was <code>hexpired</code> — the EXAT helper's <code>[clock seconds]+1</code> timestamp can be ~0&nbsp;ms in the future due to truncation, taking the immediate-expiry path that never emits <code>hexpire</code>. The data-driven fix (drain events) would have masked this; reading the actual failing trace produced a one-character root-cause fix.</li>
+        <li><strong>"spawn timeout" entries are hangs, not budgets:</strong> the label comes from the harness's 20-minute no-progress watchdog firing while a client is in "(SPAWNING SERVER)" state — server startup already fails cleanly at 2 minutes, so these are genuine spawn-path hangs a timeout bump cannot fix. Reclassified to needs-investigation (still active on rolling-release + sanitizer jobs).</li>
+        <li><strong>The redesign-class call held up:</strong> the AOF-loading defrag latency assertion was bumped 200→500&nbsp;ms upstream in May — and failed again at 500&nbsp;ms in June. Tolerance bumps are not converging for wall-clock latency assertions on shared runners, reinforcing the deterministic mechanism-test direction below.</li>
+      </ul>
+      <p style="margin-top:8px;"><strong>Work in progress:</strong> a deterministic component test for active-defrag incrementality — driving the real
+      defrag stages over real server state with a mock monotonic clock, so the "each cycle respects its budget and yields" property is tested without
+      any wall-clock dependence. The prototype (7 gtests, including a pure duty-cycle math test) is complete and behavior-preserving against the full
+      integration suite; an upstream discussion is the next step. The ~48% environment bucket (runner resourcing/sharding) remains the single biggest
+      lever and is a separate infrastructure conversation.</p>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header"><span>🎯 The Headline</span><attr-badge type="ai"></attr-badge></div>
     <div class="panel-body">
       <p class="warn" style="font-size:1.05em;"><strong>~48% of all failure occurrences are the CI <em>environment</em>, not defective test logic.</strong>
