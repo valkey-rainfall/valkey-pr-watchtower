@@ -487,7 +487,7 @@
   },
   {
     "date": "2026-07-13",
-    "open_prs": 291,
+    "open_prs": 293,
     "weekly_activity": [
       {
         "week_start": "2026-05-18",
@@ -534,7 +534,7 @@
       {
         "week_start": "2026-07-06",
         "week_end": "2026-07-13",
-        "opened": 38,
+        "opened": 40,
         "merged": 18
       }
     ]

@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-13 18:31 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-13 18:48 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Metric | Count |
 |--------|-------|
-| Total open PRs | 291 |
-| Non-draft | 266 |
+| Total open PRs | 293 |
+| Non-draft | 268 |
 | Draft | 25 |
 | Bot PRs (backports etc.) | 5 |
 | `major-decision-pending` | 36 |
