@@ -25,6 +25,7 @@ class SiteHeader extends HTMLElement {
   <header role="banner">
     <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
     <div class="site-subtitle">project-wide health monitoring for <a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a></div>
+    <div class="site-subtitle header-latest" style="font-size:0.78em; margin-top:2px; display:none;"></div>
     <div class="visitor-counter" role="img" aria-label="Visitor number 000001">
       VISITOR: 000001
     </div>
@@ -61,6 +62,21 @@ class SiteHeader extends HTMLElement {
       &nbsp;·&nbsp; <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--muted);cursor:pointer;font-family:inherit;font-size:1em;">🌓 theme</button>
     </div>
   </header>`;
+    // Populate the latest-article line. Deferred to a microtask: connectedCallback
+    // fires synchronously at customElements.define(), before fetchArticles'
+    // backing `let` below has been initialized (temporal dead zone).
+    queueMicrotask(() => {
+      fetchArticles().then(data => {
+        const posts = (data.articles || []).filter(a => a.updated !== 'auto');
+        if (!posts.length) return;
+        const a = posts.slice().sort((x, y) =>
+          ((y.updated || y.date)).localeCompare(x.updated || x.date))[0];
+        const el = this.querySelector('.header-latest');
+        if (!el) return;
+        el.innerHTML = `🆕 latest article: <a href="${a.slug}">${a.emoji || ''} ${a.title}</a> <span style="color:var(--muted)">(${a.updated || a.date})</span>`;
+        el.style.display = '';
+      }).catch(() => {});
+    });
   }
 }
 customElements.define('site-header', SiteHeader);
