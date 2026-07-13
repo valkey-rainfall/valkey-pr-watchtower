@@ -205,6 +205,33 @@ class ArticleList extends HTMLElement {
 }
 customElements.define('article-list', ArticleList);
 
+/* ── <latest-article> — featured newest article (excludes auto-updated) ── */
+class LatestArticle extends HTMLElement {
+  connectedCallback() {
+    fetchArticles().then(data => {
+      const posts = (data.articles || []).filter(a => a.updated !== 'auto');
+      if (!posts.length) { this.remove(); return; }
+      const a = posts.slice().sort((x, y) =>
+        ((y.updated || y.date)).localeCompare(x.updated || x.date))[0];
+      const upd = a.updated && a.updated !== a.date ? ` · updated ${a.updated}` : '';
+      this.innerHTML = `
+      <div class="panel" style="margin-bottom:12px;">
+        <div class="panel-header">
+          <span>🆕 Latest Article: ${a.emoji || '📄'} <a href="${a.slug}">${a.title}</a></span>
+          <attr-badge type="${a.badge || 'ai'}"></attr-badge>
+        </div>
+        <div class="panel-body">
+          <p class="muted" style="font-size:0.82em;">${a.date}${upd}
+            ${(a.tags || []).map(t => `· <code>${t}</code>`).join(' ')}</p>
+          <p style="margin-top:6px;">${a.summary}</p>
+          <p style="margin-top:6px;"><a href="${a.slug}">read →</a> &nbsp;·&nbsp; <a href="articles.html">all articles →</a></p>
+        </div>
+      </div>`;
+    }).catch(() => { this.remove(); });
+  }
+}
+customElements.define('latest-article', LatestArticle);
+
 /* ── <site-sidebar> ────────────────────────────────────────────────────── */
 class SiteSidebar extends HTMLElement {
   connectedCallback() {
