@@ -31,13 +31,13 @@ class SiteHeader extends HTMLElement {
     </div>
     <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
       <div class="visitor-counter" aria-label="Open PRs being tracked">
-        WATCHING: <span class="counter-prs-open">0295</span> OPEN PRS
+        WATCHING: <span class="counter-prs-open">0294</span> OPEN PRS
       </div>
       <div class="visitor-counter" aria-label="PRs that have passed under this watchtower's gaze">
-        GAZED UPON: <span class="counter-prs-since">0379</span> PRS
+        GAZED UPON: <span class="counter-prs-since">0382</span> PRS
       </div>
       <div class="visitor-counter" aria-label="Last updated">
-        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-17 08:08 UTC</span>
+        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-07-18 07:47 UTC</span>
       </div>
     </div>
     <script>
@@ -262,7 +262,7 @@ class SiteSidebar extends HTMLElement {
         <div class="panel-body">
           <div class="stat-grid">
             <div class="stat-box">
-              <span class="stat-number warn"><span class="counter-prs-open">0295</span></span>
+              <span class="stat-number warn"><span class="counter-prs-open">0294</span></span>
               <span class="stat-label">open PRs</span>
             </div>
             <div class="stat-box">
