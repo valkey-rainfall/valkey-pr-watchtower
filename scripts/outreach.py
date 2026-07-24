@@ -123,14 +123,20 @@ def _evidence(entry):
     ev = []
     enr = entry.get("enr") or {}
     verdict = (enr.get("checks") or {}).get("verdict")
+    cr = enr.get("review_state") == "changes_requested"
     if verdict == "failing":
         ev.append("CI failing")
     if enr.get("mergeable_state") == "dirty":
         ev.append("merge conflicts")
-    if enr.get("review_state") == "changes_requested":
-        ev.append("changes requested, not addressed")
     if entry.get("court") == "reviewer":
-        ev.append("author acted last; awaiting review")
+        # Author acted last; if a changes-requested review stands, they've
+        # responded and it's awaiting re-review (NOT "unaddressed").
+        if cr:
+            ev.append("changes requested, author responded — awaiting re-review")
+        else:
+            ev.append("author acted last; awaiting review")
+    elif cr:
+        ev.append("changes requested, not addressed")
     ev.append(f"no activity in {_human_age(entry['dormancy_days'])}"
               f" ({entry['dormancy_tier']})")
     return ev
