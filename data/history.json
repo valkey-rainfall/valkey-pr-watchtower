@@ -1078,5 +1078,59 @@
         "merged": 39
       }
     ]
+  },
+  {
+    "date": "2026-07-24",
+    "open_prs": 305,
+    "weekly_activity": [
+      {
+        "week_start": "2026-05-29",
+        "week_end": "2026-06-05",
+        "opened": 35,
+        "merged": 19
+      },
+      {
+        "week_start": "2026-06-05",
+        "week_end": "2026-06-12",
+        "opened": 46,
+        "merged": 28
+      },
+      {
+        "week_start": "2026-06-12",
+        "week_end": "2026-06-19",
+        "opened": 20,
+        "merged": 13
+      },
+      {
+        "week_start": "2026-06-19",
+        "week_end": "2026-06-26",
+        "opened": 31,
+        "merged": 13
+      },
+      {
+        "week_start": "2026-06-26",
+        "week_end": "2026-07-03",
+        "opened": 26,
+        "merged": 19
+      },
+      {
+        "week_start": "2026-07-03",
+        "week_end": "2026-07-10",
+        "opened": 35,
+        "merged": 17
+      },
+      {
+        "week_start": "2026-07-10",
+        "week_end": "2026-07-17",
+        "opened": 50,
+        "merged": 36
+      },
+      {
+        "week_start": "2026-07-17",
+        "week_end": "2026-07-24",
+        "opened": 47,
+        "merged": 32
+      }
+    ]
   }
 ]
