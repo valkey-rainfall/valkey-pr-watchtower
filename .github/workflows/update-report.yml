@@ -37,7 +37,11 @@ jobs:
 
       - name: Generate PR health report
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Full-backlog enrichment makes ~6 REST calls per open PR (~2k total),
+          # which exceeds the default GITHUB_TOKEN Actions limit (~1k/hr). Set a
+          # GH_PAT repo secret (read-only, public_repo) for 5k/hr; falls back to
+          # GITHUB_TOKEN if unset (may rate-limit / truncate on a large backlog).
+          GITHUB_TOKEN: ${{ secrets.GH_PAT || secrets.GITHUB_TOKEN }}
         run: |
           python scripts/build_report.py --out docs/report.md --html docs/report.html
 
