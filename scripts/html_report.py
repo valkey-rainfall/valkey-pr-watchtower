@@ -55,10 +55,14 @@ def _table(headers, rows):
     return f"<table><thead><tr>{h}</tr></thead><tbody>{body}</tbody></table>"
 
 
-def _panel(title, badge_text, content, scroll=False):
+def _panel(title, badge_text, content, scroll=False, anchor=None):
     body_cls = "panel-body-scroll" if scroll else "panel-body"
-    return (f'<div class="panel" style="margin-bottom:12px;">'
-            f'<div class="panel-header"><span>{title}</span>'
+    id_attr = f' id="{anchor}"' if anchor else ""
+    # Self-linking header: clicking the title sets the URL hash (shareable link).
+    title_html = (f'<a class="anchor-link" href="#{anchor}">{title}</a>'
+                  if anchor else title)
+    return (f'<div class="panel"{id_attr} style="margin-bottom:12px;">'
+            f'<div class="panel-header"><span>{title_html}</span>'
             f'<span class="badge badge-ai">{badge_text}</span></div>'
             f'<div class="{body_cls}">{content}</div></div>')
 
@@ -248,8 +252,22 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
     sections = []
 
     # ── By the Numbers (lane counts, actionability order) ──
+    # Lane → section anchor (flagged_close has no own panel; it lives in outreach).
+    lane_anchor = {
+        B.LANE_LAND_READY: "land-ready",
+        B.LANE_BOT_BACKPORT: "bot-backport",
+        B.LANE_REVIEWER_COURT: "reviewer-court",
+        B.LANE_NEEDS_DECISION: "needs-decision",
+        B.LANE_FLAGGED_CLOSE: "outreach",
+        B.LANE_AUTHOR_COURT: "author-court",
+    }
+
     def crow(label, key, cls=""):
-        return [label, f'<span class="num-badge {cls}">{counts.get(key, 0)}</span>']
+        n = counts.get(key, 0)
+        anchor = lane_anchor.get(key)
+        # Link the label to its section only when that section will render (n>0).
+        lbl = f'<a class="lane-link" href="#{anchor}">{label}</a>' if (anchor and n) else label
+        return [lbl, f'<span class="num-badge {cls}">{n}</span>']
     rows = [
         ["Total open PRs", f'<span class="num-badge warn">{bucket_result["total"]}</span>'],
         crow("🟢 Land-ready", B.LANE_LAND_READY, "ok"),
@@ -262,7 +280,8 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
     ]
     if counts.get(B.LANE_UNKNOWN):
         rows.append(crow("❔ Unclassified", B.LANE_UNKNOWN, "muted"))
-    sections.append(_panel("📊 By the Numbers", AI_BADGE, _table(["Lane", "Count"], rows)))
+    sections.append(_panel("📊 By the Numbers", AI_BADGE, _table(["Lane", "Count"], rows),
+                           anchor="by-the-numbers"))
 
     # ── Owed a review (priority, label-driven) — only if populated ──
     if outreach["priority_owed_review"]:
@@ -270,21 +289,21 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "⭐ Owed a Review (priority)", AI_BADGE,
             '<p class="muted" style="font-size:0.85em;">Authors confirmed still-wanted '
             '(via label) — the project owes these a review.</p>'
-            + _outreach_rows(outreach["priority_owed_review"])))
+            + _outreach_rows(outreach["priority_owed_review"]), anchor="owed-review"))
 
     # ── Land-ready ──
     if lanes[B.LANE_LAND_READY]:
         sections.append(_panel(
             "🟢 Land-ready — one click to merge", AI_BADGE,
             '<p class="muted" style="font-size:0.85em;">Community-approved / to-be-merged, '
-            'CI not failing, no conflicts.</p>' + _lane_land_ready(lanes[B.LANE_LAND_READY])))
+            'CI not failing, no conflicts.</p>' + _lane_land_ready(lanes[B.LANE_LAND_READY]), anchor="land-ready"))
 
     # ── Bot / backport quick-wins ──
     if lanes[B.LANE_BOT_BACKPORT]:
         sections.append(_panel(
             "🤖 Bot / backport quick-wins", AI_BADGE,
             '<p class="muted" style="font-size:0.85em;">Human-approved, fast to land.</p>'
-            + _lane_bot(lanes[B.LANE_BOT_BACKPORT]), scroll=True))
+            + _lane_bot(lanes[B.LANE_BOT_BACKPORT]), scroll=True, anchor="bot-backport"))
 
     # ── First-time contributors (retention priority) ──
     if first_timers:
@@ -293,7 +312,7 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "🌱 First-Time Contributors", AI_BADGE,
             f'<p>{len(first_timers)} PRs from new contributors — a timely response may retain '
             f'a future regular. Cross-cut; each also appears in its lane.</p>'
-            + _table(["PR", "Title", "Author", "Age", "Lane"], rows), scroll=True))
+            + _table(["PR", "Title", "Author", "Age", "Lane"], rows), scroll=True, anchor="first-timers"))
 
     # ── Ball in reviewer's court ──
     if lanes[B.LANE_REVIEWER_COURT]:
@@ -301,7 +320,7 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "👀 Ball in Reviewer's Court", AI_BADGE,
             f'<p><strong>{len(lanes[B.LANE_REVIEWER_COURT])} PRs</strong> where the author acted '
             f'last — these need a reviewer. Sorted longest-waiting first.</p>'
-            + _lane_reviewer(lanes[B.LANE_REVIEWER_COURT]), scroll=True))
+            + _lane_reviewer(lanes[B.LANE_REVIEWER_COURT]), scroll=True, anchor="reviewer-court"))
 
     # ── Needs a decision ──
     if lanes[B.LANE_NEEDS_DECISION]:
@@ -309,7 +328,7 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "🗳 Needs a Decision", AI_BADGE,
             f'<p><strong>{len(lanes[B.LANE_NEEDS_DECISION])} PRs</strong> blocked on a community '
             f'decision (major-decision-pending / -deferred).</p>'
-            + _lane_decision(lanes[B.LANE_NEEDS_DECISION]), scroll=True))
+            + _lane_decision(lanes[B.LANE_NEEDS_DECISION]), scroll=True, anchor="needs-decision"))
 
     # ── Deflake overlay ──
     if deflake:
@@ -318,7 +337,7 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "🔥 Deflake / Test-Fix", AI_BADGE,
             '<p class="muted" style="font-size:0.85em;">Merging these reduces CI noise for '
             'everyone. Cross-cut; each also appears in its lane.</p>'
-            + _table(["PR", "Title", "Author", "Age", "Lane"], rows)))
+            + _table(["PR", "Title", "Author", "Age", "Lane"], rows), anchor="deflake"))
 
     # ── Outreach dry-run ──
     outreach_html = ""
@@ -348,7 +367,7 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
                          'Nothing is posted, closed, or labelled automatically — these are '
                          'proposals with draft messages for a human to review and act on.</p>'
                          + outreach_html)
-        sections.append(_panel("📮 Outreach Dry-Run", AI_BADGE, outreach_html))
+        sections.append(_panel("📮 Outreach Dry-Run", AI_BADGE, outreach_html, anchor="outreach"))
 
     # ── Ball in author's court (bottom: blocked on someone else) ──
     if lanes[B.LANE_AUTHOR_COURT]:
@@ -356,10 +375,10 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
             "✍️ Ball in Author's Court", AI_BADGE,
             f'<p><strong>{len(lanes[B.LANE_AUTHOR_COURT])} PRs</strong> waiting on the author '
             f'(CI red / conflicts / unaddressed review). Nothing for a reviewer to do yet.</p>'
-            + _lane_author(lanes[B.LANE_AUTHOR_COURT]), scroll=True))
+            + _lane_author(lanes[B.LANE_AUTHOR_COURT]), scroll=True, anchor="author-court"))
 
     # ── Charts ──
-    sections.append(_panel("📈 Charts", AI_BADGE, _build_charts(prs, non_draft, weeks)))
+    sections.append(_panel("📈 Charts", AI_BADGE, _build_charts(prs, non_draft, weeks), anchor="charts"))
 
     body = "\n".join(sections)
     return f'''<!DOCTYPE html>
@@ -369,6 +388,15 @@ def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Live Report — Valkey PR Watchtower</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    html {{ scroll-behavior: smooth; }}
+    .panel[id] {{ scroll-margin-top: 12px; }}
+    .panel[id]:target {{ outline: 2px solid var(--accent); outline-offset: 2px; }}
+    .lane-link {{ color: var(--accent); text-decoration: none; }}
+    .lane-link:hover {{ text-decoration: underline; }}
+    .anchor-link {{ color: inherit; text-decoration: none; }}
+    .anchor-link:hover {{ text-decoration: underline; }}
+  </style>
   <script src="components.js" defer></script>
 </head>
 <body>

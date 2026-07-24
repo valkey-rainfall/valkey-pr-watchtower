@@ -81,6 +81,13 @@ for needle in ["Live PR Health Report", "By the Numbers", "Land-ready",
                "chart.js"]:
     check(f"html has: {needle}", needle in html)
 check("html land-ready before author-court", html.index("Land-ready") < html.index("Author's Court"))
+# anchors + shareable/section links
+for anc in ['id="by-the-numbers"', 'id="land-ready"', 'id="reviewer-court"',
+            'id="author-court"', 'id="outreach"', 'id="charts"']:
+    check(f"html anchor {anc}", anc in html)
+check("by-the-numbers row links to section", 'class="lane-link" href="#reviewer-court"' in html)
+check("section header is self-link", 'class="anchor-link" href="#author-court"' in html)
+check("smooth scroll + scroll-margin css", "scroll-margin-top" in html and "scroll-behavior: smooth" in html)
 check("html gentle nudge (no close threat for first-timer PR5)",
       "will be closed" not in [c["draft_message"] for c in out["closure_abandoned"] if c["number"] == 5][0])
 
