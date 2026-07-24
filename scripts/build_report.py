@@ -18,6 +18,10 @@ import urllib.request
 import urllib.parse
 
 from html_report import build_report_html
+from enrich import enrich_all
+from buckets import bucketize, LANE_LAND_READY, LANE_BOT_BACKPORT, LANE_REVIEWER_COURT, \
+    LANE_NEEDS_DECISION, LANE_AUTHOR_COURT, LANE_FLAGGED_CLOSE, LANE_EXCLUDED_DRAFT
+from outreach import build_outreach
 
 REPO = "valkey-io/valkey"
 BASE_URL = "https://api.github.com"
@@ -259,162 +263,138 @@ def patch_index_html(stats):
     print(f"  Patched components.js counters.", file=sys.stderr)
 
 
-def build_report(prs):
+def _md_row(entry, extra=None):
+    n = entry["number"]
+    title = entry["title"][:70] + ("…" if len(entry["title"]) > 70 else "")
+    row = f"| [{n}]({entry['url']}) | {title} | {entry['author']} | {age_str(age_days(entry['created_at'])) if entry.get('created_at') else '—'} |"
+    if extra is not None:
+        row += f" {extra} |"
+    return row
+
+
+def _md_outreach(lines, title, candidates):
+    if not candidates:
+        return
+    lines.append(section_header(title, 3))
+    lines.append("| PR | Title | Author | Evidence | Proposed action |")
+    lines.append("|----|-------|--------|----------|-----------------|")
+    for c in candidates:
+        title_s = c["title"][:50] + ("…" if len(c["title"]) > 50 else "")
+        ev = "; ".join(c.get("evidence", []))
+        lines.append(f"| [{c['number']}]({c['url']}) | {title_s} | {c['author']} | {ev} | `{c['proposed_action']}` |")
+    lines.append("")
+
+
+def build_report(prs, bucket_result, outreach):
+    """Markdown report — actionability-ordered lanes + outreach dry-run."""
     lines = []
     generated = TODAY.strftime("%Y-%m-%d %H:%M UTC")
+    lanes = bucket_result["lanes"]
+    counts = bucket_result["counts"]
+    by_number = bucket_result["by_number"]
 
-    lines.append(f"# Valkey PR Health Report")
-    lines.append(f"")
+    lines.append("# Valkey PR Health Report")
+    lines.append("")
     lines.append(f"**Generated:** {generated} | **Repo:** [{REPO}](https://github.com/{REPO})")
-    lines.append(f"")
-    lines.append(f"---")
+    lines.append("")
+    lines.append("_PRs are sorted into lanes by who owns the next move, most immediately actionable first._")
+    lines.append("")
+    lines.append("---")
 
-    # ── By the Numbers ──────────────────────────────────────────────────────
-    non_draft = [p for p in prs if not p.get("draft")]
-    draft = [p for p in prs if p.get("draft")]
-    bot_prs = [p for p in prs if p.get("user", {}).get("login", "").endswith("[bot]")]
-
-    label_counts = Counter()
-    for pr in prs:
-        for l in label_names(pr):
-            label_counts[l] += 1
-
+    # ── By the Numbers ──
     lines.append(section_header("📊 By the Numbers"))
-    lines.append("| Metric | Count |")
-    lines.append("|--------|-------|")
-    lines.append(f"| Total open PRs | {len(prs)} |")
-    lines.append(f"| Non-draft | {len(non_draft)} |")
-    lines.append(f"| Draft | {len(draft)} |")
-    lines.append(f"| Bot PRs (backports etc.) | {len(bot_prs)} |")
-    for label in ["major-decision-pending", "major-decision-approved",
-                  "major-decision-deferred", "to-be-merged", "to-be-closed",
-                  "stalled", "run-extra-tests", "needs-doc-pr"]:
-        if label in label_counts:
-            lines.append(f"| `{label}` | {label_counts[label]} |")
+    lines.append("| Lane | Count |")
+    lines.append("|------|-------|")
+    lines.append(f"| Total open PRs | {bucket_result['total']} |")
+    for label, key in [("🟢 Land-ready", LANE_LAND_READY),
+                       ("🤖 Bot / backport", LANE_BOT_BACKPORT),
+                       ("👀 Ball in reviewer's court", LANE_REVIEWER_COURT),
+                       ("🗳 Needs a decision", LANE_NEEDS_DECISION),
+                       ("🏷 Flagged to close", LANE_FLAGGED_CLOSE),
+                       ("✍️ Ball in author's court", LANE_AUTHOR_COURT),
+                       ("📝 Draft (excluded)", LANE_EXCLUDED_DRAFT)]:
+        lines.append(f"| {label} | {counts.get(key, 0)} |")
     lines.append("")
 
-    # ── Immediate Actions ────────────────────────────────────────────────────
-    lines.append(section_header("⚡ Immediate Actions"))
-
-    # to-be-merged
-    tbm = [p for p in non_draft if "to-be-merged" in label_names(p)]
-    if tbm:
-        lines.append(section_header("Merge Now (`to-be-merged`)", 3))
-        lines.append("| PR | Title | Author | Age | Last update |")
-        lines.append("|----|-------|--------|-----|-------------|")
-        for pr in sorted(tbm, key=lambda p: p["created_at"]):
-            lines.append(pr_row(pr))
+    def lane_section(title, key, note=None, cols="| PR | Title | Author | Age |",
+                     sep="|----|-------|--------|-----|", sort_key=None):
+        entries = lanes.get(key, [])
+        if not entries:
+            return
+        lines.append(section_header(title))
+        if note:
+            lines.append(f"_{note}_")
+            lines.append("")
+        lines.append(cols)
+        lines.append(sep)
+        skey = sort_key or (lambda e: e.get("created_at") or "")
+        for e in sorted(entries, key=skey):
+            lines.append(_md_row(e))
         lines.append("")
 
-    # major-decision-approved, non-draft
-    approved = [p for p in non_draft
-                if "major-decision-approved" in label_names(p)
-                and "to-be-merged" not in label_names(p)]
-    if approved:
-        lines.append(section_header("Community-Approved, Awaiting Merge (`major-decision-approved`)", 3))
-        lines.append("_Decision is made — these just need someone to merge them._")
-        lines.append("")
-        lines.append("| PR | Title | Author | Age | Last update |")
-        lines.append("|----|-------|--------|-----|-------------|")
-        for pr in sorted(approved, key=lambda p: p["created_at"]):
-            lines.append(pr_row(pr))
-        lines.append("")
+    # ── Priority: owed a review (label-driven) ──
+    _md_outreach(lines, "⭐ Owed a Review (priority)", outreach["priority_owed_review"]) \
+        if outreach["priority_owed_review"] else None
 
-    # to-be-closed
-    tbc = [p for p in prs if "to-be-closed" in label_names(p)]
-    stalled = [p for p in prs if "stalled" in label_names(p)]
-    if tbc or stalled:
-        lines.append(section_header("Close Now", 3))
-        lines.append("| PR | Title | Author | Age | Reason |")
-        lines.append("|----|-------|--------|-----|--------|")
-        for pr in tbc:
-            n, title, author = pr["number"], pr["title"][:60], pr.get("user", {}).get("login", "?")
-            lines.append(f"| [{n}]({pr_url(n)}) | {title} | {author} | {age_str(age_days(pr['created_at']))} | `to-be-closed` |")
-        for pr in stalled:
-            n, title, author = pr["number"], pr["title"][:60], pr.get("user", {}).get("login", "?")
-            lines.append(f"| [{n}]({pr_url(n)}) | {title} | {author} | {age_str(age_days(pr['created_at']))} | `stalled` |")
+    # ── Lanes, actionability order ──
+    lane_section("🟢 Land-ready — one click to merge", LANE_LAND_READY,
+                 note="Community-approved / to-be-merged, CI not failing, no conflicts.")
+    lane_section("🤖 Bot / backport quick-wins", LANE_BOT_BACKPORT,
+                 note="Human-approved, fast to land.")
+
+    # First-timers overlay
+    first_timers = [e for e in by_number.values() if "first_timer" in e["overlays"]
+                    and e["lane"] != LANE_EXCLUDED_DRAFT]
+    if first_timers:
+        lines.append(section_header("🌱 First-Time Contributors"))
+        lines.append("_A timely response may retain a future regular. Cross-cut; each also appears in its lane._")
+        lines.append("")
+        lines.append("| PR | Title | Author | Age | Lane |")
+        lines.append("|----|-------|--------|-----|------|")
+        for e in sorted(first_timers, key=lambda e: e.get("created_at") or "", reverse=True):
+            lines.append(_md_row(e, extra=f"`{e['lane']}`"))
         lines.append("")
 
-    # ── Decision Bottleneck ──────────────────────────────────────────────────
-    pending = [p for p in non_draft if "major-decision-pending" in label_names(p)]
-    if pending:
-        lines.append(section_header("🟡 Decision Bottleneck (`major-decision-pending`)"))
-        lines.append(f"**{len(pending)} PRs** blocked waiting for a community vote.")
-        lines.append("")
-        lines.append("| PR | Title | Author | Age | Last update |")
-        lines.append("|----|-------|--------|-----|-------------|")
-        for pr in sorted(pending, key=lambda p: p["created_at"])[:20]:
-            lines.append(pr_row(pr))
-        if len(pending) > 20:
-            lines.append(f"| … | *{len(pending) - 20} more* | | | |")
-        lines.append("")
+    lane_section("👀 Ball in Reviewer's Court", LANE_REVIEWER_COURT,
+                 note="Author acted last — these need a reviewer. Longest-waiting first.",
+                 sort_key=lambda e: -(e.get("dormancy_days") or 0))
+    lane_section("🗳 Needs a Decision", LANE_NEEDS_DECISION,
+                 note="Blocked on a community decision.")
 
-    # ── Top Contributors ─────────────────────────────────────────────────────
-    lines.append(section_header("🧑‍💻 Top Contributors by Open PR Count"))
-    author_counts = Counter(
-        p.get("user", {}).get("login", "?")
-        for p in non_draft
-        if not p.get("user", {}).get("login", "").endswith("[bot]")
-    )
-    lines.append("| Author | Open PRs |")
-    lines.append("|--------|----------|")
-    for author, count in author_counts.most_common(15):
-        flag = " 🚨" if count >= 8 else (" ⚠️" if count >= 5 else "")
-        lines.append(f"| [{author}](https://github.com/{author}) | {count}{flag} |")
-    lines.append("")
-
-    # ── Aging ────────────────────────────────────────────────────────────────
-    lines.append(section_header("🕰 Long-Dormant PRs (90+ days since last update)"))
-    dormant = [p for p in non_draft
-               if age_days(p["updated_at"]) >= 90
-               and not p.get("user", {}).get("login", "").endswith("[bot]")]
-    dormant.sort(key=lambda p: p["updated_at"])
-
-    lines.append(f"**{len(dormant)} non-draft PRs** haven't been updated in 90+ days.")
-    lines.append("")
-    lines.append("| PR | Title | Author | Created | Last update |")
-    lines.append("|----|-------|--------|---------|-------------|")
-    for pr in dormant[:25]:
-        lines.append(pr_row(pr))
-    if len(dormant) > 25:
-        lines.append(f"| … | *{len(dormant) - 25} more* | | | |")
-    lines.append("")
-
-    # ── Deflake PRs ──────────────────────────────────────────────────────────
-    deflake = [p for p in non_draft
-               if any(kw in p["title"].lower()
-                      for kw in ["flak", "deflak", "stale tmpdir", "timing"])]
+    # Deflake overlay
+    deflake = [e for e in by_number.values() if "deflake" in e["overlays"]]
     if deflake:
-        lines.append(section_header("🔥 Open Deflake / Test-Fix PRs"))
-        lines.append("_Merging these reduces CI noise for everyone._")
+        lines.append(section_header("🔥 Deflake / Test-Fix"))
+        lines.append("_Merging these reduces CI noise. Cross-cut; each also appears in its lane._")
         lines.append("")
-        lines.append("| PR | Title | Author | Age | Last update |")
-        lines.append("|----|-------|--------|-----|-------------|")
-        for pr in sorted(deflake, key=lambda p: p["created_at"]):
-            lines.append(pr_row(pr))
-        lines.append("")
-
-    # ── High CI Burden ───────────────────────────────────────────────────────
-    run_extra = [p for p in non_draft if "run-extra-tests" in label_names(p)]
-    if run_extra:
-        lines.append(section_header("⏱ High CI Burden (`run-extra-tests`)"))
-        lines.append(f"**{len(run_extra)} PRs** trigger extended CI runs.")
-        lines.append("")
-        lines.append("| PR | Title | Author | Age |")
-        lines.append("|----|-------|--------|-----|")
-        for pr in sorted(run_extra, key=lambda p: p["created_at"]):
-            n = pr["number"]
-            title = pr["title"][:60]
-            author = pr.get("user", {}).get("login", "?")
-            a = age_str(age_days(pr["created_at"]))
-            lines.append(f"| [{n}]({pr_url(n)}) | {title} | {author} | {a} |")
+        lines.append("| PR | Title | Author | Age | Lane |")
+        lines.append("|----|-------|--------|-----|------|")
+        for e in sorted(deflake, key=lambda e: e.get("created_at") or ""):
+            lines.append(_md_row(e, extra=f"`{e['lane']}`"))
         lines.append("")
 
-    # ── Footer ───────────────────────────────────────────────────────────────
+    # ── Outreach dry-run ──
+    if any(outreach[k] for k in ("reengage", "closure_abandoned",
+                                 "maintainer_flagged_close", "superseded_suggestions")):
+        lines.append(section_header("📮 Outreach Dry-Run"))
+        lines.append("_**Dry-run only.** Nothing is posted, closed, or labelled automatically — "
+                     "these are proposals for a human to review and act on._")
+        lines.append("")
+        th = outreach["thresholds"]
+        _md_outreach(lines, f"Re-engage (reviewer's court, idle ≥{th['reengage_days']}d)", outreach["reengage"])
+        _md_outreach(lines, f"Closure candidates (author's court, idle ≥{th['closure_days']}d)", outreach["closure_abandoned"])
+        _md_outreach(lines, "Maintainer-flagged to close", outreach["maintainer_flagged_close"])
+        _md_outreach(lines, "Possibly superseded (verify first)", outreach["superseded_suggestions"])
+
+    # ── Ball in author's court (bottom) ──
+    lane_section("✍️ Ball in Author's Court", LANE_AUTHOR_COURT,
+                 note="Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle first.",
+                 sort_key=lambda e: -(e.get("dormancy_days") or 0))
+
     lines.append("---")
     lines.append("")
-    lines.append(f"*Report generated by [valkey-pr-watchtower](https://github.com/valkey-rainfall/valkey-pr-watchtower). Data from GitHub API. Opinions are the author's own.*")
-
+    lines.append(f"*Report generated by [valkey-pr-watchtower](https://github.com/valkey-rainfall/valkey-pr-watchtower). "
+                 f"Data from GitHub API. Opinions are the author's own.*")
     return "\n".join(lines)
 
 
@@ -422,15 +402,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", help="Output file (default: stdout)")
     parser.add_argument("--html", help="Output HTML report file")
+    parser.add_argument("--enrich-limit", type=int, default=None,
+                        help="Cap PRs enriched (for quick low-rate-limit runs)")
     args = parser.parse_args()
 
     prs = fetch_all_open_prs()
 
-    # Fetch PRs-since-launch count (site went live 2026-07-02)
     LAUNCH_DATE = "2026-07-02"
     prs_since = fetch_prs_since(LAUNCH_DATE)
 
-    # Fetch weekly activity (opened/merged/closed per week, last 12 weeks)
     print("Fetching weekly activity...", file=sys.stderr)
     weeks = fetch_weekly_activity()
 
@@ -441,25 +421,28 @@ def main():
         "prs_since_launch": prs_since,
         "launch_date": LAUNCH_DATE,
     }
-
-    # Save historical data
     save_history(stats, weeks)
 
-    # Fetch CI status for actionable PRs (approved + to-be-merged)
-    non_draft = [p for p in prs if not p.get("draft")]
-    actionable_nums = [
-        p["number"] for p in non_draft
-        if any(l["name"] in ("to-be-merged", "major-decision-approved")
-               for l in p.get("labels", []))
-    ]
-    print(f"Fetching CI status for {len(actionable_nums)} actionable PRs...", file=sys.stderr)
-    ci_status = fetch_pr_ci_status(actionable_nums) if actionable_nums else {}
+    # Enrich all non-draft, non-bot PRs (review state, CI, mergeable, activity timelines).
+    print("Enriching open PRs...", file=sys.stderr)
 
-    # Patch live counters into index.html
+    def _progress(num, count):
+        if count % 25 == 0:
+            print(f"  enriched {count} PRs...", file=sys.stderr)
+
+    enriched = enrich_all(prs, gh_get, gh_paginate, repo=REPO,
+                          limit=args.enrich_limit, progress=_progress)
+    print(f"  enriched {len(enriched)} PRs.", file=sys.stderr)
+
+    bucket_result = bucketize(prs, enriched, now=TODAY)
+    if not bucket_result["reconciled"]:
+        print("  WARNING: lane counts did not reconcile to total!", file=sys.stderr)
+    prs_by_num = {p["number"]: p for p in prs}
+    outreach_data = build_outreach(bucket_result, prs_by_num)
+
     patch_index_html(stats)
 
-    report = build_report(prs)
-
+    report = build_report(prs, bucket_result, outreach_data)
     if args.out:
         with open(args.out, "w") as f:
             f.write(report)
@@ -467,11 +450,10 @@ def main():
     else:
         print(report)
 
-    # Generate HTML report
     if args.html:
-        html_report = build_report_html(prs, generated, weeks=weeks, ci_status=ci_status)
+        html = build_report_html(prs, generated, bucket_result, outreach_data, weeks=weeks)
         with open(args.html, "w") as f:
-            f.write(html_report)
+            f.write(html)
         print(f"Wrote {args.html}", file=sys.stderr)
 
 

@@ -1,14 +1,29 @@
-"""HTML report builder for valkey-pr-watchtower. Generates report.html."""
-from collections import Counter
+"""HTML report builder for valkey-pr-watchtower.
+
+Renders the actionability-ordered lane report + stateless outreach dry-run from a
+buckets.bucketize() result and an outreach.build_outreach() result. Section order
+(top = most immediately actionable):
+
+  By the Numbers → Owed a Review (if any) → Land-ready → Bot/backport quick-wins
+  → First-time contributors → Ball in reviewer's court → Needs a decision
+  → Deflake/test-fix → Outreach dry-run (re-engage / closure / superseded /
+  maintainer-flagged) → Ball in author's court → Charts
+"""
 from datetime import datetime, timezone
+
+import buckets as B
 
 
 def _age_days(dt_str):
+    if not dt_str:
+        return None
     dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
     return (datetime.now(timezone.utc) - dt).days
 
 
 def _age_str(days):
+    if days is None:
+        return "—"
     if days < 14:
         return f"{days}d"
     if days < 60:
@@ -18,298 +33,334 @@ def _age_str(days):
     return f"{days / 365:.1f}y"
 
 
-def _label_names(pr):
-    return [l["name"] for l in pr.get("labels", [])]
+def _pr_link(entry):
+    n = entry["number"]
+    return f'<a href="{entry["url"]}" target="_blank" rel="noopener noreferrer">#{n}</a>'
 
 
-def _pr_link(pr):
-    n = pr["number"]
-    return f'<a href="https://github.com/valkey-io/valkey/pull/{n}" target="_blank" rel="noopener noreferrer">#{n}</a>'
+def _esc(s):
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+
+
+def _title(entry, n=60):
+    t = entry.get("title", "")
+    return _esc(t[:n] + ("…" if len(t) > n else ""))
 
 
 def _table(headers, rows):
-    """Build an HTML table from headers list and rows (list of lists)."""
     h = "".join(f"<th>{hdr}</th>" for hdr in headers)
     body = ""
     for row in rows:
-        cells = "".join(f"<td>{cell}</td>" for cell in row)
-        body += f"<tr>{cells}</tr>\n"
+        body += "<tr>" + "".join(f"<td>{c}</td>" for c in row) + "</tr>\n"
     return f"<table><thead><tr>{h}</tr></thead><tbody>{body}</tbody></table>"
 
 
 def _panel(title, badge_text, content, scroll=False):
     body_cls = "panel-body-scroll" if scroll else "panel-body"
-    return f'''<div class="panel" style="margin-bottom:12px;">
-  <div class="panel-header"><span>{title}</span><span class="badge badge-ai">{badge_text}</span></div>
-  <div class="{body_cls}">{content}</div>
-</div>'''
+    return (f'<div class="panel" style="margin-bottom:12px;">'
+            f'<div class="panel-header"><span>{title}</span>'
+            f'<span class="badge badge-ai">{badge_text}</span></div>'
+            f'<div class="{body_cls}">{content}</div></div>')
 
 
-def _ci_badge(ci_info):
-    """Render a CI status badge from ci_status dict entry."""
-    if not ci_info:
+def _ci_badge(enr):
+    """CI + merge badge from an enrichment dict (verdict-based, not success==total)."""
+    if not enr:
         return '<span class="muted">—</span>'
-    checks = ci_info.get("checks", {})
+    checks = enr.get("checks") or {}
+    verdict = checks.get("verdict", "none")
     total = checks.get("total", 0)
     success = checks.get("success", 0)
-    failure = checks.get("failure", 0)
-    mergeable = ci_info.get("mergeable")
-
-    if total == 0:
-        ci_text = '<span class="muted">no checks</span>'
-    elif failure > 0:
-        ci_text = f'<span class="danger">❌ {failure}/{total} failing</span>'
-    elif success == total:
-        ci_text = f'<span class="ok">✅ {total}/{total}</span>'
+    if verdict == "failing":
+        ci = f'<span class="danger">❌ {checks.get("failure", 0)}/{total} failing</span>'
+    elif verdict == "pending":
+        ci = f'<span class="warn">⏳ {success}/{total} running</span>'
+    elif verdict == "green":
+        ci = f'<span class="ok">✅ green</span>'
     else:
-        ci_text = f'<span class="warn">⏳ {success}/{total}</span>'
+        ci = '<span class="muted">no checks</span>'
+    ms = enr.get("mergeable_state")
+    if ms == "dirty":
+        ci += ' · <span class="danger">conflicts</span>'
+    elif ms == "clean":
+        ci += ' · <span class="ok">mergeable</span>'
+    return ci
 
-    merge_text = ""
-    if mergeable is True:
-        merge_text = ' · <span class="ok">no conflicts</span>'
-    elif mergeable is False:
-        merge_text = ' · <span class="danger">conflicts</span>'
 
-    return ci_text + merge_text
+def _blocked_reason(enr):
+    if not enr:
+        return "—"
+    if (enr.get("checks") or {}).get("verdict") == "failing":
+        return '<span class="danger">CI failing</span>'
+    if enr.get("mergeable_state") == "dirty":
+        return '<span class="danger">merge conflict</span>'
+    if enr.get("review_state") == "changes_requested":
+        return '<span class="warn">changes requested</span>'
+    return '<span class="muted">awaiting author</span>'
 
+
+def _dormancy_cell(entry):
+    dd = entry.get("dormancy_days")
+    tier = entry.get("dormancy_tier", "unknown")
+    cls = {"warm": "ok", "cooling": "", "dormant": "warn",
+           "stale": "danger", "ancient": "danger"}.get(tier, "muted")
+    return f'<span class="{cls}">{_age_str(dd)} idle</span>'
+
+
+# ── lane renderers ───────────────────────────────────────────────────────────
+
+def _lane_land_ready(entries):
+    rows = [[_pr_link(e), _title(e), _esc(e["author"]),
+             _age_str(_age_days(e["created_at"])), _ci_badge(e.get("enr"))]
+            for e in sorted(entries, key=lambda e: e["created_at"] or "")]
+    return _table(["PR", "Title", "Author", "Age", "CI + merge"], rows)
+
+
+def _lane_bot(entries):
+    rows = [[_pr_link(e), _title(e), _esc(e["author"]),
+             _age_str(_age_days(e["created_at"]))]
+            for e in sorted(entries, key=lambda e: e["created_at"] or "")]
+    return _table(["PR", "Title", "Author", "Age"], rows)
+
+
+def _lane_reviewer(entries):
+    rows = [[_pr_link(e), _title(e), _esc(e["author"]),
+             _ci_badge(e.get("enr")), _dormancy_cell(e)]
+            for e in sorted(entries, key=lambda e: e.get("dormancy_days") or 0, reverse=True)]
+    return _table(["PR", "Title", "Author", "CI + merge", "Waiting"], rows)
+
+
+def _lane_decision(entries):
+    rows = [[_pr_link(e), _title(e), _esc(e["author"]), _age_str(_age_days(e["created_at"]))]
+            for e in sorted(entries, key=lambda e: e["created_at"] or "")]
+    return _table(["PR", "Title", "Author", "Age"], rows)
+
+
+def _lane_author(entries):
+    rows = [[_pr_link(e), _title(e), _esc(e["author"]),
+             _blocked_reason(e.get("enr")), _dormancy_cell(e)]
+            for e in sorted(entries, key=lambda e: e.get("dormancy_days") or 0, reverse=True)]
+    return _table(["PR", "Title", "Author", "Blocked on", "Idle"], rows)
+
+
+def _overlay_rows(entries, extra_col=None):
+    rows = []
+    for e in sorted(entries, key=lambda e: e["created_at"] or "", reverse=True):
+        row = [_pr_link(e), _title(e), _esc(e["author"]), _age_str(_age_days(e["created_at"]))]
+        if extra_col:
+            row.append(extra_col(e))
+        rows.append(row)
+    return rows
+
+
+# ── outreach renderers ───────────────────────────────────────────────────────
+
+def _outreach_rows(candidates):
+    rows = []
+    for c in candidates:
+        link = f'<a href="{c["url"]}" target="_blank" rel="noopener noreferrer">#{c["number"]}</a>'
+        evidence = "; ".join(_esc(x) for x in c.get("evidence", []))
+        action = f'<code>{_esc(c.get("proposed_action", ""))}</code>'
+        draft = c.get("draft_message")
+        note = c.get("note")
+        detail = ""
+        if draft:
+            detail = (f'<details><summary class="muted" style="cursor:pointer">draft message</summary>'
+                      f'<div style="white-space:pre-wrap;font-size:0.85em;padding:6px 0">{_esc(draft)}</div></details>')
+        elif note:
+            detail = f'<span class="muted" style="font-size:0.85em">{_esc(note)}</span>'
+        rows.append([link, _title(c, 45), _esc(c["author"]), evidence, action, detail])
+    return _table(["PR", "Title", "Author", "Evidence", "Proposed action", "Detail"], rows)
+
+
+# ── charts (age histogram + weekly activity) ─────────────────────────────────
 
 def _build_charts(prs, non_draft, weeks):
-    """Generate Chart.js HTML for PR age histogram and weekly activity."""
     import json as _json
-
-    # PR Age Histogram buckets
     buckets = {"0-2w": 0, "2-4w": 0, "1-3mo": 0, "3-6mo": 0, "6-12mo": 0, "1y+": 0}
     for pr in non_draft:
-        days = _age_days(pr["created_at"])
-        if days <= 14:
-            buckets["0-2w"] += 1
-        elif days <= 28:
-            buckets["2-4w"] += 1
-        elif days <= 90:
-            buckets["1-3mo"] += 1
-        elif days <= 180:
-            buckets["3-6mo"] += 1
-        elif days <= 365:
-            buckets["6-12mo"] += 1
-        else:
-            buckets["1y+"] += 1
-
+        days = _age_days(pr["created_at"]) or 0
+        if days <= 14: buckets["0-2w"] += 1
+        elif days <= 28: buckets["2-4w"] += 1
+        elif days <= 90: buckets["1-3mo"] += 1
+        elif days <= 180: buckets["3-6mo"] += 1
+        elif days <= 365: buckets["6-12mo"] += 1
+        else: buckets["1y+"] += 1
     labels_hist = _json.dumps(list(buckets.keys()))
     data_hist = _json.dumps(list(buckets.values()))
-
-    # Weekly activity chart
     if weeks:
         week_labels = _json.dumps([w["week_start"] for w in weeks])
         opened_data = _json.dumps([w["opened"] for w in weeks])
         merged_data = _json.dumps([w["merged"] for w in weeks])
     else:
-        week_labels = "[]"
-        opened_data = "[]"
-        merged_data = "[]"
-
+        week_labels = opened_data = merged_data = "[]"
     return f'''
 <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-  <div>
-    <h3 style="margin-bottom:8px;">PR Age Distribution (non-draft)</h3>
-    <canvas id="ageChart" style="max-height:250px;"></canvas>
-  </div>
-  <div>
-    <h3 style="margin-bottom:8px;">Weekly Activity (last 8 weeks)</h3>
-    <canvas id="activityChart" style="max-height:250px;"></canvas>
-  </div>
+  <div><h3 style="margin-bottom:8px;">PR Age Distribution (non-draft)</h3>
+    <canvas id="ageChart" style="max-height:250px;"></canvas></div>
+  <div><h3 style="margin-bottom:8px;">Weekly Activity (last 8 weeks)</h3>
+    <canvas id="activityChart" style="max-height:250px;"></canvas></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function() {{
-  // Read theme colors from CSS custom properties
   var style = getComputedStyle(document.documentElement);
   var textColor = style.getPropertyValue('--text').trim() || '#d4d4f0';
   var mutedColor = style.getPropertyValue('--muted').trim() || '#7878aa';
   var borderColor = style.getPropertyValue('--border').trim() || '#2a2a5a';
-
-  // Age histogram
   new Chart(document.getElementById('ageChart'), {{
     type: 'bar',
-    data: {{
-      labels: {labels_hist},
-      datasets: [{{
-        label: 'Open PRs',
-        data: {data_hist},
-        backgroundColor: ['#50fa7b','#50fa7b','#ffb86c','#ffb86c','#ff5555','#ff5555'],
-        borderColor: borderColor,
-        borderWidth: 1
-      }}]
-    }},
-    options: {{
-      responsive: true,
-      plugins: {{ legend: {{ display: false }} }},
-      scales: {{
-        y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
-        x: {{ ticks: {{ color: mutedColor }}, grid: {{ display: false }} }}
-      }}
-    }}
+    data: {{ labels: {labels_hist}, datasets: [{{ label: 'Open PRs', data: {data_hist},
+      backgroundColor: ['#50fa7b','#50fa7b','#ffb86c','#ffb86c','#ff5555','#ff5555'],
+      borderColor: borderColor, borderWidth: 1 }}] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ display: false }} }},
+      scales: {{ y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
+        x: {{ ticks: {{ color: mutedColor }}, grid: {{ display: false }} }} }} }}
   }});
-  // Weekly activity
   new Chart(document.getElementById('activityChart'), {{
     type: 'line',
-    data: {{
-      labels: {week_labels},
-      datasets: [
-        {{ label: 'Opened', data: {opened_data}, borderColor: '#ffb86c', backgroundColor: 'rgba(255,184,108,0.1)', tension: 0.3, fill: true }},
-        {{ label: 'Merged', data: {merged_data}, borderColor: '#50fa7b', backgroundColor: 'rgba(80,250,123,0.1)', tension: 0.3, fill: true }}
-      ]
-    }},
-    options: {{
-      responsive: true,
-      plugins: {{ legend: {{ labels: {{ color: textColor }} }} }},
-      scales: {{
-        y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
-        x: {{ ticks: {{ color: mutedColor, maxRotation: 45 }}, grid: {{ display: false }} }}
-      }}
-    }}
+    data: {{ labels: {week_labels}, datasets: [
+      {{ label: 'Opened', data: {opened_data}, borderColor: '#ffb86c', backgroundColor: 'rgba(255,184,108,0.1)', tension: 0.3, fill: true }},
+      {{ label: 'Merged', data: {merged_data}, borderColor: '#50fa7b', backgroundColor: 'rgba(80,250,123,0.1)', tension: 0.3, fill: true }} ] }},
+    options: {{ responsive: true, plugins: {{ legend: {{ labels: {{ color: textColor }} }} }},
+      scales: {{ y: {{ beginAtZero: true, ticks: {{ color: mutedColor }}, grid: {{ color: borderColor }} }},
+        x: {{ ticks: {{ color: mutedColor, maxRotation: 45 }}, grid: {{ display: false }} }} }} }}
   }});
 }})();
 </script>'''
 
 
-def build_report_html(prs, generated, weeks=None, ci_status=None):
-    if weeks is None:
-        weeks = []
-    if ci_status is None:
-        ci_status = {}
+AI_BADGE = "🤖 auto-generated daily"
 
+
+def build_report_html(prs, generated, bucket_result, outreach, weeks=None):
+    weeks = weeks or []
     non_draft = [p for p in prs if not p.get("draft")]
-    draft = [p for p in prs if p.get("draft")]
-    bot_prs = [p for p in prs if p.get("user", {}).get("login", "").endswith("[bot]")]
+    lanes = bucket_result["lanes"]
+    counts = bucket_result["counts"]
+    by_number = bucket_result["by_number"]
 
-    label_counts = Counter()
-    for pr in prs:
-        for l in _label_names(pr):
-            label_counts[l] += 1
+    # overlays gathered across lanes
+    first_timers = [e for e in by_number.values() if "first_timer" in e["overlays"]
+                    and e["lane"] not in (B.LANE_EXCLUDED_DRAFT,)]
+    deflake = [e for e in by_number.values() if "deflake" in e["overlays"]]
 
     sections = []
 
-    # ── By the Numbers
+    # ── By the Numbers (lane counts, actionability order) ──
+    def crow(label, key, cls=""):
+        return [label, f'<span class="num-badge {cls}">{counts.get(key, 0)}</span>']
     rows = [
-        ["Total open PRs", f'<span class="num-badge warn">{len(prs)}</span>'],
-        ["Non-draft", f'<span class="num-badge">{len(non_draft)}</span>'],
-        ["Draft", f'<span class="num-badge">{len(draft)}</span>'],
-        ["Bot PRs (backports)", f'<span class="num-badge">{len(bot_prs)}</span>'],
+        ["Total open PRs", f'<span class="num-badge warn">{bucket_result["total"]}</span>'],
+        crow("🟢 Land-ready", B.LANE_LAND_READY, "ok"),
+        crow("🤖 Bot / backport", B.LANE_BOT_BACKPORT),
+        crow("👀 Ball in reviewer's court", B.LANE_REVIEWER_COURT),
+        crow("🗳 Needs a decision", B.LANE_NEEDS_DECISION),
+        crow("🏷 Flagged to close", B.LANE_FLAGGED_CLOSE, "warn"),
+        crow("✍️ Ball in author's court", B.LANE_AUTHOR_COURT),
+        crow("📝 Draft (excluded)", B.LANE_EXCLUDED_DRAFT, "muted"),
     ]
-    for label in ["major-decision-pending", "major-decision-approved",
-                  "major-decision-deferred", "to-be-merged", "to-be-closed",
-                  "stalled", "run-extra-tests", "needs-doc-pr"]:
-        if label in label_counts:
-            color = "danger" if label in ("major-decision-pending", "stalled") else ("ok" if "approved" in label else "warn")
-            rows.append([f"<code>{label}</code>", f'<span class="num-badge {color}">{label_counts[label]}</span>'])
-    sections.append(_panel("📊 By the Numbers", "🤖 auto-generated daily", _table(["Metric", "Count"], rows)))
+    if counts.get(B.LANE_UNKNOWN):
+        rows.append(crow("❔ Unclassified", B.LANE_UNKNOWN, "muted"))
+    sections.append(_panel("📊 By the Numbers", AI_BADGE, _table(["Lane", "Count"], rows)))
 
-    # ── Immediate Actions: to-be-merged
-    tbm = [p for p in non_draft if "to-be-merged" in _label_names(p)]
-    approved = [p for p in non_draft if "major-decision-approved" in _label_names(p) and "to-be-merged" not in _label_names(p)]
-    tbc = [p for p in prs if "to-be-closed" in _label_names(p)]
-    stalled = [p for p in prs if "stalled" in _label_names(p)]
+    # ── Owed a review (priority, label-driven) — only if populated ──
+    if outreach["priority_owed_review"]:
+        sections.append(_panel(
+            "⭐ Owed a Review (priority)", AI_BADGE,
+            '<p class="muted" style="font-size:0.85em;">Authors confirmed still-wanted '
+            '(via label) — the project owes these a review.</p>'
+            + _outreach_rows(outreach["priority_owed_review"])))
 
-    action_html = ""
-    if tbm:
-        rows = []
-        for pr in sorted(tbm, key=lambda p: p["created_at"]):
-            ci = _ci_badge(ci_status.get(pr["number"]))
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), ci])
-        action_html += f'<h3 class="ok">Merge Now (<code>to-be-merged</code>)</h3>{_table(["PR", "Title", "Author", "Age", "CI + Merge"], rows)}'
+    # ── Land-ready ──
+    if lanes[B.LANE_LAND_READY]:
+        sections.append(_panel(
+            "🟢 Land-ready — one click to merge", AI_BADGE,
+            '<p class="muted" style="font-size:0.85em;">Community-approved / to-be-merged, '
+            'CI not failing, no conflicts.</p>' + _lane_land_ready(lanes[B.LANE_LAND_READY])))
 
-    if approved:
-        rows = []
-        for pr in sorted(approved, key=lambda p: p["created_at"]):
-            ci = _ci_badge(ci_status.get(pr["number"]))
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), ci])
-        action_html += f'<h3 class="ok" style="margin-top:14px;">Community-Approved, Awaiting Merge</h3><p class="muted" style="font-size:0.85em;">Decision is made — just needs someone to click merge.</p>{_table(["PR", "Title", "Author", "Age", "CI + Merge"], rows)}'
+    # ── Bot / backport quick-wins ──
+    if lanes[B.LANE_BOT_BACKPORT]:
+        sections.append(_panel(
+            "🤖 Bot / backport quick-wins", AI_BADGE,
+            '<p class="muted" style="font-size:0.85em;">Human-approved, fast to land.</p>'
+            + _lane_bot(lanes[B.LANE_BOT_BACKPORT]), scroll=True))
 
-    if tbc or stalled:
-        rows = []
-        for pr in tbc:
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), "<code>to-be-closed</code>"])
-        for pr in stalled:
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"])), "<code>stalled</code>"])
-        action_html += f'<h3 class="danger" style="margin-top:14px;">Close Now</h3>{_table(["PR", "Title", "Author", "Age", "Reason"], rows)}'
-
-    if action_html:
-        sections.append(_panel("⚡ Immediate Actions", "🤖 auto-generated daily", action_html))
-
-    # ── Decision Bottleneck
-    pending = [p for p in non_draft if "major-decision-pending" in _label_names(p)]
-    if pending:
-        rows = []
-        for pr in sorted(pending, key=lambda p: p["created_at"]):
-            rows.append([_pr_link(pr), pr["title"][:60], pr.get("user", {}).get("login", "?"),
-                         _age_str(_age_days(pr["created_at"])), _age_str(_age_days(pr["updated_at"])) + " ago"])
-        content = f'<p><strong>{len(pending)} PRs</strong> blocked waiting for a community vote.</p>{_table(["PR", "Title", "Author", "Age", "Last update"], rows)}'
-        sections.append(_panel("🟡 Decision Bottleneck", "🤖 auto-generated daily", content, scroll=True))
-
-    # ── Top Contributors
-    author_counts = Counter(
-        p.get("user", {}).get("login", "?")
-        for p in non_draft
-        if not p.get("user", {}).get("login", "").endswith("[bot]")
-    )
-    rows = []
-    for author, count in author_counts.most_common(15):
-        flag = ' <span class="danger">🚨</span>' if count >= 8 else (' <span class="warn">⚠️</span>' if count >= 5 else "")
-        rows.append([f'<a href="https://github.com/{author}" target="_blank" rel="noopener noreferrer">{author}</a>', f'{count}{flag}'])
-    sections.append(_panel("🧑‍💻 Top Contributors by Open PR Count", "🤖 auto-generated daily", _table(["Author", "Open PRs"], rows)))
-
-    # ── Dormant PRs
-    dormant = [p for p in non_draft
-               if _age_days(p["updated_at"]) >= 90
-               and not p.get("user", {}).get("login", "").endswith("[bot]")]
-    dormant.sort(key=lambda p: p["updated_at"])
-    if dormant:
-        rows = []
-        for pr in dormant:
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"),
-                         _age_str(_age_days(pr["created_at"])), f'<span class="danger">{_age_str(_age_days(pr["updated_at"]))} ago</span>'])
-        content = f'<p><strong>{len(dormant)} non-draft PRs</strong> haven\'t been updated in 90+ days.</p>{_table(["PR", "Title", "Author", "Created", "Last update"], rows)}'
-        sections.append(_panel("🕰 Long-Dormant PRs (90+ days)", "🤖 auto-generated daily", content, scroll=True))
-
-    # ── Deflake PRs
-    deflake = [p for p in non_draft
-               if any(kw in p["title"].lower() for kw in ["flak", "deflak", "stale tmpdir", "timing"])]
-    if deflake:
-        rows = []
-        for pr in sorted(deflake, key=lambda p: p["created_at"]):
-            rows.append([_pr_link(pr), pr["title"][:60], pr.get("user", {}).get("login", "?"),
-                         _age_str(_age_days(pr["created_at"])), _age_str(_age_days(pr["updated_at"])) + " ago"])
-        content = f'<p class="muted" style="font-size:0.85em;">Merging these reduces CI noise for everyone.</p>{_table(["PR", "Title", "Author", "Age", "Last update"], rows)}'
-        sections.append(_panel("🔥 Open Deflake / Test-Fix PRs", "🤖 auto-generated daily", content))
-
-    # ── High CI Burden
-    run_extra = [p for p in non_draft if "run-extra-tests" in _label_names(p)]
-    if run_extra:
-        rows = []
-        for pr in sorted(run_extra, key=lambda p: p["created_at"]):
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"), _age_str(_age_days(pr["created_at"]))])
-        content = f'<p><strong>{len(run_extra)} PRs</strong> trigger extended CI runs.</p>{_table(["PR", "Title", "Author", "Age"], rows)}'
-        sections.append(_panel("⏱ High CI Burden (run-extra-tests)", "🤖 auto-generated daily", content, scroll=True))
-
-    # ── First-Time Contributors
-    first_timers = [p for p in non_draft
-                    if p.get("author_association") in ("FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER", "NONE")
-                    and not p.get("user", {}).get("login", "").endswith("[bot]")]
+    # ── First-time contributors (retention priority) ──
     if first_timers:
-        rows = []
-        for pr in sorted(first_timers, key=lambda p: p["created_at"], reverse=True):
-            rows.append([_pr_link(pr), pr["title"][:55], pr.get("user", {}).get("login", "?"),
-                         _age_str(_age_days(pr["created_at"])),
-                         pr.get("author_association", "?").replace("_", " ").lower()])
-        content = f'<p>PRs from contributors with no prior merged PRs in this repo ({len(first_timers)} total). These deserve extra attention — a response now may retain a future regular contributor.</p>{_table(["PR", "Title", "Author", "Age", "Association"], rows)}'
-        sections.append(_panel("🌱 First-Time Contributors", "🤖 auto-generated daily", content, scroll=True))
+        rows = _overlay_rows(first_timers, extra_col=lambda e: f'<code>{e["lane"]}</code>')
+        sections.append(_panel(
+            "🌱 First-Time Contributors", AI_BADGE,
+            f'<p>{len(first_timers)} PRs from new contributors — a timely response may retain '
+            f'a future regular. Cross-cut; each also appears in its lane.</p>'
+            + _table(["PR", "Title", "Author", "Age", "Lane"], rows), scroll=True))
 
-    # ── Charts: PR Age Histogram + Weekly Activity
-    chart_html = _build_charts(prs, non_draft, weeks)
-    if chart_html:
-        sections.append(_panel("📈 Charts", "🤖 auto-generated daily", chart_html))
+    # ── Ball in reviewer's court ──
+    if lanes[B.LANE_REVIEWER_COURT]:
+        sections.append(_panel(
+            "👀 Ball in Reviewer's Court", AI_BADGE,
+            f'<p><strong>{len(lanes[B.LANE_REVIEWER_COURT])} PRs</strong> where the author acted '
+            f'last — these need a reviewer. Sorted longest-waiting first.</p>'
+            + _lane_reviewer(lanes[B.LANE_REVIEWER_COURT]), scroll=True))
 
-    # ── Assemble page
+    # ── Needs a decision ──
+    if lanes[B.LANE_NEEDS_DECISION]:
+        sections.append(_panel(
+            "🗳 Needs a Decision", AI_BADGE,
+            f'<p><strong>{len(lanes[B.LANE_NEEDS_DECISION])} PRs</strong> blocked on a community '
+            f'decision (major-decision-pending / -deferred).</p>'
+            + _lane_decision(lanes[B.LANE_NEEDS_DECISION]), scroll=True))
+
+    # ── Deflake overlay ──
+    if deflake:
+        rows = _overlay_rows(deflake, extra_col=lambda e: f'<code>{e["lane"]}</code>')
+        sections.append(_panel(
+            "🔥 Deflake / Test-Fix", AI_BADGE,
+            '<p class="muted" style="font-size:0.85em;">Merging these reduces CI noise for '
+            'everyone. Cross-cut; each also appears in its lane.</p>'
+            + _table(["PR", "Title", "Author", "Age", "Lane"], rows)))
+
+    # ── Outreach dry-run ──
+    outreach_html = ""
+    if outreach["reengage"]:
+        outreach_html += (f'<h3 class="warn">Re-engage ({len(outreach["reengage"])}) — '
+                          f'reviewer\'s court, idle ≥{outreach["thresholds"]["reengage_days"]}d</h3>'
+                          '<p class="muted" style="font-size:0.85em;">Project let these sit; '
+                          'apologise and ask if the author still wants to land it.</p>'
+                          + _outreach_rows(outreach["reengage"]))
+    if outreach["closure_abandoned"]:
+        outreach_html += (f'<h3 class="danger" style="margin-top:14px;">Closure candidates '
+                          f'({len(outreach["closure_abandoned"])}) — author\'s court, idle '
+                          f'≥{outreach["thresholds"]["closure_days"]}d</h3>'
+                          '<p class="muted" style="font-size:0.85em;">Ball is the author\'s and '
+                          'gone quiet. First-timers get a gentle nudge instead of a close threat.</p>'
+                          + _outreach_rows(outreach["closure_abandoned"]))
+    if outreach["maintainer_flagged_close"]:
+        outreach_html += (f'<h3 style="margin-top:14px;">Maintainer-flagged to close '
+                          f'({len(outreach["maintainer_flagged_close"])})</h3>'
+                          + _outreach_rows(outreach["maintainer_flagged_close"]))
+    if outreach["superseded_suggestions"]:
+        outreach_html += (f'<h3 style="margin-top:14px;">Possibly superseded '
+                          f'({len(outreach["superseded_suggestions"])}) — verify before acting</h3>'
+                          + _outreach_rows(outreach["superseded_suggestions"]))
+    if outreach_html:
+        outreach_html = ('<p style="font-size:0.85em;"><strong>Dry-run only.</strong> '
+                         'Nothing is posted, closed, or labelled automatically — these are '
+                         'proposals with draft messages for a human to review and act on.</p>'
+                         + outreach_html)
+        sections.append(_panel("📮 Outreach Dry-Run", AI_BADGE, outreach_html))
+
+    # ── Ball in author's court (bottom: blocked on someone else) ──
+    if lanes[B.LANE_AUTHOR_COURT]:
+        sections.append(_panel(
+            "✍️ Ball in Author's Court", AI_BADGE,
+            f'<p><strong>{len(lanes[B.LANE_AUTHOR_COURT])} PRs</strong> waiting on the author '
+            f'(CI red / conflicts / unaddressed review). Nothing for a reviewer to do yet.</p>'
+            + _lane_author(lanes[B.LANE_AUTHOR_COURT]), scroll=True))
+
+    # ── Charts ──
+    sections.append(_panel("📈 Charts", AI_BADGE, _build_charts(prs, non_draft, weeks)))
+
     body = "\n".join(sections)
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -322,29 +373,24 @@ def build_report_html(prs, generated, weeks=None, ci_status=None):
 </head>
 <body>
 <div class="page-wrap">
-
   <site-header></site-header>
   <site-nav></site-nav>
-
   <div class="grid">
   <main>
-
   <div class="panel" style="margin-bottom:12px;">
     <div class="panel-header"><span>📊 Live PR Health Report</span><attr-badge type="ai"></attr-badge></div>
     <div class="panel-body">
-      <p>Generated: <strong>{generated}</strong> from <a href="https://github.com/valkey-io/valkey/pulls" target="_blank" rel="noopener noreferrer">live GitHub API data</a>.
+      <p>Generated: <strong>{generated}</strong> from
+      <a href="https://github.com/valkey-io/valkey/pulls" target="_blank" rel="noopener noreferrer">live GitHub API data</a>.
+      PRs are sorted into lanes by <em>who owns the next move</em>, most immediately actionable first.
       Source: <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/scripts/build_report.py" target="_blank" rel="noopener noreferrer">build_report.py</a>.</p>
     </div>
   </div>
-
   {body}
-
   </main>
   <site-sidebar></site-sidebar>
   </div>
-
   <site-footer></site-footer>
-
 </div>
 </body>
 </html>'''
