@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-07-24 22:30 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-07-24 22:55 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 _PRs are sorted into lanes by who owns the next move, most immediately actionable first._
 
@@ -56,7 +56,7 @@ _A timely response may retain a future regular. Cross-cut; each also appears in 
 
 | PR | Title | Author | Age | Lane |
 |----|-------|--------|-----|------|
-| [4257](https://github.com/valkey-io/valkey/pull/4257) | perf: combined post-command pending-work gate in afterCommand() | ahmetalicc | 1d | `author_court` |
+| [4257](https://github.com/valkey-io/valkey/pull/4257) | perf: combined post-command pending-work gate in afterCommand() | ahmetalicc | 2d | `author_court` |
 | [4254](https://github.com/valkey-io/valkey/pull/4254) | Convert oversized hash listpacks during RDB load | ANSHUL-REAL | 2d | `author_court` |
 | [4252](https://github.com/valkey-io/valkey/pull/4252) | valkey-benchmark: fix -r option to support keyspace values above INT_M… | michellee-10 | 3d | `reviewer_court` |
 | [4232](https://github.com/valkey-io/valkey/pull/4232) | Bump minimum cmake version to 3.24 | Baraa-Hasheesh | 3d | `author_court` |
@@ -182,10 +182,10 @@ _Author acted last — these need a reviewer. Longest-waiting first._
 | [3531](https://github.com/valkey-io/valkey/pull/3531) | Streaming Compression support for RDB | sarthakaggarwal97 | 3mo |
 | [3118](https://github.com/valkey-io/valkey/pull/3118) | Incr the dirty counter when deleting expired keys/fields from active e… | enjoy-binbin | 5mo |
 | [4259](https://github.com/valkey-io/valkey/pull/4259) | Support dual-channel atomic slot migration | murphyjacob4 | 1d |
-| [4179](https://github.com/valkey-io/valkey/pull/4179) | Deflake: replace flaky wall-clock defrag latency assertion with determ… | rainsupreme | 8d |
+| [4206](https://github.com/valkey-io/valkey/pull/4206) | ZSET B+ Tree PR 3: Replace skiplist with FB+ Tree implementation | rainsupreme | 6d |
+| [4179](https://github.com/valkey-io/valkey/pull/4179) | Deflake: replace flaky wall-clock defrag latency assertion with determ… | rainsupreme | 9d |
 | [4080](https://github.com/valkey-io/valkey/pull/4080) | Make serverObject (robj) opaque | rainsupreme | 3w |
 | [4252](https://github.com/valkey-io/valkey/pull/4252) | valkey-benchmark: fix -r option to support keyspace values above INT_M… | michellee-10 | 3d |
-| [4206](https://github.com/valkey-io/valkey/pull/4206) | ZSET B+ Tree PR 3: Replace skiplist with FB+ Tree implementation | rainsupreme | 6d |
 
 
 ## 🗳 Needs a Decision
@@ -240,7 +240,7 @@ _Merging these reduces CI noise. Cross-cut; each also appears in its lane._
 | [3049](https://github.com/valkey-io/valkey/pull/3049) | Fix flaky test in manual-failover.tcl | Nikhil-Manglore | 6mo | `reviewer_court` |
 | [3969](https://github.com/valkey-io/valkey/pull/3969) | Test framework: avoid stale tmpdir reuse on PID collision | zuiderkwast | 6w | `excluded_draft` |
 | [4102](https://github.com/valkey-io/valkey/pull/4102) | Deflake "Replica output bytes metric" with atomic stats capture | Taeknology | 2w | `land_ready` |
-| [4179](https://github.com/valkey-io/valkey/pull/4179) | Deflake: replace flaky wall-clock defrag latency assertion with determ… | rainsupreme | 8d | `reviewer_court` |
+| [4179](https://github.com/valkey-io/valkey/pull/4179) | Deflake: replace flaky wall-clock defrag latency assertion with determ… | rainsupreme | 9d | `reviewer_court` |
 | [4223](https://github.com/valkey-io/valkey/pull/4223) | Deflake ccov: Contain slot migration test failures with a recovery bar… | rainsupreme | 4d | `reviewer_court` |
 | [4251](https://github.com/valkey-io/valkey/pull/4251) | deflake ccov: Use _exit() when a child is killed by SIGUSR1 | rainsupreme | 3d | `author_court` |
 
@@ -395,13 +395,13 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [1927](https://github.com/valkey-io/valkey/pull/1927) | Mark primary node as alive immediately if reachable and failover is no… | hpatro | 1.3y |
 | [1888](https://github.com/valkey-io/valkey/pull/1888) | Change the usec_per_call operation from float to long long division | bluayer | 1.3y |
 | [2183](https://github.com/valkey-io/valkey/pull/2183) | Spelling | jsoref | 1.1y |
+| [2242](https://github.com/valkey-io/valkey/pull/2242) | spelling: cannot | jsoref | 1.1y |
 | [2238](https://github.com/valkey-io/valkey/pull/2238) | spelling: ; otherwise, | jsoref | 1.1y |
 | [2252](https://github.com/valkey-io/valkey/pull/2252) | Spelling 16 | jsoref | 1.1y |
 | [2251](https://github.com/valkey-io/valkey/pull/2251) | spelling: set up | jsoref | 1.1y |
 | [2250](https://github.com/valkey-io/valkey/pull/2250) | Spelling 14 | jsoref | 1.1y |
 | [2249](https://github.com/valkey-io/valkey/pull/2249) | Spelling 13 | jsoref | 1.1y |
 | [2248](https://github.com/valkey-io/valkey/pull/2248) | spelling: otherwise, | jsoref | 1.1y |
-| [2242](https://github.com/valkey-io/valkey/pull/2242) | spelling: cannot | jsoref | 1.1y |
 | [2241](https://github.com/valkey-io/valkey/pull/2241) | Spelling 4 | jsoref | 1.1y |
 | [2253](https://github.com/valkey-io/valkey/pull/2253) | Spelling 17 | jsoref | 1.1y |
 | [2306](https://github.com/valkey-io/valkey/pull/2306) | Unexpected variable overriding from .make-settings file | yzc-yzc | 1.1y |
@@ -542,13 +542,13 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [4254](https://github.com/valkey-io/valkey/pull/4254) | Convert oversized hash listpacks during RDB load | ANSHUL-REAL | 2d |
 | [4215](https://github.com/valkey-io/valkey/pull/4215) | valkey-benchmark: reject empty command sequence instead of hanging | dhruv2x | 5d |
 | [3984](https://github.com/valkey-io/valkey/pull/3984) | AOF loading must not check ACL permissions in exec | lukepalmer | 6w |
-| [2978](https://github.com/valkey-io/valkey/pull/2978) | Add XX option to ZRANGE commands for null/empty distinction | youngmore1024 | 7mo |
 | [4262](https://github.com/valkey-io/valkey/pull/4262) | Also free string object under THP in fork child | enjoy-binbin | 0d |
-| [4257](https://github.com/valkey-io/valkey/pull/4257) | perf: combined post-command pending-work gate in afterCommand() | ahmetalicc | 1d |
+| [4257](https://github.com/valkey-io/valkey/pull/4257) | perf: combined post-command pending-work gate in afterCommand() | ahmetalicc | 2d |
 | [4256](https://github.com/valkey-io/valkey/pull/4256) | Parallelize Valgrind tests to reduce Daily Runtime | sarthakaggarwal97 | 2d |
 | [4251](https://github.com/valkey-io/valkey/pull/4251) | deflake ccov: Use _exit() when a child is killed by SIGUSR1 | rainsupreme | 3d |
 | [4076](https://github.com/valkey-io/valkey/pull/4076) | QoS for system critical events ( such as cluster heartbeats, replicati… | satheeshaGowda | 3w |
 | [4005](https://github.com/valkey-io/valkey/pull/4005) | Reserve connection slots for priority sources | satheeshaGowda | 5w |
+| [2978](https://github.com/valkey-io/valkey/pull/2978) | Add XX option to ZRANGE commands for null/empty distinction | youngmore1024 | 7mo |
 
 ---
 
