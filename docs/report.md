@@ -1,6 +1,6 @@
 # Valkey PR Health Report
 
-**Generated:** 2026-09-30 11:57 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
+**Generated:** 2026-10-01 12:29 UTC | **Repo:** [valkey-io/valkey](https://github.com/valkey-io/valkey)
 
 _PRs are sorted into lanes by who owns the next move, most immediately actionable first._
 
@@ -10,14 +10,14 @@ _PRs are sorted into lanes by who owns the next move, most immediately actionabl
 
 | Lane | Count |
 |------|-------|
-| Total open PRs | 336 |
+| Total open PRs | 337 |
 | 🟢 Land-ready | 4 |
 | 🤖 Bot / backport | 6 |
-| 👀 Ball in reviewer's court | 60 |
+| 👀 Ball in reviewer's court | 57 |
 | 🗳 Needs a decision | 29 |
 | 🏷 Flagged to close | 2 |
-| ✍️ Ball in author's court | 206 |
-| 📝 Draft (excluded) | 29 |
+| ✍️ Ball in author's court | 212 |
+| 📝 Draft (excluded) | 27 |
 
 
 ## 🟢 Land-ready — one click to merge
@@ -29,7 +29,7 @@ _Community-approved / to-be-merged, CI not failing, no conflicts._
 | [685](https://github.com/valkey-io/valkey/pull/685) | Align the entry read and lag rules of the consumer group | artikell | 2.3y |
 | [3413](https://github.com/valkey-io/valkey/pull/3413) | Optimize infoCommand with SDS pre-allocation | charsyam | 6mo |
 | [3496](https://github.com/valkey-io/valkey/pull/3496) | aof: write directly to server.aof_buf in feedAppendOnlyFile | charsyam | 5mo |
-| [4765](https://github.com/valkey-io/valkey/pull/4765) | Restore replica flow control with I/O threads enabled | chky1386 | 7d |
+| [4765](https://github.com/valkey-io/valkey/pull/4765) | Restore replica flow control with I/O threads enabled | chky1386 | 8d |
 
 
 ## 🤖 Bot / backport quick-wins
@@ -43,7 +43,7 @@ _Human-approved, fast to land._
 | [4685](https://github.com/valkey-io/valkey/pull/4685) | [backport] Backport sweep for 8.0 | valkeyrie-ops[bot] | 2w |
 | [4686](https://github.com/valkey-io/valkey/pull/4686) | [backport] Backport sweep for 9.0 | valkeyrie-ops[bot] | 2w |
 | [4687](https://github.com/valkey-io/valkey/pull/4687) | [backport] Backport sweep for 8.1 | valkeyrie-ops[bot] | 2w |
-| [4794](https://github.com/valkey-io/valkey/pull/4794) | [backport] Backport sweep for 9.2 | valkeyrie-ops[bot] | 1d |
+| [4794](https://github.com/valkey-io/valkey/pull/4794) | [backport] Backport sweep for 9.2 | valkeyrie-ops[bot] | 2d |
 
 
 ## 🌱 First-Time Contributors
@@ -52,26 +52,27 @@ _A timely response may retain a future regular. Cross-cut; each also appears in 
 
 | PR | Title | Author | Age | Lane |
 |----|-------|--------|-----|------|
-| [4802](https://github.com/valkey-io/valkey/pull/4802) | Fix process title test to respect PROG_SUFFIX | IvaAMarinova | 1d | `author_court` |
-| [4792](https://github.com/valkey-io/valkey/pull/4792) | Fix protocol error log truncating the query buffer at null bytes | Chy-Zaber-Bin-Zahid | 2d | `author_court` |
-| [4775](https://github.com/valkey-io/valkey/pull/4775) | Bound the time spent evicting keys from the tracking table | tanmayBeginsJourney | 6d | `author_court` |
-| [4771](https://github.com/valkey-io/valkey/pull/4771) | module: fix timeout overflow returning live blocked client | mohanrajendran | 6d | `author_court` |
-| [4767](https://github.com/valkey-io/valkey/pull/4767) | Add tls-groups config directive for PQC hybrid key exchange | SANJEEV-Choubey | 7d | `reviewer_court` |
-| [4735](https://github.com/valkey-io/valkey/pull/4735) | Fix stale slot migration state after full sync | Rayan-and-beyond | 12d | `reviewer_court` |
+| [4813](https://github.com/valkey-io/valkey/pull/4813) | Match PSUBSCRIBE patterns on sharded publish (SPUBLISH) | rotenbergt | 0d | `author_court` |
+| [4808](https://github.com/valkey-io/valkey/pull/4808) | Fix stream trimming with MAXLEN of 2^32 or more on 32-bit builds | abhi-byte62 | 0d | `author_court` |
+| [4802](https://github.com/valkey-io/valkey/pull/4802) | Fix process title test to respect PROG_SUFFIX | IvaAMarinova | 2d | `author_court` |
+| [4792](https://github.com/valkey-io/valkey/pull/4792) | Fix protocol error log truncating the query buffer at null bytes | Chy-Zaber-Bin-Zahid | 3d | `author_court` |
+| [4771](https://github.com/valkey-io/valkey/pull/4771) | module: fix timeout overflow returning live blocked client | mohanrajendran | 7d | `author_court` |
+| [4767](https://github.com/valkey-io/valkey/pull/4767) | Add tls-groups config directive for PQC hybrid key exchange | SANJEEV-Choubey | 8d | `reviewer_court` |
+| [4735](https://github.com/valkey-io/valkey/pull/4735) | Fix stale slot migration state after full sync | Rayan-and-beyond | 13d | `reviewer_court` |
 | [4668](https://github.com/valkey-io/valkey/pull/4668) | Fix: mark node as disconnected when node is FAIL | greatsharp | 2w | `author_court` |
 | [4662](https://github.com/valkey-io/valkey/pull/4662) | Validate cluster bus extension minimum sizes | rohitmahesh1 | 2w | `author_court` |
 | [4661](https://github.com/valkey-io/valkey/pull/4661) | Reject unterminated cluster bus string extensions | rohitmahesh1 | 2w | `reviewer_court` |
-| [4644](https://github.com/valkey-io/valkey/pull/4644) | Fix btree zset lex seek, NaN score bounds and a root prefix leak | xiaocj | 2w | `reviewer_court` |
-| [4641](https://github.com/valkey-io/valkey/pull/4641) | Fix NULL pointer dereference in MODULE LOADEX unload cleanup | simpleqt | 2w | `author_court` |
-| [4637](https://github.com/valkey-io/valkey/pull/4637) | Reject a negative LIMIT offset in zset range commands | xiaocj | 2w | `author_court` |
+| [4644](https://github.com/valkey-io/valkey/pull/4644) | Fix btree zset lex seek, NaN score bounds and a root prefix leak | xiaocj | 3w | `reviewer_court` |
+| [4641](https://github.com/valkey-io/valkey/pull/4641) | Fix NULL pointer dereference in MODULE LOADEX unload cleanup | simpleqt | 3w | `author_court` |
+| [4637](https://github.com/valkey-io/valkey/pull/4637) | Reject a negative LIMIT offset in zset range commands | xiaocj | 3w | `author_court` |
 | [4625](https://github.com/valkey-io/valkey/pull/4625) | docs: drop duplicated words in two comments | simpleqt | 3w | `author_court` |
 | [4594](https://github.com/valkey-io/valkey/pull/4594) | Check close() before publishing temp files with rename() in AOF manife… | KewangZhili | 4w | `author_court` |
 | [4585](https://github.com/valkey-io/valkey/pull/4585) | Fix valkey-benchmark hang in showReport() percentile iteration | arcivanov | 4w | `author_court` |
 | [4540](https://github.com/valkey-io/valkey/pull/4540) | fix: add release_header dependency to valkey-cli and valkey-benchmark … | waterWang | 4w | `author_court` |
-| [4532](https://github.com/valkey-io/valkey/pull/4532) | fix: deduplicate sentinel known-replica lines during CONFIG REWRITE | waterWang | 4w | `author_court` |
+| [4532](https://github.com/valkey-io/valkey/pull/4532) | fix: deduplicate sentinel known-replica lines during CONFIG REWRITE | waterWang | 5w | `author_court` |
 | [4502](https://github.com/valkey-io/valkey/pull/4502) | Add tls-groups to control TLS named groups | AliasJeff | 5w | `author_court` |
-| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 5w | `author_court` |
-| [4489](https://github.com/valkey-io/valkey/pull/4489) | Hold no descriptor on nodes.conf when rename() publishes it | KewangZhili | 5w | `reviewer_court` |
+| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 6w | `author_court` |
+| [4489](https://github.com/valkey-io/valkey/pull/4489) | Hold no descriptor on nodes.conf when rename() publishes it | KewangZhili | 6w | `reviewer_court` |
 | [4457](https://github.com/valkey-io/valkey/pull/4457) | Fix a/an article errors across comments, test names, and error strings | BoazBD | 6w | `author_court` |
 | [4453](https://github.com/valkey-io/valkey/pull/4453) | Fix replica full resync after restart with AOF-only persistence | Shikha-code36 | 6w | `author_court` |
 | [4451](https://github.com/valkey-io/valkey/pull/4451) | fix: persist replication state for replica PSYNC after restart | waterWang | 6w | `author_court` |
@@ -88,7 +89,7 @@ _A timely response may retain a future regular. Cross-cut; each also appears in 
 | [4426](https://github.com/valkey-io/valkey/pull/4426) | Fix O(N*L) glob character-class matching complexity in stringmatchlen | VinayakGhai | 6w | `author_court` |
 | [4424](https://github.com/valkey-io/valkey/pull/4424) | Resolve slot from key for module and arbitrary-key commands | patrickswedish | 6w | `author_court` |
 | [4418](https://github.com/valkey-io/valkey/pull/4418) | Avoid a year-2038 problem | bmwiedemann | 6w | `reviewer_court` |
-| [4400](https://github.com/valkey-io/valkey/pull/4400) | Add LPUSHBOUND/RPUSHBOUND: list push with a maximum length bound | jjz921024 | 6w | `author_court` |
+| [4400](https://github.com/valkey-io/valkey/pull/4400) | Add LPUSHBOUND/RPUSHBOUND: list push with a maximum length bound | jjz921024 | 7w | `author_court` |
 | [4386](https://github.com/valkey-io/valkey/pull/4386) | Add conditional list commands: LPUSHIF, RPUSHIF, LPOPIF, RPOPIF | jjz921024 | 7w | `needs_decision` |
 | [4385](https://github.com/valkey-io/valkey/pull/4385) | Report expiration lag in INFO latencystats | renechoi | 7w | `reviewer_court` |
 | [4377](https://github.com/valkey-io/valkey/pull/4377) | Deflake qbuf fill waits in client-eviction tests | tarikermis | 7w | `reviewer_court` |
@@ -100,7 +101,7 @@ _A timely response may retain a future regular. Cross-cut; each also appears in 
 | [4216](https://github.com/valkey-io/valkey/pull/4216) | Support Valkey 9.1 rollback compatibility with Redis 6.0 | chenys | 2mo | `author_court` |
 | [4214](https://github.com/valkey-io/valkey/pull/4214) | fix(acl): prevent NULL pointer dereference on malformed selector in AC… | magic-peach | 2mo | `author_court` |
 | [4213](https://github.com/valkey-io/valkey/pull/4213) | fix(debug): add bounds check in memtest_test_linux_anonymous_maps to p… | magic-peach | 2mo | `author_court` |
-| [4190](https://github.com/valkey-io/valkey/pull/4190) | Reclaim dead client IDs from the tracking table (#4143) | rayjinghaolei | 2mo | `reviewer_court` |
+| [4190](https://github.com/valkey-io/valkey/pull/4190) | Reclaim dead client IDs from the tracking table (#4143) | rayjinghaolei | 2mo | `author_court` |
 | [4163](https://github.com/valkey-io/valkey/pull/4163) | Solution (#4143): [BUG] Tracking table items not cleaned after client … | TFGSUMIT | 2mo | `author_court` |
 | [4159](https://github.com/valkey-io/valkey/pull/4159) | Add configurable auth options for CLUSTER MIGRATESLOTS (#2392) | warrenzhu25 | 2mo | `author_court` |
 | [4147](https://github.com/valkey-io/valkey/pull/4147) | fix: remove duplicated words and correct grammar in comments | magic-peach | 2mo | `author_court` |
@@ -113,13 +114,13 @@ _A timely response may retain a future regular. Cross-cut; each also appears in 
 | [4108](https://github.com/valkey-io/valkey/pull/4108) | Skip commandlog bookkeeping when no threshold is crossed | omerrubi-amzn | 2mo | `author_court` |
 | [4107](https://github.com/valkey-io/valkey/pull/4107) | Fix false sharing in per-thread memory usage counters | omerrubi-amzn | 2mo | `author_court` |
 | [4106](https://github.com/valkey-io/valkey/pull/4106) | Handle previously unchecked pthread_mutex_* and fclose return values  … | SuchitraShankar07 | 2mo | `author_court` |
-| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtime state from static … | stanhu | 2mo | `reviewer_court` |
+| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtime state from static … | stanhu | 3mo | `reviewer_court` |
 | [4079](https://github.com/valkey-io/valkey/pull/4079) | Route INFO generation (core + module API) through a pluggable info emi… | omerrubi-amzn | 3mo | `author_court` |
 | [4050](https://github.com/valkey-io/valkey/pull/4050) | module: add CreateString ReferenceFromKey/Uninitialized, and StringSet… | kvcache | 3mo | `needs_decision` |
 | [4010](https://github.com/valkey-io/valkey/pull/4010) | Limit multibulk args count and fix integer type truncations | wufengwind | 3mo | `author_court` |
 | [4003](https://github.com/valkey-io/valkey/pull/4003) | Add futex-based blocking when main thread waits for IO poll results | asafpamzn | 3mo | `author_court` |
 | [3976](https://github.com/valkey-io/valkey/pull/3976) | Fix reserved identifier violations in include guards (#3850) | vansvan17 | 3mo | `author_court` |
-| [3906](https://github.com/valkey-io/valkey/pull/3906) | fix: improve Makefile robustness by accomodating file paths with space… | mebinthattil | 3mo | `author_court` |
+| [3906](https://github.com/valkey-io/valkey/pull/3906) | fix: improve Makefile robustness by accomodating file paths with space… | mebinthattil | 4mo | `author_court` |
 | [3845](https://github.com/valkey-io/valkey/pull/3845) | [BUG] Fix CROSSSLOT error in rebalance when --user is specified withou… | 2030XiaoGe | 4mo | `reviewer_court` |
 | [3651](https://github.com/valkey-io/valkey/pull/3651) | info: add command breakdown to Errorstats | servusdei2018 | 4mo | `author_court` |
 | [3565](https://github.com/valkey-io/valkey/pull/3565) | Implement AOF data integrity check support. | sumitk163 | 5mo | `author_court` |
@@ -160,7 +161,7 @@ _Author acted last — these need a reviewer. Longest-waiting first._
 | [3845](https://github.com/valkey-io/valkey/pull/3845) | [BUG] Fix CROSSSLOT error in rebalance when --user is specified withou… | 2030XiaoGe | 4mo |
 | [3974](https://github.com/valkey-io/valkey/pull/3974) | Fix unbalanced ']' in bitops (BITFIELD_RO) command | ShubhamTaple | 3mo |
 | [3709](https://github.com/valkey-io/valkey/pull/3709) | feat: Add valkey-check-acl offline ACL file validator | yulazariy | 4mo |
-| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtime state from static … | stanhu | 2mo |
+| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtime state from static … | stanhu | 3mo |
 | [4119](https://github.com/valkey-io/valkey/pull/4119) | Fix NULL pointer arithmetic in scripting engine's wrapText() | xiejing-dev | 2mo |
 | [4145](https://github.com/valkey-io/valkey/pull/4145) | Fix ENTRIESREAD error message to include the accepted value 0 | nikolauspschuetz | 2mo |
 | [4223](https://github.com/valkey-io/valkey/pull/4223) | Deflake ccov: Contain slot migration test failures with a recovery bar… | rainsupreme | 2mo |
@@ -168,7 +169,7 @@ _Author acted last — these need a reviewer. Longest-waiting first._
 | [4251](https://github.com/valkey-io/valkey/pull/4251) | deflake ccov: Use _exit() when a child is killed by SIGUSR1 | rainsupreme | 2mo |
 | [4262](https://github.com/valkey-io/valkey/pull/4262) | Clarify dismissObject comments on THP and string handling | enjoy-binbin | 2mo |
 | [4280](https://github.com/valkey-io/valkey/pull/4280) | fix: preserve original file permissions on ACL SAVE [fj4WqyCCw3C5ShR1R… | waterWang | 2mo |
-| [4313](https://github.com/valkey-io/valkey/pull/4313) | Deflake diskless timeout replica count assertion | Taeknology | 8w |
+| [4313](https://github.com/valkey-io/valkey/pull/4313) | Deflake diskless timeout replica count assertion | Taeknology | 2mo |
 | [2279](https://github.com/valkey-io/valkey/pull/2279) | The smaller config epoch primary will become the replica when two prim… | enjoy-binbin | 1.3y |
 | [4056](https://github.com/valkey-io/valkey/pull/4056) | Rename reserved-identifier header guards to the NAME_H convention | AlisinaDevelo | 3mo |
 | [4357](https://github.com/valkey-io/valkey/pull/4357) | Add base64 field decoding for benchmark datasets | Carol-ggg | 7w |
@@ -176,38 +177,35 @@ _Author acted last — these need a reviewer. Longest-waiting first._
 | [4377](https://github.com/valkey-io/valkey/pull/4377) | Deflake qbuf fill waits in client-eviction tests | tarikermis | 7w |
 | [4375](https://github.com/valkey-io/valkey/pull/4375) | Fix make test-unit link failure when libsystemd is auto-detected | tarikermis | 7w |
 | [4184](https://github.com/valkey-io/valkey/pull/4184) | Say non-negative in the shared positive-count range error message | AlisinaDevelo | 2mo |
-| [4477](https://github.com/valkey-io/valkey/pull/4477) | Fix issue #4476 | allenss-amazon | 5w |
+| [4477](https://github.com/valkey-io/valkey/pull/4477) | Fix issue #4476 | allenss-amazon | 6w |
 | [4437](https://github.com/valkey-io/valkey/pull/4437) | Fix O(class size x string length) DoS in glob character-class matching | Shikha-code36 | 6w |
 | [4444](https://github.com/valkey-io/valkey/pull/4444) | debug/tests: tolerate libbacktrace fork failure in crash log test | Xsidz | 6w |
-| [4489](https://github.com/valkey-io/valkey/pull/4489) | Hold no descriptor on nodes.conf when rename() publishes it | KewangZhili | 5w |
+| [4489](https://github.com/valkey-io/valkey/pull/4489) | Hold no descriptor on nodes.conf when rename() publishes it | KewangZhili | 6w |
 | [4385](https://github.com/valkey-io/valkey/pull/4385) | Report expiration lag in INFO latencystats | renechoi | 7w |
-| [4638](https://github.com/valkey-io/valkey/pull/4638) | Optimize hash TTL queries, GEOPOS and GEOHASH with batched hashtable l… | chzhoo | 2w |
+| [4638](https://github.com/valkey-io/valkey/pull/4638) | Optimize hash TTL queries, GEOPOS and GEOHASH with batched hashtable l… | chzhoo | 3w |
 | [4661](https://github.com/valkey-io/valkey/pull/4661) | Reject unterminated cluster bus string extensions | rohitmahesh1 | 2w |
 | [4542](https://github.com/valkey-io/valkey/pull/4542) | Optimize pvector shrink on removal | charsyam | 4w |
 | [4700](https://github.com/valkey-io/valkey/pull/4700) | Only fast-fail on NACK reasons a new election epoch can fix | enjoy-binbin | 2w |
-| [4735](https://github.com/valkey-io/valkey/pull/4735) | Fix stale slot migration state after full sync | Rayan-and-beyond | 12d |
-| [4733](https://github.com/valkey-io/valkey/pull/4733) | Fix sds overflow assert on RESTORE payload with an overflowing string … | enjoy-binbin | 12d |
-| [4642](https://github.com/valkey-io/valkey/pull/4642) | x86 Perf: Derive call()'s time snapshot from the monotonic sample inst… | rainsupreme | 2w |
-| [4740](https://github.com/valkey-io/valkey/pull/4740) | Add module server event for cluster topology change | Aksha1812 | 11d |
-| [4757](https://github.com/valkey-io/valkey/pull/4757) | Drain replica CLI output before closing the test pipe | chky1386 | 8d |
-| [4417](https://github.com/valkey-io/valkey/pull/4417) | Speed up HGETALL, HKEYS and HVALS with exact-length headers and fused … | jjuleslasarte | 6w |
-| [4760](https://github.com/valkey-io/valkey/pull/4760) | Honor explicit output formats for human-readable CLI replies | chky1386 | 7d |
-| [4758](https://github.com/valkey-io/valkey/pull/4758) | Document guidelines for adding INFO fields | chky1386 | 8d |
+| [4735](https://github.com/valkey-io/valkey/pull/4735) | Fix stale slot migration state after full sync | Rayan-and-beyond | 13d |
+| [4733](https://github.com/valkey-io/valkey/pull/4733) | Fix sds overflow assert on RESTORE payload with an overflowing string … | enjoy-binbin | 13d |
+| [4642](https://github.com/valkey-io/valkey/pull/4642) | x86 Perf: Derive call()'s time snapshot from the monotonic sample inst… | rainsupreme | 3w |
+| [4740](https://github.com/valkey-io/valkey/pull/4740) | Add module server event for cluster topology change | Aksha1812 | 12d |
+| [4757](https://github.com/valkey-io/valkey/pull/4757) | Drain replica CLI output before closing the test pipe | chky1386 | 9d |
+| [4760](https://github.com/valkey-io/valkey/pull/4760) | Honor explicit output formats for human-readable CLI replies | chky1386 | 8d |
+| [4758](https://github.com/valkey-io/valkey/pull/4758) | Document guidelines for adding INFO fields | chky1386 | 9d |
 | [4655](https://github.com/valkey-io/valkey/pull/4655) | [Bug Fix] Fix fast-fail double-counting a NACK voter that later fails | xdk-amz | 2w |
-| [4785](https://github.com/valkey-io/valkey/pull/4785) | Deflake COPY Preserves TTLs test under libc malloc | chky1386 | 3d |
-| [4644](https://github.com/valkey-io/valkey/pull/4644) | Fix btree zset lex seek, NaN score bounds and a root prefix leak | xiaocj | 2w |
+| [4785](https://github.com/valkey-io/valkey/pull/4785) | Deflake COPY Preserves TTLs test under libc malloc | chky1386 | 4d |
+| [4644](https://github.com/valkey-io/valkey/pull/4644) | Fix btree zset lex seek, NaN score bounds and a root prefix leak | xiaocj | 3w |
 | [4054](https://github.com/valkey-io/valkey/pull/4054) | Reject bare "(" and empty string in zset score ranges | AlisinaDevelo | 3mo |
-| [4795](https://github.com/valkey-io/valkey/pull/4795) | Deflake the slot-migration failover tests | Baraa-Hasheesh | 1d |
-| [4711](https://github.com/valkey-io/valkey/pull/4711) | Fix UAF in streams when XADD creates a new node | Baraa-Hasheesh | 13d |
-| [4636](https://github.com/valkey-io/valkey/pull/4636) | Reject bulk lengths that would overflow the bulk-size arithmetic | foobar | 2w |
-| [4190](https://github.com/valkey-io/valkey/pull/4190) | Reclaim dead client IDs from the tracking table (#4143) | rayjinghaolei | 2mo |
-| [4797](https://github.com/valkey-io/valkey/pull/4797) | Forkless Full-Sync | nitaicaro | 1d |
-| [4783](https://github.com/valkey-io/valkey/pull/4783) | Fix HEXPIRE family command summaries | poiuj | 4d |
-| [4772](https://github.com/valkey-io/valkey/pull/4772) | Avoid propagating expired hash fields from HDEL, HGETDEL, HPERSIST, an… | xdk-amz | 6d |
-| [4767](https://github.com/valkey-io/valkey/pull/4767) | Add tls-groups config directive for PQC hybrid key exchange | SANJEEV-Choubey | 7d |
-| [4762](https://github.com/valkey-io/valkey/pull/4762) | Fix metadata copy on value overwrite and drop redundant forkless init | harrylin98 | 7d |
-| [4526](https://github.com/valkey-io/valkey/pull/4526) | Add background leaf compaction for B+tree sorted sets | rainsupreme | 4w |
+| [4795](https://github.com/valkey-io/valkey/pull/4795) | Deflake the slot-migration failover tests | Baraa-Hasheesh | 2d |
+| [4711](https://github.com/valkey-io/valkey/pull/4711) | Fix UAF in streams when XADD creates a new node | Baraa-Hasheesh | 2w |
+| [4636](https://github.com/valkey-io/valkey/pull/4636) | Reject bulk lengths that would overflow the bulk-size arithmetic | foobar | 3w |
+| [4762](https://github.com/valkey-io/valkey/pull/4762) | Fix metadata copy on value overwrite and drop redundant forkless init | harrylin98 | 8d |
+| [4526](https://github.com/valkey-io/valkey/pull/4526) | Add background leaf compaction for B+tree sorted sets | rainsupreme | 5w |
 | [4339](https://github.com/valkey-io/valkey/pull/4339) | Route security/auth crypto through the OpenSSL 3 provider API | MarkAtwood | 8w |
+| [4803](https://github.com/valkey-io/valkey/pull/4803) | Fix crash when disabling prefetching with long-running Lua scripts | chzhoo | 1d |
+| [4767](https://github.com/valkey-io/valkey/pull/4767) | Add tls-groups config directive for PQC hybrid key exchange | SANJEEV-Choubey | 8d |
+| [3724](https://github.com/valkey-io/valkey/pull/3724) | Add sync-from-replica with delayed primary switch | avifenesh | 4mo |
 
 
 ## 🗳 Needs a Decision
@@ -244,7 +242,7 @@ _Blocked on a community decision._
 | [4268](https://github.com/valkey-io/valkey/pull/4268) | Add script-check-maxmemory to bound memory growth of scripts | enjoy-binbin | 2mo |
 | [4386](https://github.com/valkey-io/valkey/pull/4386) | Add conditional list commands: LPUSHIF, RPUSHIF, LPOPIF, RPOPIF | jjz921024 | 7w |
 | [4445](https://github.com/valkey-io/valkey/pull/4445) | Add script-cache-per-db config to scope the EVAL/SCRIPT script cache p… | karolyi | 6w |
-| [4631](https://github.com/valkey-io/valkey/pull/4631) | Add per command histograms to track the end to end latency | Baraa-Hasheesh | 2w |
+| [4631](https://github.com/valkey-io/valkey/pull/4631) | Add per command histograms to track the end to end latency | Baraa-Hasheesh | 3w |
 
 
 ## 🔥 Deflake / Test-Fix
@@ -258,16 +256,16 @@ _Merging these reduces CI noise. Cross-cut; each also appears in its lane._
 | [4223](https://github.com/valkey-io/valkey/pull/4223) | Deflake ccov: Contain slot migration test failures with a recovery bar… | rainsupreme | 2mo | `reviewer_court` |
 | [4251](https://github.com/valkey-io/valkey/pull/4251) | deflake ccov: Use _exit() when a child is killed by SIGUSR1 | rainsupreme | 2mo | `reviewer_court` |
 | [4296](https://github.com/valkey-io/valkey/pull/4296) | Deflake: run_solo tests once in a dedicated job instead of across the … | rainsupreme | 2mo | `author_court` |
-| [4309](https://github.com/valkey-io/valkey/pull/4309) | Deflake dual-channel replication buffer memory test | Taeknology | 8w | `author_court` |
-| [4313](https://github.com/valkey-io/valkey/pull/4313) | Deflake diskless timeout replica count assertion | Taeknology | 8w | `reviewer_court` |
-| [4314](https://github.com/valkey-io/valkey/pull/4314) | Deflake test: fix race causing missing manual failover timeout log | ShubhamTaple | 8w | `excluded_draft` |
+| [4309](https://github.com/valkey-io/valkey/pull/4309) | Deflake dual-channel replication buffer memory test | Taeknology | 2mo | `author_court` |
+| [4313](https://github.com/valkey-io/valkey/pull/4313) | Deflake diskless timeout replica count assertion | Taeknology | 2mo | `reviewer_court` |
+| [4314](https://github.com/valkey-io/valkey/pull/4314) | Deflake test: fix race causing missing manual failover timeout log | ShubhamTaple | 2mo | `excluded_draft` |
 | [4377](https://github.com/valkey-io/valkey/pull/4377) | Deflake qbuf fill waits in client-eviction tests | tarikermis | 7w | `reviewer_court` |
-| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 5w | `author_court` |
-| [4726](https://github.com/valkey-io/valkey/pull/4726) | Deflake EXEC keyless redirect test by waiting for roles to converge be… | kakiuwang-ui | 13d | `author_court` |
-| [4785](https://github.com/valkey-io/valkey/pull/4785) | Deflake COPY Preserves TTLs test under libc malloc | chky1386 | 3d | `reviewer_court` |
-| [4789](https://github.com/valkey-io/valkey/pull/4789) | Deflake modify new keys during forkless bgsave | Baraa-Hasheesh | 2d | `author_court` |
-| [4795](https://github.com/valkey-io/valkey/pull/4795) | Deflake the slot-migration failover tests | Baraa-Hasheesh | 1d | `reviewer_court` |
-| [4805](https://github.com/valkey-io/valkey/pull/4805) | Fix several test-harness issues that can cause flaky failures. | artikell | 0d | `author_court` |
+| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 6w | `author_court` |
+| [4726](https://github.com/valkey-io/valkey/pull/4726) | Deflake EXEC keyless redirect test by waiting for roles to converge be… | kakiuwang-ui | 2w | `author_court` |
+| [4785](https://github.com/valkey-io/valkey/pull/4785) | Deflake COPY Preserves TTLs test under libc malloc | chky1386 | 4d | `reviewer_court` |
+| [4789](https://github.com/valkey-io/valkey/pull/4789) | Deflake modify new keys during forkless bgsave | Baraa-Hasheesh | 3d | `author_court` |
+| [4795](https://github.com/valkey-io/valkey/pull/4795) | Deflake the slot-migration failover tests | Baraa-Hasheesh | 2d | `reviewer_court` |
+| [4805](https://github.com/valkey-io/valkey/pull/4805) | Fix several test-harness issues that can cause flaky failures. | artikell | 1d | `author_court` |
 
 
 ## 📮 Outreach Dry-Run
@@ -279,13 +277,14 @@ _**Dry-run only.** Nothing is posted, closed, or labelled automatically — thes
 
 | PR | Title | Author | Evidence | Proposed action |
 |----|-------|--------|----------|-----------------|
+| [4280](https://github.com/valkey-io/valkey/pull/4280) | fix: preserve original file permissions on ACL SAV… | waterWang | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4262](https://github.com/valkey-io/valkey/pull/4262) | Clarify dismissObject comments on THP and string h… | enjoy-binbin | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4251](https://github.com/valkey-io/valkey/pull/4251) | deflake ccov: Use _exit() when a child is killed b… | rainsupreme | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4223](https://github.com/valkey-io/valkey/pull/4223) | Deflake ccov: Contain slot migration test failures… | rainsupreme | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4179](https://github.com/valkey-io/valkey/pull/4179) | Deflake: replace flaky wall-clock defrag latency a… | rainsupreme | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4145](https://github.com/valkey-io/valkey/pull/4145) | Fix ENTRIESREAD error message to include the accep… | nikolauspschuetz | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
 | [4119](https://github.com/valkey-io/valkey/pull/4119) | Fix NULL pointer arithmetic in scripting engine's … | xiejing-dev | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
-| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtim… | stanhu | author acted last; awaiting review; no activity in about 2 months (cooling) | `ping_reengage` |
+| [4085](https://github.com/valkey-io/valkey/pull/4085) | sentinel: add state-config-file to separate runtim… | stanhu | author acted last; awaiting review; no activity in about 3 months (dormant) | `ping_reengage` |
 | [3974](https://github.com/valkey-io/valkey/pull/3974) | Fix unbalanced ']' in bitops (BITFIELD_RO) command | ShubhamTaple | author acted last; awaiting review; no activity in about 3 months (dormant) | `ping_reengage` |
 | [3845](https://github.com/valkey-io/valkey/pull/3845) | [BUG] Fix CROSSSLOT error in rebalance when --user… | 2030XiaoGe | author acted last; awaiting review; no activity in about 3 months (dormant) | `ping_reengage` |
 | [3739](https://github.com/valkey-io/valkey/pull/3739) | Makefile Fix: LTO flags silently dropped when OPTI… | rainsupreme | author acted last; awaiting review; no activity in about 4 months (dormant) | `ping_reengage` |
@@ -304,10 +303,11 @@ _**Dry-run only.** Nothing is posted, closed, or labelled automatically — thes
 
 | PR | Title | Author | Evidence | Proposed action |
 |----|-------|--------|----------|-----------------|
+| [4015](https://github.com/valkey-io/valkey/pull/4015) | Raft Cluster: stability fixes | zuiderkwast | CI failing; merge conflicts; no activity in about 3 months (dormant) | `comment_and_close` |
 | [4010](https://github.com/valkey-io/valkey/pull/4010) | Limit multibulk args count and fix integer type tr… | wufengwind | merge conflicts; no activity in about 3 months (dormant) | `ping_gentle_nudge` |
 | [3976](https://github.com/valkey-io/valkey/pull/3976) | Fix reserved identifier violations in include guar… | vansvan17 | no activity in about 3 months (dormant) | `ping_gentle_nudge` |
 | [3966](https://github.com/valkey-io/valkey/pull/3966) | Add per-slot memory-bytes metric to CLUSTER SLOT-S… | eifrah-aws | merge conflicts; no activity in about 3 months (dormant) | `comment_and_close` |
-| [3907](https://github.com/valkey-io/valkey/pull/3907) | Fork-based Per-type Object Memory Profiling | artikell | merge conflicts; no activity in about 3 months (dormant) | `comment_and_close` |
+| [3907](https://github.com/valkey-io/valkey/pull/3907) | Fork-based Per-type Object Memory Profiling | artikell | merge conflicts; no activity in about 4 months (dormant) | `comment_and_close` |
 | [3894](https://github.com/valkey-io/valkey/pull/3894) | Add connection tunneling feature for Primary failo… | omanges | CI failing; merge conflicts; no activity in about 4 months (dormant) | `comment_and_close` |
 | [3893](https://github.com/valkey-io/valkey/pull/3893) | Add repl-disable-full-resync-until to gate primary… | artikell | merge conflicts; no activity in about 3 months (dormant) | `comment_and_close` |
 | [3854](https://github.com/valkey-io/valkey/pull/3854) | implement `VM_ClusterIsSlotImporting` | bandalgomsu | no activity in about 4 months (dormant) | `comment_and_close` |
@@ -317,7 +317,7 @@ _**Dry-run only.** Nothing is posted, closed, or labelled automatically — thes
 | [3603](https://github.com/valkey-io/valkey/pull/3603) | Fix: connSocketBlockingConnect ignores aeWait erro… | xdk-amz | merge conflicts; no activity in about 4 months (dormant) | `comment_and_close` |
 | [3589](https://github.com/valkey-io/valkey/pull/3589) | ci: Add slow tag to fuzzer and expand libc-malloc … | jjuleslasarte | CI failing; merge conflicts; no activity in about 3 months (dormant) | `comment_and_close` |
 | [3549](https://github.com/valkey-io/valkey/pull/3549) | tls: prevent stale auto-reload from overriding CON… | charsyam | merge conflicts; no activity in about 5 months (dormant) | `comment_and_close` |
-| [3539](https://github.com/valkey-io/valkey/pull/3539) | Changes to use word-based bitwise processing for s… | omanges | no activity in about 3 months (dormant) | `comment_and_close` |
+| [3539](https://github.com/valkey-io/valkey/pull/3539) | Changes to use word-based bitwise processing for s… | omanges | no activity in about 4 months (dormant) | `comment_and_close` |
 | [3534](https://github.com/valkey-io/valkey/pull/3534) | string: avoid storing already-expired MSETEX value… | charsyam | CI failing; no activity in about 3 months (dormant) | `comment_and_close` |
 | [3502](https://github.com/valkey-io/valkey/pull/3502) | Cache Lua server.call() argv to reduce allocations… | rjd15372 | CI failing; merge conflicts; no activity in about 4 months (dormant) | `comment_and_close` |
 | [3490](https://github.com/valkey-io/valkey/pull/3490) | Add LCS LEN fast path using rolling two-row DP | charsyam | CI failing; no activity in about 5 months (dormant) | `comment_and_close` |
@@ -403,17 +403,17 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [2306](https://github.com/valkey-io/valkey/pull/2306) | Unexpected variable overriding from .make-settings file | yzc-yzc | 1.2y |
 | [2318](https://github.com/valkey-io/valkey/pull/2318) | change check order for xautoclaim | charsyam | 1.2y |
 | [2213](https://github.com/valkey-io/valkey/pull/2213) | Optimize bitcount by using AVX-512 intrinsic | shanwan1 | 1.3y |
-| [2265](https://github.com/valkey-io/valkey/pull/2265) | Implement tunneling support for non-cluster post-failover scenarios | yairgott | 1.3y |
 | [663](https://github.com/valkey-io/valkey/pull/663) | Fix 32-bit atomic linking on powerpc | PingXie | 2.3y |
+| [2265](https://github.com/valkey-io/valkey/pull/2265) | Implement tunneling support for non-cluster post-failover scenarios | yairgott | 1.3y |
 | [356](https://github.com/valkey-io/valkey/pull/356) | Background Job Manager (BJM) - replacement for BIO | JimB123 | 2.4y |
 | [2576](https://github.com/valkey-io/valkey/pull/2576) | bio.c: Split thread function into smaller parts | TedLyngmo | 1.1y |
 | [2577](https://github.com/valkey-io/valkey/pull/2577) | bio.c: Split thread function into smaller parts v2 | TedLyngmo | 1.1y |
 | [2496](https://github.com/valkey-io/valkey/pull/2496) | Add static specifier to the internal functions of HLL | yzc-yzc | 1.1y |
 | [707](https://github.com/valkey-io/valkey/pull/707) | Allow multi-slot MGET in Cluster Mode | JohnSully | 2.3y |
 | [2255](https://github.com/valkey-io/valkey/pull/2255) | Accept socket judge fd overflow | kukey | 1.3y |
-| [2914](https://github.com/valkey-io/valkey/pull/2914) | Add TLS client presented certificate expiry warnings and KPI | YiwenZhang12 | 9mo |
+| [2914](https://github.com/valkey-io/valkey/pull/2914) | Add TLS client presented certificate expiry warnings and KPI | YiwenZhang12 | 10mo |
 | [2664](https://github.com/valkey-io/valkey/pull/2664) | add_memalign_func | luorong1999 | 1.0y |
-| [3153](https://github.com/valkey-io/valkey/pull/3153) | add warning log when certs are expired/not yet valid | YiwenZhang12 | 7mo |
+| [3153](https://github.com/valkey-io/valkey/pull/3153) | add warning log when certs are expired/not yet valid | YiwenZhang12 | 8mo |
 | [3189](https://github.com/valkey-io/valkey/pull/3189) | implement replica-announce-name | bandalgomsu | 7mo |
 | [3239](https://github.com/valkey-io/valkey/pull/3239) | Fix SIGTERM crash during Lua script execution | dvkashapov | 7mo |
 | [3148](https://github.com/valkey-io/valkey/pull/3148) | fix(cluster): Resolve serverAssert(link != sender->link) crash in larg… | liwei330249526 | 8mo |
@@ -442,7 +442,7 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [3854](https://github.com/valkey-io/valkey/pull/3854) | implement `VM_ClusterIsSlotImporting` | bandalgomsu | 4mo |
 | [3894](https://github.com/valkey-io/valkey/pull/3894) | Add connection tunneling feature for Primary failover | omanges | 4mo |
 | [3728](https://github.com/valkey-io/valkey/pull/3728) | Fix grammatical typo "This functions" in code comments | moko-poi | 4mo |
-| [3907](https://github.com/valkey-io/valkey/pull/3907) | Fork-based Per-type Object Memory Profiling | artikell | 3mo |
+| [3907](https://github.com/valkey-io/valkey/pull/3907) | Fork-based Per-type Object Memory Profiling | artikell | 4mo |
 | [3539](https://github.com/valkey-io/valkey/pull/3539) | Changes to use word-based bitwise processing for slot updates | omanges | 5mo |
 | [3893](https://github.com/valkey-io/valkey/pull/3893) | Add repl-disable-full-resync-until to gate primary full resync | artikell | 4mo |
 | [3534](https://github.com/valkey-io/valkey/pull/3534) | string: avoid storing already-expired MSETEX values | charsyam | 5mo |
@@ -499,8 +499,8 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [4432](https://github.com/valkey-io/valkey/pull/4432) | Deduplicate select/swapdb/move dbid argument parsing helpers | VinayakGhai | 6w |
 | [4428](https://github.com/valkey-io/valkey/pull/4428) | Track and report key expiration lag metric in INFO stats | VinayakGhai | 6w |
 | [4426](https://github.com/valkey-io/valkey/pull/4426) | Fix O(N*L) glob character-class matching complexity in stringmatchlen | VinayakGhai | 6w |
-| [4400](https://github.com/valkey-io/valkey/pull/4400) | Add LPUSHBOUND/RPUSHBOUND: list push with a maximum length bound | jjz921024 | 6w |
-| [4399](https://github.com/valkey-io/valkey/pull/4399) | Rename client flag `replica` to `replica_or_monitor` | madolson | 6w |
+| [4400](https://github.com/valkey-io/valkey/pull/4400) | Add LPUSHBOUND/RPUSHBOUND: list push with a maximum length bound | jjz921024 | 7w |
+| [4399](https://github.com/valkey-io/valkey/pull/4399) | Rename client flag `replica` to `replica_or_monitor` | madolson | 7w |
 | [4416](https://github.com/valkey-io/valkey/pull/4416) | Client-side caching: Notify redirect client when tracking source disco… | tzongw | 6w |
 | [4457](https://github.com/valkey-io/valkey/pull/4457) | Fix a/an article errors across comments, test names, and error strings | BoazBD | 6w |
 | [4456](https://github.com/valkey-io/valkey/pull/4456) | Raft Cluster: Automatic learner promotion (#4392) | quanyeyang | 6w |
@@ -513,11 +513,11 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [4442](https://github.com/valkey-io/valkey/pull/4442) | build: fix test-unit link failure when libsystemd is auto-detected | Xsidz | 6w |
 | [4439](https://github.com/valkey-io/valkey/pull/4439) | Add support for USE_SYSTEM_JEMALLOC flag | EvgeniyPatlan | 6w |
 | [4504](https://github.com/valkey-io/valkey/pull/4504) | Fix crash and wrong return values in the hash stringRef module API | ShubhamTaple | 5w |
-| [4309](https://github.com/valkey-io/valkey/pull/4309) | Deflake dual-channel replication buffer memory test | Taeknology | 8w |
+| [4309](https://github.com/valkey-io/valkey/pull/4309) | Deflake dual-channel replication buffer memory test | Taeknology | 2mo |
 | [4511](https://github.com/valkey-io/valkey/pull/4511) | Preserve config file permissions on rewrite | charsyam | 5w |
 | [4502](https://github.com/valkey-io/valkey/pull/4502) | Add tls-groups to control TLS named groups | AliasJeff | 5w |
-| [3906](https://github.com/valkey-io/valkey/pull/3906) | fix: improve Makefile robustness by accomodating file paths with space… | mebinthattil | 3mo |
-| [4532](https://github.com/valkey-io/valkey/pull/4532) | fix: deduplicate sentinel known-replica lines during CONFIG REWRITE | waterWang | 4w |
+| [3906](https://github.com/valkey-io/valkey/pull/3906) | fix: improve Makefile robustness by accomodating file paths with space… | mebinthattil | 4mo |
+| [4532](https://github.com/valkey-io/valkey/pull/4532) | fix: deduplicate sentinel known-replica lines during CONFIG REWRITE | waterWang | 5w |
 | [4513](https://github.com/valkey-io/valkey/pull/4513) | Reject overflowing save config values | charsyam | 5w |
 | [4286](https://github.com/valkey-io/valkey/pull/4286) | Cluster: require a PONG on the current link before sending an automati… | mayongze | 2mo |
 | [4541](https://github.com/valkey-io/valkey/pull/4541) | Reject module cross-slot BlockClientOnKeys in cluster mode | enjoy-binbin | 4w |
@@ -532,9 +532,9 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [4615](https://github.com/valkey-io/valkey/pull/4615) | valkey-benchmark: fix cluster node pointer array allocation size | cuishuang | 3w |
 | [4083](https://github.com/valkey-io/valkey/pull/4083) | Implement transfer leadership before forgetting the current leader | bandalgomsu | 3mo |
 | [4625](https://github.com/valkey-io/valkey/pull/4625) | docs: drop duplicated words in two comments | simpleqt | 3w |
-| [4641](https://github.com/valkey-io/valkey/pull/4641) | Fix NULL pointer dereference in MODULE LOADEX unload cleanup | simpleqt | 2w |
+| [4641](https://github.com/valkey-io/valkey/pull/4641) | Fix NULL pointer dereference in MODULE LOADEX unload cleanup | simpleqt | 3w |
 | [3565](https://github.com/valkey-io/valkey/pull/3565) | Implement AOF data integrity check support. | sumitk163 | 5mo |
-| [4634](https://github.com/valkey-io/valkey/pull/4634) | Add ValkeyModule_AlignedAlloc and ValkeyModule_TryAlignedAlloc to the … | allenss-amazon | 2w |
+| [4634](https://github.com/valkey-io/valkey/pull/4634) | Add ValkeyModule_AlignedAlloc and ValkeyModule_TryAlignedAlloc to the … | allenss-amazon | 3w |
 | [4553](https://github.com/valkey-io/valkey/pull/4553) | Optimize HFE active expiry cleanup | charsyam | 4w |
 | [4518](https://github.com/valkey-io/valkey/pull/4518) | Add the ACL username to commandlog/slowlog entries | hpatro | 5w |
 | [4389](https://github.com/valkey-io/valkey/pull/4389) | Validate replication RDB bulk lengths | roshkhatri | 7w |
@@ -543,55 +543,61 @@ _Waiting on the author (CI red / conflicts / unaddressed review). Longest-idle f
 | [4671](https://github.com/valkey-io/valkey/pull/4671) | Validate the RDB transfer size announced by the primary | Pyolar | 2w |
 | [3707](https://github.com/valkey-io/valkey/pull/3707) | Support VALKEYMODULE_REPLY_AGAIN in VM_UnblockClient Reply cb | KarthikSubbarao | 4mo |
 | [4694](https://github.com/valkey-io/valkey/pull/4694) | Include roles in ACL DIGEST | melancholictheory | 2w |
-| [4657](https://github.com/valkey-io/valkey/pull/4657) | Build: make the Make / CMake gtest build link on macOS | eifrah-aws | 2w |
 | [4007](https://github.com/valkey-io/valkey/pull/4007) | Randomize hashtable scan start to avoid cursor=0 restart bias | hpatro | 3mo |
 | [3389](https://github.com/valkey-io/valkey/pull/3389) | Optimize multi key commands (such as MGET, MSET, DEL, UNLINK, EXISTS a… | satheeshaGowda | 6mo |
-| [4726](https://github.com/valkey-io/valkey/pull/4726) | Deflake EXEC keyless redirect test by waiting for roles to converge be… | kakiuwang-ui | 13d |
-| [4725](https://github.com/valkey-io/valkey/pull/4725) | Fix integer overflow with SET PX expiration | arshidkv12 | 13d |
-| [4715](https://github.com/valkey-io/valkey/pull/4715) | minor ZSET code cleanup: Remove dead guard in deleteRangeCore and enha… | rainsupreme | 13d |
-| [4708](https://github.com/valkey-io/valkey/pull/4708) | Support filtering ACL LIST by user and role | arshidkv12 | 13d |
+| [4726](https://github.com/valkey-io/valkey/pull/4726) | Deflake EXEC keyless redirect test by waiting for roles to converge be… | kakiuwang-ui | 2w |
+| [4725](https://github.com/valkey-io/valkey/pull/4725) | Fix integer overflow with SET PX expiration | arshidkv12 | 2w |
+| [4715](https://github.com/valkey-io/valkey/pull/4715) | minor ZSET code cleanup: Remove dead guard in deleteRangeCore and enha… | rainsupreme | 2w |
+| [4708](https://github.com/valkey-io/valkey/pull/4708) | Support filtering ACL LIST by user and role | arshidkv12 | 2w |
 | [4698](https://github.com/valkey-io/valkey/pull/4698) | SORT and SORT_RO should be read-only: stop converting listpack sorted … | rainsupreme | 2w |
 | [4692](https://github.com/valkey-io/valkey/pull/4692) | Add a blockable module notification at the end of EXEC | quanyeyang | 2w |
 | [4681](https://github.com/valkey-io/valkey/pull/4681) | Fix dynamic priority-subnets demotion of replicas/slot migration links… | satheeshaGowda | 2w |
 | [4677](https://github.com/valkey-io/valkey/pull/4677) | Fix log timestamp UTC offset: broken on non-Linux, wrong for negative/… | rainsupreme | 2w |
-| [4734](https://github.com/valkey-io/valkey/pull/4734) | Implement XNACK | nickiaq | 12d |
-| [4728](https://github.com/valkey-io/valkey/pull/4728) | Fix CONFIG SET tls-port crash when TLS is unavailable | arshidkv12 | 13d |
-| [4675](https://github.com/valkey-io/valkey/pull/4675) | Fix cluster bus self-forget use-after-free | roshkhatri | 2w |
-| [4742](https://github.com/valkey-io/valkey/pull/4742) | Feature Add exponential backoff for failed full syncs | bandalgomsu | 11d |
+| [4734](https://github.com/valkey-io/valkey/pull/4734) | Implement XNACK | nickiaq | 13d |
+| [4728](https://github.com/valkey-io/valkey/pull/4728) | Fix CONFIG SET tls-port crash when TLS is unavailable | arshidkv12 | 2w |
+| [4742](https://github.com/valkey-io/valkey/pull/4742) | Feature Add exponential backoff for failed full syncs | bandalgomsu | 12d |
 | [4107](https://github.com/valkey-io/valkey/pull/4107) | Fix false sharing in per-thread memory usage counters | omerrubi-amzn | 2mo |
 | [4093](https://github.com/valkey-io/valkey/pull/4093) | Emit latency metrics for round trip time for cluster nodes | ydsakshi | 2mo |
 | [4622](https://github.com/valkey-io/valkey/pull/4622) | Fix linux build with clang | secwall | 3w |
 | [4191](https://github.com/valkey-io/valkey/pull/4191) | Added changes to propagate FLUSHSLOT instead of UNLINK in replication … | omanges | 2mo |
-| [4771](https://github.com/valkey-io/valkey/pull/4771) | module: fix timeout overflow returning live blocked client | mohanrajendran | 6d |
-| [4770](https://github.com/valkey-io/valkey/pull/4770) | Reply directly for eligible SDIFF and single-set SUNION cases | charsyam | 6d |
-| [4707](https://github.com/valkey-io/valkey/pull/4707) | Skip raw TSC when the kernel clocksource is not tsc | quanyeyang | 13d |
+| [4771](https://github.com/valkey-io/valkey/pull/4771) | module: fix timeout overflow returning live blocked client | mohanrajendran | 7d |
+| [4770](https://github.com/valkey-io/valkey/pull/4770) | Reply directly for eligible SDIFF and single-set SUNION cases | charsyam | 7d |
 | [3381](https://github.com/valkey-io/valkey/pull/3381) | Write-behind log for async AOF-based durability | jjuleslasarte | 6mo |
-| [4637](https://github.com/valkey-io/valkey/pull/4637) | Reject a negative LIMIT offset in zset range commands | xiaocj | 2w |
-| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 5w |
+| [4637](https://github.com/valkey-io/valkey/pull/4637) | Reject a negative LIMIT offset in zset range commands | xiaocj | 3w |
+| [4490](https://github.com/valkey-io/valkey/pull/4490) | Deflake slot migration waits by using the suite's 50s bound | KewangZhili | 6w |
 | [4679](https://github.com/valkey-io/valkey/pull/4679) | Support LBOUND, UBOUND, SATURATE, ENX, and PERSIST options for INCREX | murphyjacob4 | 2w |
 | [4453](https://github.com/valkey-io/valkey/pull/4453) | Fix replica full resync after restart with AOF-only persistence | Shikha-code36 | 6w |
 | [4451](https://github.com/valkey-io/valkey/pull/4451) | fix: persist replication state for replica PSYNC after restart | waterWang | 6w |
-| [4090](https://github.com/valkey-io/valkey/pull/4090) | Prevent forgotten nodes from rejoining the cluster via MEET | AlisinaDevelo | 2mo |
-| [4792](https://github.com/valkey-io/valkey/pull/4792) | Fix protocol error log truncating the query buffer at null bytes | Chy-Zaber-Bin-Zahid | 2d |
-| [4789](https://github.com/valkey-io/valkey/pull/4789) | Deflake modify new keys during forkless bgsave | Baraa-Hasheesh | 2d |
+| [4090](https://github.com/valkey-io/valkey/pull/4090) | Prevent forgotten nodes from rejoining the cluster via MEET | AlisinaDevelo | 3mo |
+| [4792](https://github.com/valkey-io/valkey/pull/4792) | Fix protocol error log truncating the query buffer at null bytes | Chy-Zaber-Bin-Zahid | 3d |
+| [4789](https://github.com/valkey-io/valkey/pull/4789) | Deflake modify new keys during forkless bgsave | Baraa-Hasheesh | 3d |
 | [4124](https://github.com/valkey-io/valkey/pull/4124) | Wait past the HEXPIREAT deadline in the non-existing fields negative t… | AlisinaDevelo | 2mo |
-| [4802](https://github.com/valkey-io/valkey/pull/4802) | Fix process title test to respect PROG_SUFFIX | IvaAMarinova | 1d |
-| [4800](https://github.com/valkey-io/valkey/pull/4800) | Fix bracketed IPv6 cluster CLI address parsing | chenshi5012 | 1d |
-| [4793](https://github.com/valkey-io/valkey/pull/4793) | [Coverage] geo - adding coverage for error branches | Baraa-Hasheesh | 1d |
-| [4787](https://github.com/valkey-io/valkey/pull/4787) | geohash code cleanup | Baraa-Hasheesh | 2d |
-| [4776](https://github.com/valkey-io/valkey/pull/4776) | Prefetch entries in hashtable scan (SCAN, HSCAN, SSCAN, ZSCAN) | NadavGigi | 6d |
-| [4775](https://github.com/valkey-io/valkey/pull/4775) | Bound the time spent evicting keys from the tracking table | tanmayBeginsJourney | 6d |
-| [4768](https://github.com/valkey-io/valkey/pull/4768) | Support running unit-tests with clang out of the box | Baraa-Hasheesh | 7d |
+| [4802](https://github.com/valkey-io/valkey/pull/4802) | Fix process title test to respect PROG_SUFFIX | IvaAMarinova | 2d |
+| [4800](https://github.com/valkey-io/valkey/pull/4800) | Fix bracketed IPv6 cluster CLI address parsing | chenshi5012 | 2d |
+| [4793](https://github.com/valkey-io/valkey/pull/4793) | [Coverage] geo - adding coverage for error branches | Baraa-Hasheesh | 2d |
+| [4787](https://github.com/valkey-io/valkey/pull/4787) | geohash code cleanup | Baraa-Hasheesh | 3d |
+| [4776](https://github.com/valkey-io/valkey/pull/4776) | Prefetch entries in hashtable scan (SCAN, HSCAN, SSCAN, ZSCAN) | NadavGigi | 7d |
+| [4768](https://github.com/valkey-io/valkey/pull/4768) | Support running unit-tests with clang out of the box | Baraa-Hasheesh | 8d |
 | [4690](https://github.com/valkey-io/valkey/pull/4690) | PERF: remove redundant checks in HINCRBYFLOAT & INCREX commands | Baraa-Hasheesh | 2w |
 | [4537](https://github.com/valkey-io/valkey/pull/4537) | Support arbitrary commands and mixed loads in the on-demand benchmark | roshkhatri | 4w |
 | [4424](https://github.com/valkey-io/valkey/pull/4424) | Resolve slot from key for module and arbitrary-key commands | patrickswedish | 6w |
 | [3645](https://github.com/valkey-io/valkey/pull/3645) | fix: Reject module writes during client pause to prevent crash | smkher | 4mo |
-| [4805](https://github.com/valkey-io/valkey/pull/4805) | Fix several test-harness issues that can cause flaky failures. | artikell | 0d |
-| [4803](https://github.com/valkey-io/valkey/pull/4803) | Fix crash when disabling prefetching with long-running Lua scripts | chzhoo | 0d |
-| [4782](https://github.com/valkey-io/valkey/pull/4782) | Make quicklist read-only iteration non-mutating on compressed nodes | murphyjacob4 | 4d |
-| [4773](https://github.com/valkey-io/valkey/pull/4773) | Add MAXBYTES trimming strategy to XADD and XTRIM | xdk-amz | 6d |
-| [4710](https://github.com/valkey-io/valkey/pull/4710) | Fix IO thread shutdown cleanup leak | roshkhatri | 13d |
+| [4782](https://github.com/valkey-io/valkey/pull/4782) | Make quicklist read-only iteration non-mutating on compressed nodes | murphyjacob4 | 5d |
+| [4773](https://github.com/valkey-io/valkey/pull/4773) | Add MAXBYTES trimming strategy to XADD and XTRIM | xdk-amz | 7d |
 | [1927](https://github.com/valkey-io/valkey/pull/1927) | Mark primary node as alive immediately if reachable and failover is no… | hpatro | 1.5y |
+| [4813](https://github.com/valkey-io/valkey/pull/4813) | Match PSUBSCRIBE patterns on sharded publish (SPUBLISH) | rotenbergt | 0d |
+| [4812](https://github.com/valkey-io/valkey/pull/4812) | hotkeys: correct the documented bound on a stale RENAME/MOVE/SWAPDB e… | alon-arenberg | 0d |
+| [4811](https://github.com/valkey-io/valkey/pull/4811) | Optimize XAUTOCLAIM stream scans with a forward iterator | charsyam | 0d |
+| [4810](https://github.com/valkey-io/valkey/pull/4810) | Fix XREAD + after deleting the last stream entry | charsyam | 0d |
+| [4808](https://github.com/valkey-io/valkey/pull/4808) | Fix stream trimming with MAXLEN of 2^32 or more on 32-bit builds | abhi-byte62 | 0d |
+| [4805](https://github.com/valkey-io/valkey/pull/4805) | Fix several test-harness issues that can cause flaky failures. | artikell | 1d |
+| [4797](https://github.com/valkey-io/valkey/pull/4797) | Forkless Full-Sync | nitaicaro | 2d |
+| [4772](https://github.com/valkey-io/valkey/pull/4772) | Avoid propagating expired hash fields from HDEL, HGETDEL, HPERSIST, an… | xdk-amz | 7d |
+| [4707](https://github.com/valkey-io/valkey/pull/4707) | Skip raw TSC when the kernel clocksource is not tsc | quanyeyang | 2w |
+| [4675](https://github.com/valkey-io/valkey/pull/4675) | Fix cluster bus self-forget use-after-free | roshkhatri | 2w |
+| [4657](https://github.com/valkey-io/valkey/pull/4657) | Build: make the Make / CMake gtest build link on macOS | eifrah-aws | 2w |
+| [4417](https://github.com/valkey-io/valkey/pull/4417) | Speed up HGETALL, HKEYS and HVALS with exact-length headers and fused … | jjuleslasarte | 6w |
+| [4190](https://github.com/valkey-io/valkey/pull/4190) | Reclaim dead client IDs from the tracking table (#4143) | rayjinghaolei | 2mo |
 
 ---
 
