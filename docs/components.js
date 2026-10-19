@@ -24,38 +24,11 @@ class SiteHeader extends HTMLElement {
     this.innerHTML = `
   <header role="banner">
     <div class="site-title">🗼 VALKEY PR WATCHTOWER</div>
-    <div class="site-subtitle">project-wide health monitoring for <a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a></div>
+    <div class="site-subtitle">notes, write-ups and tools around <a href="https://github.com/valkey-io/valkey" style="color:var(--accent3)">valkey-io/valkey</a>, in a personal capacity</div>
     <div class="site-subtitle header-latest" style="font-size:0.78em; margin-top:2px; display:none;"></div>
     <div class="visitor-counter" role="img" aria-label="Visitor number 000001">
       VISITOR: 000001
     </div>
-    <div style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;">
-      <div class="visitor-counter" aria-label="Open PRs being tracked">
-        WATCHING: <span class="counter-prs-open">0370</span> OPEN PRS
-      </div>
-      <div class="visitor-counter" aria-label="PRs that have passed under this watchtower's gaze">
-        GAZED UPON: <span class="counter-prs-since">0990</span> PRS
-      </div>
-      <div class="visitor-counter" aria-label="Last updated">
-        UPDATED: <span class="counter-last-updated" id="last-updated-utc">2026-10-19 12:12 UTC</span>
-      </div>
-    </div>
-    <script>
-      (function() {
-        var el = document.getElementById('last-updated-utc');
-        if (!el) return;
-        try {
-          var raw = el.textContent.trim();
-          var iso = raw.replace(' UTC','Z').replace(' ','T');
-          var d = new Date(iso);
-          if (isNaN(d)) return;
-          el.textContent = d.toLocaleString(undefined, {
-            month: 'short', day: 'numeric', year: 'numeric',
-            hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
-          });
-        } catch(e) {}
-      })();
-    </script>
     <div style="font-size:0.75em; color:var(--muted); margin-top:4px;">
       a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>, in a personal capacity
       &nbsp;·&nbsp; not Valkey, the Linux Foundation, or her employer speaking
@@ -124,7 +97,7 @@ class SiteNav extends HTMLElement {
   <nav aria-label="Site navigation">
     <span>→</span>
     <a href="index.html">🏠 Home</a>
-    <a href="report.html">📊 Live Report</a>
+    <a href="report.html">📊 PR Report (archived)</a>
     <a href="articles.html">📰 Articles</a>
     <a href="analysis.html">🔍 Deep Analysis</a>
     <a href="test-health.html">🧪 Test Health</a>
@@ -256,30 +229,14 @@ class SiteSidebar extends HTMLElement {
 
       <div class="panel">
         <div class="panel-header">
-          <span>📊 Snapshot</span>
+          <span>📊 PR Report</span>
           <attr-badge type="ai"></attr-badge>
         </div>
         <div class="panel-body">
-          <div class="stat-grid">
-            <div class="stat-box">
-              <span class="stat-number warn"><span class="counter-prs-open">0370</span></span>
-              <span class="stat-label">open PRs</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-number danger">38</span>
-              <span class="stat-label">decision-pending</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-number ok">8</span>
-              <span class="stat-label">approved, unmerged</span>
-            </div>
-            <div class="stat-box">
-              <span class="stat-number danger">17</span>
-              <span class="stat-label">PRs from 2024</span>
-            </div>
-          </div>
-          <p style="font-size:0.72em; color:var(--muted); margin-top:8px; text-align:center;">
-            <a href="report.html">live report →</a>
+          <p style="font-size:0.82em; color:var(--muted); margin:0;">
+            The daily PR health report ran from July to October 2026 and is
+            retired. The final snapshot stays up as an archive:
+            <a href="report.html">last report →</a>
           </p>
         </div>
       </div>

@@ -1,38 +1,37 @@
 # valkey-pr-watchtower 🗼
 
-Project-wide PR health monitoring for [valkey-io/valkey](https://github.com/valkey-io/valkey).
+Write-ups, guides, analyses and small tools around [valkey-io/valkey](https://github.com/valkey-io/valkey), made in a personal capacity.
 
-**[→ View the live report](https://valkey-rainfall.github.io/valkey-pr-watchtower/)**
+**[→ The site](https://valkey-rainfall.github.io/valkey-pr-watchtower/)**
 
 ---
 
 ## What this is
 
-A personal tool that generates automated health reports on the Valkey PR backlog: aging patterns, stalled decisions, duplicate PRs, flaky test signals, contributor load, and actionable triage recommendations.
+A personal, unofficial home for things [@rainsupreme](https://github.com/rainsupreme) and her AI agents have made around Valkey: review guides, deep dives, orientation notes, tooling. Everything here is public; nothing private, confidential or proprietary belongs in this repository.
 
-Reports are regenerated daily by GitHub Actions and published to GitHub Pages. No human needed in the loop for the data — just data → analysis → page.
+It started life as a daily PR-health report generated from the GitHub API. That report ran from July to October 2026 and is retired; its last snapshot is kept at `docs/report.html` and the generator scripts live on in git history.
 
-> **Disclaimer:** This is a personal project maintained by [@rainsupreme](https://github.com/rainsupreme), a Valkey contributor, not an official Valkey project representative. The analysis and opinions here are my own.
+> **Disclaimer:** A personal project written in a personal capacity. Not an official Valkey project; does not represent the views of the Valkey project, the Linux Foundation, or the author's employer. Opinions are the author's own. AI-assisted content is marked as such.
 
 ---
 
 ## What's in here
 
 ```
-scripts/
-  build_report.py        # fetches live GitHub data → generates docs/report.md
-  build_affinity.py      # (planned) git log analysis → reviewer affinity scoring
-  suggest_reviewers.py   # (planned) PR → ranked reviewer suggestions
-
 docs/
-  index.md               # landing page (static)
-  report.md              # auto-generated daily PR health report
+  index.html             # landing page
   articles.json          # article manifest: metadata + "Latest Updates" feed
   articles.html          # browse-all-articles page (reads articles.json)
   _article-template.html # copy this to start a new article
+  components.js          # header, nav, sidebar, footer, attribution badges
+  report.html, report.md # archived final snapshot of the daily PR report
+
+data/
+  history.json           # daily PR-count series captured while the report ran
 
 .github/workflows/
-  update-report.yml      # daily cron: run build_report.py, commit, push
+  deploy-pages.yml       # publish docs/ to GitHub Pages on push to main
 ```
 
 ---
@@ -73,23 +72,3 @@ There's no formal assignment process for most PRs. Maintainers pick up what they
 
 **First contributions:**
 The project is welcoming but bandwidth-constrained. Your first PR might take longer than you expect. That's normal and not a signal about the PR quality. A good first PR to build trust: fix a real bug (not just a typo), keep it small, include a test.
-
----
-
-## Running locally
-
-```bash
-pip install requests python-dateutil
-export GITHUB_TOKEN=your_token
-python scripts/build_report.py > docs/report.md
-```
-
----
-
-## Roadmap
-
-- [x] Daily automated PR health report
-- [ ] First-contribution welcome workflow
-- [ ] Reviewer affinity scoring (file ownership × review history)
-- [ ] Automated reviewer suggestions on new PRs
-- [ ] Flaky test tracker (correlate bot-filed issues with open deflake PRs)

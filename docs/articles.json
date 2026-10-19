@@ -2,13 +2,16 @@
   "articles": [
     {
       "slug": "report.html",
-      "title": "Live PR Health Report",
-      "emoji": "📊",
+      "title": "PR Health Report (archived)",
+      "emoji": "🗄",
       "date": "2026-07-02",
-      "updated": "auto",
+      "updated": "2026-10-19",
       "badge": "ai",
-      "summary": "Auto-regenerated daily: PR backlog aging, stalled decisions, duplicate PRs, contributor load, and triage recommendations from live GitHub data.",
-      "tags": ["prs", "auto-updated"]
+      "summary": "Final snapshot of the daily PR-health report (July–October 2026): backlog lanes by who owns the next move, aging, decision bottlenecks, contributor load. No longer updated.",
+      "tags": [
+        "prs",
+        "archived"
+      ]
     },
     {
       "slug": "analysis.html",
@@ -18,7 +21,10 @@
       "updated": "2026-07-02",
       "badge": "ai",
       "summary": "A one-time deep dive into the open-PR backlog: what is actually stuck, why, and which levers would move the most PRs.",
-      "tags": ["prs", "deep-dive"]
+      "tags": [
+        "prs",
+        "deep-dive"
+      ]
     },
     {
       "slug": "orientation.html",
@@ -28,7 +34,10 @@
       "updated": "2026-07-02",
       "badge": "ai",
       "summary": "A new-contributor's map of the PR landscape: where to start, what review culture to expect, and how decisions get made.",
-      "tags": ["contributors", "guide"]
+      "tags": [
+        "contributors",
+        "guide"
+      ]
     },
     {
       "slug": "test-health.html",
@@ -38,10 +47,18 @@
       "updated": "2026-07-13",
       "badge": "ai",
       "summary": "Every flaky test across 466 daily-CI runs classified by failure mode and root cause — plus a follow-up: 3 deflake PRs shipped upstream, and what the data got wrong.",
-      "tags": ["tests", "deep-dive"]
+      "tags": [
+        "tests",
+        "deep-dive"
+      ]
     }
   ],
   "updates": [
+    {
+      "date": "2026-10-19",
+      "text": "Daily PR report retired; last snapshot archived. The site is now a home for write-ups, guides and tools made in a personal capacity.",
+      "href": "report.html"
+    },
     {
       "date": "2026-07-13",
       "text": "Test Health follow-up: 3 deflake PRs shipped upstream (4156, 4157, 4158), verification methodology, and corrections",

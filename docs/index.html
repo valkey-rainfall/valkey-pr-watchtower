@@ -26,15 +26,17 @@
         </div>
         <div class="panel-body">
           <p>
-            This is my personal dashboard for keeping an eye on the
-            <a href="https://github.com/valkey-io/valkey" target="_blank" rel="noopener noreferrer">valkey-io/valkey</a>
-            PR backlog. I care about the project's health and want to see it
-            succeed — this is my way of contributing beyond individual PRs.
+            This is my personal corner for things I (or my AI agents) have made
+            around <a href="https://github.com/valkey-io/valkey" target="_blank" rel="noopener noreferrer">valkey-io/valkey</a>:
+            write-ups, guides, analyses and small tools. It started as a daily
+            PR-health report; that report is retired and stays up as an archive.
+            Nothing here is reviewed or approved by the Valkey project, the Linux
+            Foundation, or my employer — it is my own view, in my own time.
           </p>
           <hr class="divider">
           <h2>What's here</h2>
           <ul>
-            <li><a href="report.html">📊 Live Report</a> — auto-generated daily from the GitHub API. Shows merge-ready PRs, decision bottlenecks, aging, deflake work, and contributor load.</li>
+            <li><a href="report.html">📊 PR Report (archived)</a> — the final snapshot of the daily PR-health report that ran July–October 2026. Kept for reference; no longer updated.</li>
             <li><a href="articles.html">📰 Articles</a> — everything published here, browsable by tag, newest first.</li>
             <li><a href="analysis.html">🔍 Deep Analysis</a> — a one-time deep dive from 2026-07-02. Includes duplicate PR pairs, zero-review PRs, CI health, and systemic recommendations.</li>
             <li><a href="test-health.html">🧪 Test Health</a> — a one-time flaky-test deep dive from the daily CI dashboard. 119 tracked tests classified by failure mode, anti-patterns to avoid, gtest-migration candidates, and ranked fixes.</li>
@@ -48,42 +50,6 @@
             <li><attr-badge type="approved"></attr-badge> — AI wrote it, I read it, vouched for accuracy, and chose to publish it</li>
             <li><attr-badge type="human"></attr-badge> — I wrote it (possibly with AI editing assistance)</li>
           </ul>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-top:12px;">
-        <div class="panel-header">
-          <span>⚡ Quick Action List</span>
-          <attr-badge type="ai"></attr-badge>
-        </div>
-        <div class="panel-body">
-          <p style="color:var(--muted); font-size:0.8em; margin-bottom:8px;">
-            High-confidence immediate actions — no new decisions needed.
-          </p>
-
-          <h3 class="ok">Merge Now (community-approved, CI green)</h3>
-          <div class="action-item"><span class="action-num">#3413</span><span><a href="https://github.com/valkey-io/valkey/pull/3413" target="_blank" rel="noopener noreferrer">Optimize infoCommand with SDS pre-allocation</a> <span class="muted">— labeled <code>to-be-merged</code> for 3 months</span></span></div>
-          <div class="action-item"><span class="action-num">#685</span><span><a href="https://github.com/valkey-io/valkey/pull/685" target="_blank" rel="noopener noreferrer">Align entry read/lag rules of consumer group</a> <span class="danger">— approved 2+ years ago</span></span></div>
-          <div class="action-item"><span class="action-num">#866</span><span><a href="https://github.com/valkey-io/valkey/pull/866" target="_blank" rel="noopener noreferrer">New maxmemory-scripts config</a> <span class="danger">— approved 23 months ago</span></span></div>
-          <div class="action-item"><span class="action-num">#2555</span><span><a href="https://github.com/valkey-io/valkey/pull/2555" target="_blank" rel="noopener noreferrer">Use BIO thread for cluster config saving</a></span></div>
-          <div class="action-item"><span class="action-num">#3050</span><span><a href="https://github.com/valkey-io/valkey/pull/3050" target="_blank" rel="noopener noreferrer">Add CONFIG INFO display config type/values</a></span></div>
-          <div class="action-item"><span class="action-num">#3466</span><span><a href="https://github.com/valkey-io/valkey/pull/3466" target="_blank" rel="noopener noreferrer">XACKDEL Command</a></span></div>
-          <div class="action-item"><span class="action-num">#3467</span><span><a href="https://github.com/valkey-io/valkey/pull/3467" target="_blank" rel="noopener noreferrer">XDELEX Command</a></span></div>
-          <div class="action-item"><span class="action-num">#3522</span><span><a href="https://github.com/valkey-io/valkey/pull/3522" target="_blank" rel="noopener noreferrer">Fail fast on empty CA directory at TLS config load</a></span></div>
-
-          <hr class="divider">
-
-          <h3 class="warn">Prioritize Review (deflake — affects all CI)</h3>
-          <div class="action-item"><span class="action-num">#3764</span><span><a href="https://github.com/valkey-io/valkey/pull/3764" target="_blank" rel="noopener noreferrer">Deflake io-threads test</a> <span class="danger">— open 7 weeks, no review</span></span></div>
-          <div class="action-item"><span class="action-num">#3969</span><span><a href="https://github.com/valkey-io/valkey/pull/3969" target="_blank" rel="noopener noreferrer">Test framework: avoid stale tmpdir reuse on PID collision</a> <span class="muted">— draft, zuiderkwast</span></span></div>
-
-          <hr class="divider">
-
-          <h3 class="danger">Close (duplicates / superseded / stalled)</h3>
-          <div class="action-item"><span class="action-num">#3508</span><span>Exact duplicate of <a href="https://github.com/valkey-io/valkey/pull/3510" target="_blank" rel="noopener noreferrer">#3510</a> — TLS busy loop</span></div>
-          <div class="action-item"><span class="action-num">#3493</span><span>Superseded by <a href="https://github.com/valkey-io/valkey/pull/3810" target="_blank" rel="noopener noreferrer">#3810</a> / <a href="https://github.com/valkey-io/valkey/pull/4054" target="_blank" rel="noopener noreferrer">#4054</a> — zrangebyscore (3 open PRs for 1 bug)</span></div>
-          <div class="action-item"><span class="action-num">#3211</span><span>Superseded by <a href="https://github.com/valkey-io/valkey/pull/4055" target="_blank" rel="noopener noreferrer">#4055</a> — cluster-announce-ip validation</span></div>
-          <div class="action-item"><span class="action-num">#3427</span><span>Labeled <code>to-be-closed</code> — Windows native builds</span></div>
         </div>
       </div>
 

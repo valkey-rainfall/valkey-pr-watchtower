@@ -1,8 +1,9 @@
 # Valkey PR Watchtower 🗼
 
-Project-wide PR health monitoring for [valkey-io/valkey](https://github.com/valkey-io/valkey).
+Write-ups, guides, analyses and small tools around [valkey-io/valkey](https://github.com/valkey-io/valkey), made in a personal capacity.
 
-- **[→ Latest PR Health Report](report.md)** — updated daily
+- **[→ Articles](articles.html)**
+- **[→ Archived PR health report](report.html)** — ran daily July–October 2026, no longer updated
 - **[→ Source repo](https://github.com/valkey-rainfall/valkey-pr-watchtower)**
 
 ---
