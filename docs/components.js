@@ -57,8 +57,8 @@ class SiteHeader extends HTMLElement {
       })();
     </script>
     <div style="font-size:0.75em; color:var(--muted); margin-top:4px;">
-      a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>
-      &nbsp;·&nbsp; a personal project, not an official Valkey project
+      a personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>, in a personal capacity
+      &nbsp;·&nbsp; not Valkey, the Linux Foundation, or her employer speaking
       &nbsp;·&nbsp; <button id="theme-toggle" onclick="toggleTheme()" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--muted);cursor:pointer;font-family:inherit;font-size:1em;">🌓 theme</button>
     </div>
   </header>`;
@@ -345,9 +345,10 @@ class SiteFooter extends HTMLElement {
       <a href="https://github.com/valkey-rainfall/valkey-pr-watchtower">source on GitHub</a>
     </p>
     <p style="margin-top:6px;">
-      Personal project, not an official Valkey project.
-      Data from the GitHub API.
-      Opinions are the author's own.
+      Personal project by <a href="https://github.com/rainsupreme">rainsupreme</a>, written in her personal capacity.
+      It is not an official Valkey project and does not represent the views of the
+      Valkey project, the Linux Foundation, or her employer.
+      Opinions are the author's own. AI-assisted content is marked as such.
     </p>
     <p style="margin-top:6px;">
       <span class="blink">★</span>

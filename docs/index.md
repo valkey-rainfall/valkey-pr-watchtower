@@ -7,4 +7,4 @@ Project-wide PR health monitoring for [valkey-io/valkey](https://github.com/valk
 
 ---
 
-*A personal project by [@rainsupreme](https://github.com/rainsupreme). Not affiliated with the Valkey project or Amazon.*
+*A personal project by [@rainsupreme](https://github.com/rainsupreme), written in her personal capacity. Not an official Valkey project; does not represent the views of the Valkey project, the Linux Foundation, or her employer.*
