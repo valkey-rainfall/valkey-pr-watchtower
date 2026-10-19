@@ -1,59 +1,5 @@
 [
   {
-    "date": "2026-07-19",
-    "open_prs": 297,
-    "weekly_activity": [
-      {
-        "week_start": "2026-05-24",
-        "week_end": "2026-05-31",
-        "opened": 24,
-        "merged": 22
-      },
-      {
-        "week_start": "2026-05-31",
-        "week_end": "2026-06-07",
-        "opened": 36,
-        "merged": 16
-      },
-      {
-        "week_start": "2026-06-07",
-        "week_end": "2026-06-14",
-        "opened": 41,
-        "merged": 30
-      },
-      {
-        "week_start": "2026-06-14",
-        "week_end": "2026-06-21",
-        "opened": 19,
-        "merged": 9
-      },
-      {
-        "week_start": "2026-06-21",
-        "week_end": "2026-06-28",
-        "opened": 30,
-        "merged": 13
-      },
-      {
-        "week_start": "2026-06-28",
-        "week_end": "2026-07-05",
-        "opened": 25,
-        "merged": 18
-      },
-      {
-        "week_start": "2026-07-05",
-        "week_end": "2026-07-12",
-        "opened": 34,
-        "merged": 15
-      },
-      {
-        "week_start": "2026-07-12",
-        "week_end": "2026-07-19",
-        "opened": 47,
-        "merged": 36
-      }
-    ]
-  },
-  {
     "date": "2026-07-20",
     "open_prs": 300,
     "weekly_activity": [
@@ -4855,6 +4801,60 @@
         "week_start": "2026-10-11",
         "week_end": "2026-10-18",
         "opened": 46,
+        "merged": 32
+      }
+    ]
+  },
+  {
+    "date": "2026-10-19",
+    "open_prs": 370,
+    "weekly_activity": [
+      {
+        "week_start": "2026-08-24",
+        "week_end": "2026-08-31",
+        "opened": 57,
+        "merged": 46
+      },
+      {
+        "week_start": "2026-08-31",
+        "week_end": "2026-09-07",
+        "opened": 47,
+        "merged": 43
+      },
+      {
+        "week_start": "2026-09-07",
+        "week_end": "2026-09-14",
+        "opened": 43,
+        "merged": 27
+      },
+      {
+        "week_start": "2026-09-14",
+        "week_end": "2026-09-21",
+        "opened": 52,
+        "merged": 44
+      },
+      {
+        "week_start": "2026-09-21",
+        "week_end": "2026-09-28",
+        "opened": 45,
+        "merged": 20
+      },
+      {
+        "week_start": "2026-09-28",
+        "week_end": "2026-10-05",
+        "opened": 34,
+        "merged": 15
+      },
+      {
+        "week_start": "2026-10-05",
+        "week_end": "2026-10-12",
+        "opened": 31,
+        "merged": 10
+      },
+      {
+        "week_start": "2026-10-12",
+        "week_end": "2026-10-19",
+        "opened": 49,
         "merged": 32
       }
     ]
