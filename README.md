@@ -32,6 +32,7 @@ guides/
 
 tools/
   build_site.py          # assembles docs/ + rendered guides/ into _site/ (the published tree)
+  check_links.py         # verifies every internal href/src (and #fragment) in _site/ resolves
 
 data/
   history.json           # daily PR-count series captured while the report ran
@@ -44,6 +45,8 @@ data/
 Every page has exactly one canonical source, chosen by which file exists: `docs/<slug>.html` (hand-written HTML, served as-is) or `guides/<slug>.md` (markdown, rendered at build time). A slug with both fails the build. Rendered pages are never committed; `_site/` is gitignored.
 
 The build also validates `docs/articles.json`: every article entry has the expected fields, `badge` is one of `ai`/`approved`/`human`, dates are `YYYY-MM-DD`, slugs are unique and point at an existing page, and every `updates[].href` names a real page. CI runs the build on every pull request, so a broken manifest or page layout is caught before merge rather than as a red deploy.
+
+CI also runs `codespell` over the sources (Valkey vocabulary and the frozen report archive are excluded in `.codespellrc`; add a word there when codespell flags a real term) and `tools/check_links.py` over `_site/`, which fails on any internal `href`/`src` that names a missing file or a `#fragment` with no matching `id`. External links are not fetched. Both run locally the same way: `codespell` from the repo root, `python3 tools/check_links.py` after a build.
 
 ---
 

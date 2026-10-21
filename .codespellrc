@@ -1,0 +1,10 @@
+# codespell configuration (also read when codespell runs with no arguments).
+#
+# Skipped paths are a frozen snapshot of text quoted from GitHub (PR titles are
+# truncated there, which reads as misspellings) and the raw data series.
+# The ignore list is Valkey vocabulary codespell mistakes for English typos.
+[codespell]
+skip = ./docs/report.html,./docs/report.md,./data,./_site,./.git
+ignore-words-list = exat,pexat,hset,zset,ziplist,listpack,hashtable,memtier,valkey
+check-filenames =
+check-hidden =

@@ -3,7 +3,8 @@ name: CI
 # Runs the same site build the deploy uses, so a pull request cannot merge a
 # source layout the deploy would reject: a slug with two sources, a manifest
 # entry with no page, a malformed articles.json, or a markdown page the renderer
-# cannot handle. The deploy workflow stays separate and runs only on main.
+# cannot handle. Then checks spelling in the sources and every internal link in
+# the built site. The deploy workflow stays separate and runs only on main.
 
 on:
   pull_request:
@@ -21,7 +22,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install markdown
+      - run: pip install markdown codespell
       - run: python3 tools/build_site.py --out _site
       - name: Rendered pages present
         run: |
@@ -30,3 +31,7 @@ jobs:
             test -s "$page" || { echo "missing $page"; exit 1; }
           done
           echo "$(ls _site/*.html | wc -l) pages in _site/"
+      - name: Spelling (config in .codespellrc)
+        run: codespell
+      - name: Internal links resolve
+        run: python3 tools/check_links.py --site _site
