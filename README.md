@@ -25,37 +25,49 @@ docs/
   articles.html          # browse-all-articles page (reads articles.json)
   _article-template.html # copy this to start a hand-written article
   components.js          # header, nav, sidebar, footer, attribution badges
-  review-guide.html      # GENERATED from guides/review-guide.md
   report.html, report.md # archived final snapshot of the daily PR report
 
 guides/
-  review-guide.md        # canonical text of the review guide; edit this, then rebuild
+  review-guide.md        # markdown-canonical pages; rendered to <slug>.html at build time
 
 tools/
-  build_article.py       # renders a guides/*.md file into a docs/*.html article page
+  build_site.py          # assembles docs/ + rendered guides/ into _site/ (the published tree)
 
 data/
   history.json           # daily PR-count series captured while the report ran
 
 .github/workflows/
-  deploy-pages.yml       # publish docs/ to GitHub Pages on push to main
+  deploy-pages.yml       # build _site/ and publish it to GitHub Pages on push to main
 ```
+
+Every page has exactly one canonical source, chosen by which file exists: `docs/<slug>.html` (hand-written HTML, served as-is) or `guides/<slug>.md` (markdown, rendered at build time). A slug with both fails the build. Rendered pages are never committed; `_site/` is gitignored.
 
 ---
 
 ## Adding an article
 
-Hand-written page:
+Both formats are first-class. Pick HTML when the page needs layout or interactivity the panel renderer does not give you; pick markdown when the text will be edited over time or read straight from the repo.
+
+Hand-written HTML page:
 
 1. `cp docs/_article-template.html docs/your-slug.html` and fill in the title, date, and content panels.
 2. Add an entry to the `articles` array in `docs/articles.json` (slug, title, emoji, date, updated, badge, summary, tags).
 3. Add an entry to the **top** of the `updates` array in `docs/articles.json`.
 
-Markdown-first guide (the text is meant to be edited over time, or read from the repo directly):
+Markdown page:
 
-1. Write or edit `guides/your-slug.md`. The first `#` heading is the page title; each `##` section becomes one panel.
-2. `python3 tools/build_article.py guides/your-slug.md docs/your-slug.html --badge approved --emoji 🔎 --source-url https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/guides/your-slug.md` (needs `pip install markdown`). Commit both files; the HTML is generated and never hand-edited.
-3. Same two `articles.json` entries as above; bump `updated` on every rebuild.
+1. Write `guides/your-slug.md`. The first `#` heading is the page title; each `##` section becomes one panel. Raw inline HTML passes through, so a `<details>` block or a custom table inside an otherwise-markdown page works.
+2. Same two `articles.json` entries as above. The entry's `emoji` and `badge` are what the rendered page shows; bump `updated` when the text changes.
+3. Commit the markdown only. The deploy workflow renders it; no HTML to commit or keep in sync.
+
+Switching a page between formats is a normal git change: to go markdown -> HTML, run the build, `git add` the rendered page from `_site/` into `docs/`, and delete the `.md`; the reverse is writing the `.md` and deleting the `.html`. The build refuses a slug that has both.
+
+Preview locally (needs `pip install markdown`):
+
+```
+python3 tools/build_site.py          # writes _site/
+python3 -m http.server 8000 --bind 127.0.0.1 --directory _site
+```
 
 The nav, the Articles page, and the sidebar "Latest Updates" panel all read `articles.json` — no other file needs editing. Attribution badges: `ai`, `approved`, or `human` (see `<attr-badge>` in `components.js`).
 
