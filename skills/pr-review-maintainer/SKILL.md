@@ -71,9 +71,13 @@ not raw dumps. Each brief says which guide sections it covers.
   fail them)? Do they cover the edge cases the review history raised? Does a
   regression test fail without the fix (check out the base and run it)?
 - **Flakiness scan of new/modified tests** against the guide's "Tests" rules
-  and the checklist in `tests/README.md`. The one question that catches most
-  of it: "if this process freezes for 2 seconds at any point, does the test
-  still pass?" If no, flag it.
+  and the checklist in `tests/README.md`. The four shapes that account for most
+  deflake commits: a fixed sleep standing in for a condition; a timeout or
+  budget sized for a fast local machine; an assertion on state another thread,
+  process or replica updates asynchronously (including a mid-operation `INFO`
+  read); a bound on an in-test duration or latency. The one question that
+  catches most of it: "if this process freezes for 2 seconds at any point, does
+  the test still pass?" If no, flag it.
 - Per-language suspect scan (see lists below)
 - **Classify every finding: pre-existing vs. introduced by this PR**
 
