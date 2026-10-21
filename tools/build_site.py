@@ -24,6 +24,7 @@ Requires the ``markdown`` package.
 import argparse
 import html
 import json
+import re
 import shutil
 import sys
 from pathlib import Path
@@ -146,10 +147,85 @@ def render(md_text, badge, emoji, source_url):
     )
 
 
+ARTICLE_FIELDS = {
+    "slug": str,
+    "title": str,
+    "emoji": str,
+    "date": str,
+    "updated": str,
+    "badge": str,
+    "summary": str,
+    "tags": list,
+}
+UPDATE_FIELDS = {"date": str, "text": str, "href": str}
+BADGES = {"ai", "approved", "human"}
+DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
+def check_fields(problems, where, obj, fields):
+    """Every field present with the right type; nothing missing or extra."""
+    if not isinstance(obj, dict):
+        problems.append(f"{where}: expected an object")
+        return False
+    for name, kind in fields.items():
+        if name not in obj:
+            problems.append(f"{where}: missing '{name}'")
+        elif not isinstance(obj[name], kind):
+            problems.append(f"{where}: '{name}' should be {kind.__name__}")
+    for name in obj.keys() - fields.keys():
+        problems.append(f"{where}: unknown field '{name}'")
+    return True
+
+
 def load_manifest():
-    """Return {slug.html: entry} for every article in docs/articles.json."""
-    data = json.loads(MANIFEST.read_text(encoding="utf-8"))
-    return {entry["slug"]: entry for entry in data["articles"]}
+    """Return {slug.html: entry} from docs/articles.json after validating its shape.
+
+    Every page's metadata comes from this file, so a malformed entry would
+    publish a page with a missing badge or a dead link in the updates feed.
+    """
+    try:
+        data = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise BuildError(f"docs/articles.json is not valid JSON: {exc}") from exc
+
+    problems = []
+    if not isinstance(data, dict) or set(data) != {"articles", "updates"}:
+        raise BuildError("docs/articles.json must be an object with exactly 'articles' and 'updates'")
+
+    manifest = {}
+    for i, entry in enumerate(data["articles"]):
+        where = f"articles[{i}]"
+        if not check_fields(problems, where, entry, ARTICLE_FIELDS):
+            continue
+        slug = entry.get("slug", "")
+        if not isinstance(slug, str) or not slug.endswith(".html") or "/" in slug:
+            problems.append(f"{where}: slug '{slug}' must be a bare '<name>.html'")
+        if slug in manifest:
+            problems.append(f"{where}: duplicate slug '{slug}'")
+        if entry.get("badge") not in BADGES:
+            problems.append(f"{where}: badge '{entry.get('badge')}' not one of {sorted(BADGES)}")
+        for field in ("date", "updated"):
+            if isinstance(entry.get(field), str) and not DATE_RE.match(entry[field]):
+                problems.append(f"{where}: {field} '{entry[field]}' is not YYYY-MM-DD")
+        if isinstance(entry.get("tags"), list) and not all(isinstance(t, str) for t in entry["tags"]):
+            problems.append(f"{where}: tags must all be strings")
+        if isinstance(slug, str):
+            manifest[slug] = entry
+
+    pages = set(manifest) | {p.name for p in DOCS.glob("*.html") if not p.name.startswith("_")}
+    for i, upd in enumerate(data["updates"]):
+        where = f"updates[{i}]"
+        if not check_fields(problems, where, upd, UPDATE_FIELDS):
+            continue
+        if isinstance(upd.get("date"), str) and not DATE_RE.match(upd["date"]):
+            problems.append(f"{where}: date '{upd['date']}' is not YYYY-MM-DD")
+        href = upd.get("href", "")
+        if isinstance(href, str) and href.split("#")[0] not in pages:
+            problems.append(f"{where}: href '{href}' does not name a page in articles or docs/")
+
+    if problems:
+        raise BuildError("\n".join(problems))
+    return manifest
 
 
 def check_sources(manifest):

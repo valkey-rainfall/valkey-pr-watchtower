@@ -37,10 +37,13 @@ data/
   history.json           # daily PR-count series captured while the report ran
 
 .github/workflows/
+  ci.yml                 # on pull requests: run the site build, fail on any source/manifest problem
   deploy-pages.yml       # build _site/ and publish it to GitHub Pages on push to main
 ```
 
 Every page has exactly one canonical source, chosen by which file exists: `docs/<slug>.html` (hand-written HTML, served as-is) or `guides/<slug>.md` (markdown, rendered at build time). A slug with both fails the build. Rendered pages are never committed; `_site/` is gitignored.
+
+The build also validates `docs/articles.json`: every article entry has the expected fields, `badge` is one of `ai`/`approved`/`human`, dates are `YYYY-MM-DD`, slugs are unique and point at an existing page, and every `updates[].href` names a real page. CI runs the build on every pull request, so a broken manifest or page layout is caught before merge rather than as a red deploy.
 
 ---
 
