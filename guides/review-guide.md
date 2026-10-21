@@ -1,13 +1,10 @@
 # Valkey review guide
 
-Working draft, 2026-10-15; revised 2026-10-16 after the first eight reviews run
-against it (PRs 3496, 4054, 4637, 4644, 4645, 4852, 4871, 4875); revised 2026-10-19
-after a second read (write-path propagation, CI-run approval, hostile input,
-backports, author readiness). Derived from the project's written norms
-(CONTRIBUTING, the test READMEs, the governance docs) and a study of 981 merged
-PRs, 21 post-merge regressions, and ~160 deflake commits from 2022 onward. It is
-one maintainer's working checklist, written for herself and for anyone drafting
-reviews with her; "we" and "our" below mean that. Not project policy.
+Derived from the project's written norms (CONTRIBUTING, the test READMEs, the
+governance docs) and a study of 981 merged PRs, 21 post-merge regressions, and
+~160 deflake commits from 2022 onward. It is one maintainer's working checklist,
+written for herself and for anyone drafting reviews with her; "we" and "our"
+below mean that. Not project policy.
 
 ## How review actually works here
 
@@ -296,4 +293,4 @@ Every count above is from a GitHub API pull of the 981 PRs merged into
 valkey-io/valkey from 2022 onward: files touched, reviewers, review threads and
 their outcomes, labels and timeline; plus 21 post-merge regressions traced to the
 PR that introduced each, and ~160 commits that fix a flaky test. The dataset and
-the scripts that build it are not published yet; ask if you want them.
+the scripts that build it are not published.
