@@ -30,6 +30,10 @@ docs/
 guides/
   review-guide.md        # markdown-canonical pages; rendered to <slug>.html at build time
 
+skills/
+  pr-review-maintainer/  # AI-agent operating procedure for drafting reviews against the guide;
+                         # not published on the site, install by cloning or copying
+
 tools/
   build_site.py          # assembles docs/ + rendered guides/ into _site/ (the published tree)
   check_links.py         # verifies every internal href/src (and #fragment) in _site/ resolves

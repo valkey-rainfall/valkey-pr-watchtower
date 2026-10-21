@@ -2,9 +2,8 @@
 
 Derived from the project's written norms (CONTRIBUTING, the test READMEs, the
 governance docs) and a study of 981 merged PRs, 21 post-merge regressions, and
-~160 deflake commits from 2022 onward. It is one maintainer's working checklist,
-written for herself and for anyone drafting reviews with her; "we" and "our"
-below mean that. Not project policy.
+~160 deflake commits from 2022 onward. One maintainer's working checklist, not
+project policy.
 
 ## How review actually works here
 
@@ -24,20 +23,20 @@ below mean that. Not project policy.
 
 ## Before reading the diff
 
-1. Read the whole description and every existing thread. Verdicts changed on this
-   alone more than once (PR 4490).
-2. Classify: bug fix, feature, refactor, test, CI. Refactor mixed with behavior change
-   is the first thing to ask to split.
-3. Major-decision check (TSC decides, we route). Triggers visible in a diff:
+1. Read the whole description and every existing thread. The threads alone have
+   reversed a verdict more than once (PR 4490).
+2. Decide what kind of change it is: bug fix, feature, refactor, test, CI. Refactor
+   mixed with behavior change is the first thing to ask to split.
+3. Major-decision check (the TSC decides; a reviewer routes). Triggers visible in a diff:
    `src/commands/*.json` change; new `VM_*`, or a changed return-value or flag
    contract of an existing `VM_*` with no signature change (PR 4645 made
    `VM_ZsetRangeEndReached` non-sticky; same class); new INFO / CLUSTER / CLIENT LIST field;
    new config; new `OBJ_ENCODING_*` or `RDB_TYPE_*`; layout change to `robj`,
    `hashtable`, `kvstore`, `client`, `clusterNode`; changed default; renamed or
    removed user-visible anything; changed error prefix; replication stream content;
-   RESP2/3 reply shape; anything under `deps/`. Plus two of our own: a tradeoff where
-   one thing gets worse to gain another, and any one-way door (if undoing it later
-   would be a major decision, it is one now). Action: `major-decision-pending`,
+   RESP2/3 reply shape; anything under `deps/`. Two more that no list spells out: a
+   tradeoff where one thing gets worse to gain another, and any one-way door (if
+   undoing it later would be a major decision, it is one now). Action: `major-decision-pending`,
    don't approve, confirm a linked issue has TSC discussion, keep reviewing the code.
 4. Mechanical: DCO on every commit, clang-format-18, test present, `src/commands`
    json for command changes (and the `key_specs` in it are right: they drive
@@ -62,7 +61,7 @@ below mean that. Not project policy.
 ## Picking up a stale or previously approved PR
 
 The p90 wait for a first review is three weeks, and PR 3496 sat six months with an
-approval on it. Before acting on an old approval, ours or anyone's:
+approval on it. Before acting on an old approval, your own or anyone's:
 
 1. Confirm the approval is on the current head (`gh pr view --json reviews` gives
    the commit per review). A later push voids it.
@@ -122,7 +121,8 @@ Counts are effective TSC threads in 12 months.
    input, a count that overflows the allocation size.
 9. **Logging (31), error handling (22), process (16), scope creep (12), weak tests
    (11), flaky tests (9).** Test items are raised rarely in review yet are the
-   largest class of post-merge regressions (see below). That gap is ours to close.
+   largest class of post-merge regressions (see below). That gap is the reviewer's
+   to close.
 
 Two patterns reviewers reject on sight: struct or helper definitions mid-function,
 and decorative section-divider comments. Comment on the pattern and the fix, never
@@ -144,7 +144,7 @@ is (item 5 above).
 - Misses cluster at both size extremes. Small PRs look trivial and get no threads;
   large PRs get design debate while a hunk goes unexercised.
 
-## Our checks that the project does not write down
+## Checks the project does not write down
 
 **Tests.** Every new or changed test gets a flake read against the checklist in
 `tests/README.md` ("Writing tests that don't flake", PR 4895; until it merges, the
@@ -165,11 +165,11 @@ Reviewer-side rules on top of the checklist:
   config only.
 - gtests: leak-clean under LeakSanitizer, `-Werror` clean, C-readable style per
   `src/unit/README.md`.
-- Before commenting on a test, write down what it compares against and what bug
-  class that oracle can catch. On PR 4875 we reversed three times on whether a
-  gtest loop was worth keeping while reasoning from the PR text; one read of the
-  test source settled it (unconditional-strtod oracle, right design, needs a
-  wider corpus).
+- Before commenting on a test, name what it compares against and what bug class
+  that oracle can catch, and take both from the test source, not from the PR's
+  account of it. The two can disagree: on PR 4875 the description undersold a gtest
+  loop whose oracle (unconditional `strtod`) was the right design and only needed
+  a wider corpus.
 
 **Performance and memory.** Required evidence for any hot-path change or any claim:
 workload named (command mix, key count and size, pipeline, threads, build flags,
@@ -205,8 +205,8 @@ structures never learn about their callers. No issue numbers in source comments.
 API comments state the contract, not the rationale. New files wired into both
 Makefile and CMakeLists. Description matches the diff, including a test count that
 was actually listed. Every "fixes", "more correct", or "harmless" claim in the body
-gets the same trace as a hunk: state its premise, then check the premise against
-the source the diff does not touch. PR 3496 claimed its early return fixed a
+deserves the same scrutiny as a hunk: find its premise, then check the premise
+against the source the diff does not touch. PR 3496 claimed its early return fixed a
 suppressed SELECT; `rewriteAppendOnlyFileBackground` already resets
 `aof_selected_db` on every path out of that state, so the claim was false and would
 have gone into the squash commit as history.
@@ -240,7 +240,7 @@ reasoning for them.
 
 ## Writing the review
 
-- Length: median inline comment is 25 words, p90 is 87. One mechanism per comment.
+- Comments here run short (median 25 words, p90 87) and carry one mechanism each.
 - Phrase disagreement as a question with the reason attached: "Shouldn't we X,
   since Y?" rather than "Change this to X." Explain why every time; the corpus has
   almost no bare instructions from TSC members.
@@ -256,7 +256,6 @@ reasoning for them.
   issue this fixes, the PR this builds on or reverts, a sibling fix); write
   "PR 1234" in prose when it is only context for this thread. The thing to avoid
   is a pile of unjustified cross-references, not cross-references.
-- Never present a review as complete without a hunk-by-hunk read of the diff.
 
 ## Title and description as the squash commit
 
