@@ -23,9 +23,16 @@ docs/
   index.html             # landing page
   articles.json          # article manifest: metadata + "Latest Updates" feed
   articles.html          # browse-all-articles page (reads articles.json)
-  _article-template.html # copy this to start a new article
+  _article-template.html # copy this to start a hand-written article
   components.js          # header, nav, sidebar, footer, attribution badges
+  review-guide.html      # GENERATED from guides/review-guide.md
   report.html, report.md # archived final snapshot of the daily PR report
+
+guides/
+  review-guide.md        # canonical text of the review guide; edit this, then rebuild
+
+tools/
+  build_article.py       # renders a guides/*.md file into a docs/*.html article page
 
 data/
   history.json           # daily PR-count series captured while the report ran
@@ -38,9 +45,17 @@ data/
 
 ## Adding an article
 
+Hand-written page:
+
 1. `cp docs/_article-template.html docs/your-slug.html` and fill in the title, date, and content panels.
 2. Add an entry to the `articles` array in `docs/articles.json` (slug, title, emoji, date, updated, badge, summary, tags).
 3. Add an entry to the **top** of the `updates` array in `docs/articles.json`.
+
+Markdown-first guide (the text is meant to be edited over time, or read from the repo directly):
+
+1. Write or edit `guides/your-slug.md`. The first `#` heading is the page title; each `##` section becomes one panel.
+2. `python3 tools/build_article.py guides/your-slug.md docs/your-slug.html --badge approved --emoji 🔎 --source-url https://github.com/valkey-rainfall/valkey-pr-watchtower/blob/main/guides/your-slug.md` (needs `pip install markdown`). Commit both files; the HTML is generated and never hand-edited.
+3. Same two `articles.json` entries as above; bump `updated` on every rebuild.
 
 The nav, the Articles page, and the sidebar "Latest Updates" panel all read `articles.json` — no other file needs editing. Attribution badges: `ai`, `approved`, or `human` (see `<attr-badge>` in `components.js`).
 

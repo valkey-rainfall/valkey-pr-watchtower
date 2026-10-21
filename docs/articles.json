@@ -1,6 +1,20 @@
 {
   "articles": [
     {
+      "slug": "review-guide.html",
+      "title": "Valkey Review Guide",
+      "emoji": "🔎",
+      "date": "2026-10-15",
+      "updated": "2026-10-21",
+      "badge": "approved",
+      "summary": "A maintainer's working checklist for reviewing valkey-io/valkey PRs, derived from 981 merged PRs, 21 post-merge regressions and ~160 deflake commits: what reviewers actually raise, what review missed, and the checks the project does not write down.",
+      "tags": [
+        "prs",
+        "guide",
+        "review"
+      ]
+    },
+    {
       "slug": "report.html",
       "title": "PR Health Report (archived)",
       "emoji": "🗄",
@@ -54,6 +68,11 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-10-21",
+      "text": "New guide: Valkey Review Guide — a maintainer's checklist derived from 981 merged PRs and 21 post-merge regressions",
+      "href": "review-guide.html"
+    },
     {
       "date": "2026-10-19",
       "text": "Daily PR report retired; last snapshot archived. The site is now a home for write-ups, guides and tools made in a personal capacity.",
