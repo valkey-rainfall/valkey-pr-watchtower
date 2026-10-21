@@ -180,7 +180,8 @@ memory. Reject as evidence: a single run per side; no spread; under a minute of
 steady state at the stated rate; a dataset that fits in cache; default
 `valkey-benchmark` flags; a mismatched base; only the improved metric shown. Run-to-run
 drift on a single developer host is ~4%, so a 3% gain with no spread means
-nothing. If evidence is missing, run it yourself: PR head vs merge-base on both
+nothing. If evidence is missing, apply the `run-benchmark` label (the project's
+own benchmark workflow) or run it yourself: PR head vs merge-base on both
 architectures, builds pinned so code layout does not move between the two trees,
 per-run spread, cycles/req and instructions/req alongside throughput.
 
