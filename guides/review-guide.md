@@ -16,9 +16,10 @@ reviews with her; "we" and "our" below mean that. Not project policy.
   to a code change. Leave the thread open until it is resolved; approve with caveats
   if the remaining items are minor.
 - Approvals are terse (70% are five words or fewer). The scrutiny lives in threads.
-- One TSC reviewer per PR is the norm at every size (median 1, even above 1000 lines).
-  The merger approved the PR themselves 68% of the time. There is no second-approver
-  safety net, so one review has to be complete.
+- One TSC reviewer per PR is the measured median at every size, even above 1000
+  lines, and the merger approved the PR themselves 68% of the time. Review as if
+  yours is the only one, because it usually is: one review has to be complete. A
+  second reviewer is welcome, not redundant.
 - First review lands in ~12 hours at the median, but p90 is three weeks. Picking up
   a stale PR in your area is part of the job.
 - Reviewers defer freely ("follow-up PR", "file an issue") and state scope discipline
