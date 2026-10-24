@@ -156,8 +156,8 @@ not boxes to check, and never demands to transmit to the contributor.
    better split, or is asking to split it disproportionate?
 7. **Is this a major decision?** Run the guide's trigger list. If any fires,
    the verdict routes to the TSC rather than approving; note on the thread what
-   the decision waits on (guide, item 3). A breaking change aimed at a minor
-   release is blocking on its own (guide, item 2).
+   the decision waits on (guide, item 3). A change in the major-release-only
+   class (guide, item 2) aimed at a minor or patch release is blocking on its own.
 8. **Which rung is this really on, and was the debt paid?** Take Subagent A's
    "claims rung N, artifact present/absent" and check it against the diff.
    Third or fourth rung with no artifact: the review is one comment, "please

@@ -27,26 +27,32 @@ project policy.
    reversed a verdict more than once (PR 4490).
 2. Decide what kind of change it is: bug fix, feature, refactor, test, CI. Refactor
    mixed with behavior change is the first thing to ask to split. Then place it on
-   a ladder where each rung names the written artifact owed before code:
-   - Bug fix that keeps the design: none.
-   - Small additive feature, existing behavior unchanged: an issue is enough.
-   - Changes an existing user experience: an issue with the design settled in it
-     (a one-pager at most) before line-by-line review. A behavior change beyond a
-     small bug fix is a major decision under GOVERNANCE.md ("changes that affect
-     backward compatibility", "new user visible fields"), so the TSC approves it;
-     item 3 below is how to route it.
-   - New concept: a design discussion, usually TSC.
-   Separately from the ladder: a breaking change (one that alters documented
-   behavior an existing client could depend on) ships only in a major release
-   under the project's semantic versioning
-   ([releases](https://valkey.io/topics/releases/)). Check which branch the PR is
-   aimed at and which release it would land in; a breaking change aimed at a minor
-   release is a blocking finding on its own, before any design question.
+   a ladder; each rung names what I want to see written down before I review the
+   code line by line (a personal bar, except where a project rule is cited):
+   - Bug fix that keeps the design: nothing beyond the PR.
+   - Small additive feature, existing behavior unchanged: an issue.
+   - Changes an existing user experience: an issue with the design settled in it.
+     Where the change touches backward compatibility or adds a user-visible field
+     that must be maintained, GOVERNANCE.md makes it a major decision and the TSC
+     approves it; item 3 below routes it. Behavior changes outside that list are
+     a reviewer's call, not a TSC vote.
+   - New concept: an issue first, per CONTRIBUTING ("major feature or a semantical
+     change ... start by creating an issue"); a new data structure or API is a
+     major decision under GOVERNANCE.md.
+   Separately from the ladder, the release question. The project generally follows
+   semantic versioning ([releases](https://valkey.io/topics/releases/)): patch and
+   minor releases are backward compatible; only a major release may break any of
+   the seven API contracts listed there (command inputs, outputs and defined
+   behavior; Lua API; RDB version; replication protocol; cluster bus; Module API;
+   AOF format), alter an existing command's behavior, remove a deprecated command,
+   or change a config default. Check which release the PR would land in; a change
+   in that class aimed at a minor or patch release is a blocking finding on its
+   own, before any design question.
    A PR on the third or fourth rung with no such artifact gets "please open the
    issue first" instead of a line-by-line review. The drift to catch is the inverse:
    a PR filed as a bug fix whose fix quietly changes the design has moved up a rung
    without paying for it. (The ladder is borrowed from kirodotdev/KiroCrew's T1-T4
-   issue tiers; the artifacts are Valkey's.)
+   issue tiers; the artifacts and rules are Valkey's.)
 3. Major-decision check (the TSC decides; a reviewer routes). Triggers visible in a diff:
    `src/commands/*.json` change; new `VM_*`, or a changed return-value or flag
    contract of an existing `VM_*` with no signature change (PR 4645 made
@@ -239,9 +245,11 @@ have gone into the squash commit as history.
 analogous paths. Note untested public APIs. Never call a failure "known flaky"
 without a build-history link, and record the flake before rerunning, not after:
 a rerun with no record is a data point lost, and the ledger of recorded flakes is
-what justifies fixing the suite instead of retrying it. Never fix a flake with a
-retry, a longer sleep, a relaxed assertion or a skip; those hide the signal the
-ledger exists to keep. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
+what justifies fixing the suite instead of retrying it. A deflake that only
+lengthens a fixed sleep, loosens an assertion, or skips the test on the runner
+where it failed hides the signal; the fix is the condition wait, the scaled
+budget, or the real race (`tests/README.md` has the catalog). Platform skips
+for a capability the runner lacks are a different thing and are fine. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
 tracking dashboard and datastore for Valkey, intended for upstreaming. Once it is
 live, name it here as the reference for currently active flaky tests and the
 canonical build-history link, and point the skill's Subagent A at it. --> Before
