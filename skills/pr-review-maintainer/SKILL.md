@@ -20,7 +20,11 @@ fix this file.
 2. **Every finding gets a severity class BEFORE the review is written:**
    `blocking` / `suggest-not-blocking` / `pre-existing-out-of-scope`.
    No finding ships without one. This is the discipline mechanism that keeps
-   nits from becoming merge hostages.
+   nits from becoming merge hostages. **Every non-blocking finding also gets a
+   disposition:** `file` (an issue is opened and its `#` is in the comment
+   before the review posts) / `drop` (one line on why it does not matter) /
+   `author-in-this-PR`. A deferral with no disposition is not a finding yet
+   (guide, "Writing the review").
 3. **Never demand fixes for pre-existing warts** in code the contributor
    merely touched. Note them, mark out-of-scope, move on.
 4. **Read the actual diff, hunk by hunk.** Never the description's claim about
@@ -57,11 +61,18 @@ not raw dumps. Each brief says which guide sections it covers.
 - Related/predecessor PRs and issues (search PR body, comments, commit
   messages for cross-references; check if this PR is part N of an agreed
   multi-part fix)
+- Which rung of the guide's change ladder ("Before reading the diff", item 2)
+  the PR claims, and whether the artifact that rung owes exists: a linked
+  issue, a settled design discussion, a TSC thread. Report "claims rung N,
+  artifact present/absent", not a verdict.
 - Author's track record on this repo: prior merged PRs, responsiveness to
   feedback, DCO signoff present
 - CI status per check; anything red or flaky. Before calling a red check
   infrastructure, compare against `unstable`'s most recent run of the same
-  workflow (guide, "Maintainer hat").
+  workflow (guide, "Maintainer hat"). For a flaky candidate, bring the
+  build-history link the guide requires; once the flake ledger tooling
+  exists, that ledger is the canonical source (see the guide's
+  FLAKE-LEDGER note).
 
 ### Subagent B — Diff mechanics
 - The full diff, hunk by hunk: what actually changed vs. what the description
@@ -142,13 +153,25 @@ not boxes to check, and never demands to transmit to the contributor.
 6. **Is the PR the right size and shape for the project?** Would it be
    better split, or is asking to split it disproportionate?
 7. **Is this a major decision?** Run the guide's trigger list. If any fires,
-   the verdict routes to the TSC rather than approving.
+   the verdict routes to the TSC rather than approving, with an owner and a
+   revisit date on the thread (guide, item 3).
+8. **Which rung is this really on, and was the debt paid?** Take Subagent A's
+   "claims rung N, artifact present/absent" and check it against the diff.
+   Third or fourth rung with no artifact: the review is one comment, "please
+   open the issue first", not a line-by-line. Claims bug fix but the diff
+   changes the design: say so before anything else; the rest of the review
+   is premature until that is settled.
 
 ## Phase 3 — Write it
 
 Structure: **Summary → What's good → Issues (each tagged with its severity
 class) → Verdict.** The verdict states plainly what is blocking (if anything)
 and what is merely suggested. If nothing blocks: say "approve" without hedging.
+
+On every later round, open with one line restating what still blocks
+("blocking: X, Y; everything else is nit"), even when the answer is "nothing".
+A PR's merge state should be readable from its newest review comment, not
+reconstructed from the thread history.
 
 Draft inline comments to the corpus the guide describes: short (median 25
 words, p90 87), one mechanism each, disagreement phrased as a question with

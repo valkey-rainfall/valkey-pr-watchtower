@@ -26,7 +26,18 @@ project policy.
 1. Read the whole description and every existing thread. The threads alone have
    reversed a verdict more than once (PR 4490).
 2. Decide what kind of change it is: bug fix, feature, refactor, test, CI. Refactor
-   mixed with behavior change is the first thing to ask to split.
+   mixed with behavior change is the first thing to ask to split. Then place it on
+   a ladder where each rung names the written artifact owed before code:
+   - Bug fix that keeps the design: none.
+   - Small additive feature, existing behavior unchanged: an issue is enough.
+   - Changes an existing user experience: an issue with the design settled in it
+     (a one-pager at most) before line-by-line review.
+   - New concept: a design discussion, usually TSC.
+   A PR on the third or fourth rung with no such artifact gets "please open the
+   issue first" instead of a line-by-line review. The drift to catch is the inverse:
+   a PR filed as a bug fix whose fix quietly changes the design has moved up a rung
+   without paying for it. (The ladder is borrowed from kirodotdev/KiroCrew's T1-T4
+   issue tiers; the artifacts are Valkey's.)
 3. Major-decision check (the TSC decides; a reviewer routes). Triggers visible in a diff:
    `src/commands/*.json` change; new `VM_*`, or a changed return-value or flag
    contract of an existing `VM_*` with no signature change (PR 4645 made
@@ -38,6 +49,10 @@ project policy.
    tradeoff where one thing gets worse to gain another, and any one-way door (if
    undoing it later would be a major decision, it is one now). Action: `major-decision-pending`,
    don't approve, confirm a linked issue has TSC discussion, keep reviewing the code.
+   Parking needs an owner and a date: write on the thread who decides (TSC vote,
+   a named maintainer, the author after a measurement) and put a revisit date in
+   your own calendar. A parked item with neither is how a valid request sits
+   for months with everyone agreeing it is valid.
 4. Mechanical: DCO on every commit, clang-format-18, test present, `src/commands`
    json for command changes (and the `key_specs` in it are right: they drive
    cluster routing and ACL key checks, so a wrong spec is a silent cluster bug),
@@ -213,7 +228,13 @@ have gone into the squash commit as history.
 
 **Maintainer hat.** Scan the file for sibling instances of the bug. Check coverage of
 analogous paths. Note untested public APIs. Never call a failure "known flaky"
-without a build-history link. Before calling a red check infrastructure, open
+without a build-history link, and record the flake before rerunning, not after:
+a rerun with no record is a data point lost, and the ledger of recorded flakes is
+what justifies fixing the suite instead of retrying it. Never fix a flake with a
+retry, a longer sleep, a relaxed assertion or a skip; those hide the signal the
+ledger exists to keep. <!-- FLAKE-LEDGER: when the flake tooling (Rain + Ranma)
+ships, name its output here as the canonical build-history link and point the
+skill's Subagent A at it. --> Before calling a red check infrastructure, open
 `unstable`'s own most recent run of the same workflow: the same red there means
 infra (PR 4332's `build-debian-old` was a repo-wide mirror 404), a green there
 means the red is the PR's. Never merge your own PR on your own approval; it needs
@@ -250,7 +271,10 @@ reasoning for them.
   so an unmarked comment reads as blocking.
 - Approve with caveats when only minor items remain; leave the thread open.
 - Defer rather than block when the item is real but out of scope; say "follow-up"
-  and, if it matters, file the issue yourself.
+  and give the deferral a disposition before the review posts: filed (with the
+  `#` of the issue you opened), dropped (say why it does not matter), or author
+  handles it in this PR. "Fine for now, follow up later" with none of the three
+  is where the item dies.
 - `#1234` creates a cross-reference on the other issue or PR. Use it when that
   link is intentional and adds value for someone landing on the other side (the
   issue this fixes, the PR this builds on or reverts, a sibling fix); write
