@@ -156,14 +156,18 @@ not boxes to check, and never demands to transmit to the contributor.
    better split, or is asking to split it disproportionate?
 7. **Is this a major decision?** Run the guide's trigger list. If any fires,
    the verdict routes to the TSC rather than approving; note on the thread what
-   the decision waits on (guide, item 3). A change in the major-release-only
-   class (guide, item 2) aimed at a minor or patch release is blocking on its own.
+   the decision waits on (guide, item 3). A behavior change beyond fixing an
+   edge-case bug also goes to the TSC, and changed log-message or other
+   user-visible text is a behavior change (guide, item 2). A change in the
+   major-release-only class (guide, item 2) aimed at a minor or patch release is
+   blocking on its own.
 8. **Which rung is this really on, and was the debt paid?** Take Subagent A's
    "claims rung N, artifact present/absent" and check it against the diff.
    Third or fourth rung with no artifact: the review is one comment, "please
    open the issue first", not a line-by-line. Claims bug fix but the diff
-   changes the design: say so before anything else; the rest of the review
-   is premature until that is settled.
+   changes the design, or changes behavior beyond the edge case it names: say
+   so before anything else; the rest of the review is premature until that is
+   settled.
 
 ## Phase 3 — Write it
 

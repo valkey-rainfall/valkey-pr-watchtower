@@ -29,13 +29,16 @@ project policy.
    mixed with behavior change is the first thing to ask to split. Then place it on
    a ladder; each rung names what I want to see written down before I review the
    code line by line (a personal bar, except where a project rule is cited):
-   - Bug fix that keeps the design: nothing beyond the PR.
+   - Strict bug fix: an edge case, design unchanged, no behavior anyone could
+     depend on changes. Nothing beyond the PR.
    - Small additive feature, existing behavior unchanged: an issue.
-   - Changes an existing user experience: an issue with the design settled in it.
-     Where the change touches backward compatibility or adds a user-visible field
-     that must be maintained, GOVERNANCE.md makes it a major decision and the TSC
-     approves it; item 3 below routes it. Behavior changes outside that list are
-     a reviewer's call, not a TSC vote.
+   - Changes existing behavior beyond fixing an edge-case bug: an issue with the
+     design settled in it, and consult the TSC. Behavior changes are often
+     breaking changes, and behavior includes the wording of log messages and any
+     other user-visible text, not only command semantics; log scrapers and
+     clients match on both. Where the change touches backward compatibility or
+     adds a user-visible field that must be maintained, GOVERNANCE.md makes it a
+     major decision outright; item 3 below routes it.
    - New concept: an issue first, per CONTRIBUTING ("major feature or a semantical
      change ... start by creating an issue"); a new data structure or API is a
      major decision under GOVERNANCE.md.
@@ -50,8 +53,9 @@ project policy.
    own, before any design question.
    A PR on the third or fourth rung with no such artifact gets "please open the
    issue first" instead of a line-by-line review. The drift to catch is the inverse:
-   a PR filed as a bug fix whose fix quietly changes the design has moved up a rung
-   without paying for it. (The ladder is borrowed from kirodotdev/KiroCrew's T1-T4
+   a PR filed as a bug fix whose fix quietly changes the design, or changes
+   behavior beyond the edge case it names, has moved up a rung without paying for
+   it. (The ladder is borrowed from kirodotdev/KiroCrew's T1-T4
    issue tiers; the artifacts and rules are Valkey's.)
 3. Major-decision check (the TSC decides; a reviewer routes). Triggers visible in a diff:
    `src/commands/*.json` change; new `VM_*`, or a changed return-value or flag
@@ -59,7 +63,8 @@ project policy.
    `VM_ZsetRangeEndReached` non-sticky; same class); new INFO / CLUSTER / CLIENT LIST field;
    new config; new `OBJ_ENCODING_*` or `RDB_TYPE_*`; layout change to `robj`,
    `hashtable`, `kvstore`, `client`, `clusterNode`; changed default; renamed or
-   removed user-visible anything; changed error prefix; replication stream content;
+   removed user-visible anything; changed error prefix; changed wording of a log
+   message or other user-visible text; replication stream content;
    RESP2/3 reply shape; anything under `deps/`. Two more that no list spells out: a
    tradeoff where one thing gets worse to gain another, and any one-way door (if
    undoing it later would be a major decision, it is one now). Action: `major-decision-pending`,
@@ -246,10 +251,16 @@ analogous paths. Note untested public APIs. Never call a failure "known flaky"
 without a build-history link, and record the flake before rerunning, not after:
 a rerun with no record is a data point lost, and the ledger of recorded flakes is
 what justifies fixing the suite instead of retrying it. A deflake that only
-lengthens a fixed sleep, loosens an assertion, or skips the test on the runner
-where it failed hides the signal; the fix is the condition wait, the scaled
-budget, or the real race (`tests/README.md` has the catalog). Platform skips
-for a capability the runner lacks are a different thing and are fine. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
+lengthens an `after`, weakens the assertion the test exists to make, or skips the
+test on the runner where it failed hides the signal; the fix is the one the
+`tests/README.md` checklist names for that pattern: poll with `wait_for_condition`
+instead of `after`, scale the budget for valgrind, wait explicitly for replication
+or cluster convergence, or fix the real race. Two loosenings the checklist itself
+prescribes are not that: widening a time range or asserting an ordering or lower
+bound instead of an upper bound on a duration, and skipping on a probed platform
+capability (`valgrind:skip`, `tls:skip`). The checklist's closing line is the rule:
+fix the synchronization rather than retrying; the next slower runner will find the
+same gap. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
 tracking dashboard and datastore for Valkey, intended for upstreaming. Once it is
 live, name it here as the reference for currently active flaky tests and the
 canonical build-history link, and point the skill's Subagent A at it. --> Before
