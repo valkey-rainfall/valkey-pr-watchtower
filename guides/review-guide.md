@@ -26,18 +26,53 @@ project policy.
 1. Read the whole description and every existing thread. The threads alone have
    reversed a verdict more than once (PR 4490).
 2. Decide what kind of change it is: bug fix, feature, refactor, test, CI. Refactor
-   mixed with behavior change is the first thing to ask to split.
+   mixed with behavior change is the first thing to ask to split. Then place it on
+   a ladder; each rung names what I want to see written down before I review the
+   code line by line (a personal bar, except where a project rule is cited):
+   - Strict bug fix: an edge case, design unchanged, no behavior anyone could
+     depend on changes. Nothing beyond the PR.
+   - Small additive feature, existing behavior unchanged: an issue.
+   - Changes existing behavior beyond fixing an edge-case bug: an issue with the
+     design settled in it, and consult the TSC. Behavior changes are often
+     breaking changes, and behavior includes the wording of log messages and any
+     other user-visible text, not only command semantics; log scrapers and
+     clients match on both. Where the change touches backward compatibility or
+     adds a user-visible field that must be maintained, GOVERNANCE.md makes it a
+     major decision outright; item 3 below routes it.
+   - New concept: an issue first, per CONTRIBUTING ("major feature or a semantical
+     change ... start by creating an issue"); a new data structure or API is a
+     major decision under GOVERNANCE.md.
+   Separately from the ladder, the release question. The project generally follows
+   semantic versioning ([releases](https://valkey.io/topics/releases/)): patch and
+   minor releases are backward compatible; only a major release may break any of
+   the seven API contracts listed there (command inputs, outputs and defined
+   behavior; Lua API; RDB version; replication protocol; cluster bus; Module API;
+   AOF format), alter an existing command's behavior, remove a deprecated command,
+   or change a config default. Check which release the PR would land in; a change
+   in that class aimed at a minor or patch release is a blocking finding on its
+   own, before any design question.
+   A PR on the third or fourth rung with no such artifact gets "please open the
+   issue first" instead of a line-by-line review. The drift to catch is the inverse:
+   a PR filed as a bug fix whose fix quietly changes the design, or changes
+   behavior beyond the edge case it names, has moved up a rung without paying for
+   it. (The ladder is borrowed from kirodotdev/KiroCrew's T1-T4
+   issue tiers; the artifacts and rules are Valkey's.)
 3. Major-decision check (the TSC decides; a reviewer routes). Triggers visible in a diff:
    `src/commands/*.json` change; new `VM_*`, or a changed return-value or flag
    contract of an existing `VM_*` with no signature change (PR 4645 made
    `VM_ZsetRangeEndReached` non-sticky; same class); new INFO / CLUSTER / CLIENT LIST field;
    new config; new `OBJ_ENCODING_*` or `RDB_TYPE_*`; layout change to `robj`,
    `hashtable`, `kvstore`, `client`, `clusterNode`; changed default; renamed or
-   removed user-visible anything; changed error prefix; replication stream content;
+   removed user-visible anything; changed error prefix; changed wording of a log
+   message or other user-visible text; replication stream content;
    RESP2/3 reply shape; anything under `deps/`. Two more that no list spells out: a
    tradeoff where one thing gets worse to gain another, and any one-way door (if
    undoing it later would be a major decision, it is one now). Action: `major-decision-pending`,
    don't approve, confirm a linked issue has TSC discussion, keep reviewing the code.
+   The TSC's timetable is its own; what you can do is note on the thread what the
+   decision is waiting on and, if you want to see it through, put a revisit date in
+   your own calendar. Without that, a parked item sits for months with everyone
+   agreeing it is valid.
 4. Mechanical: DCO on every commit, clang-format-18, test present, `src/commands`
    json for command changes (and the `key_specs` in it are right: they drive
    cluster routing and ACL key checks, so a wrong spec is a silent cluster bug),
@@ -213,7 +248,23 @@ have gone into the squash commit as history.
 
 **Maintainer hat.** Scan the file for sibling instances of the bug. Check coverage of
 analogous paths. Note untested public APIs. Never call a failure "known flaky"
-without a build-history link. Before calling a red check infrastructure, open
+without a build-history link, and record the flake before rerunning, not after:
+a rerun with no record is a data point lost, and the ledger of recorded flakes is
+what justifies fixing the suite instead of retrying it. A deflake that only
+lengthens an `after`, weakens the assertion the test exists to make, or skips the
+test on the runner where it failed hides the signal; the fix is the one the
+`tests/README.md` checklist names for that pattern: poll with `wait_for_condition`
+instead of `after`, scale the budget for valgrind, wait explicitly for replication
+or cluster convergence, or fix the real race. Two loosenings the checklist itself
+prescribes are not that: widening a time range or asserting an ordering or lower
+bound instead of an upper bound on a duration, and skipping on a probed platform
+capability (`valgrind:skip`, `tls:skip`). The checklist's closing line is the rule:
+fix the synchronization rather than retrying; the next slower runner will find the
+same gap. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
+tracking dashboard and datastore for Valkey, intended for upstreaming. Once it is
+live, name it here as the reference for currently active flaky tests and the
+canonical build-history link, and point the skill's Subagent A at it. --> Before
+calling a red check infrastructure, open
 `unstable`'s own most recent run of the same workflow: the same red there means
 infra (PR 4332's `build-debian-old` was a repo-wide mirror 404), a green there
 means the red is the PR's. Never merge your own PR on your own approval; it needs
@@ -250,7 +301,10 @@ reasoning for them.
   so an unmarked comment reads as blocking.
 - Approve with caveats when only minor items remain; leave the thread open.
 - Defer rather than block when the item is real but out of scope; say "follow-up"
-  and, if it matters, file the issue yourself.
+  and give the deferral a disposition before the review posts: filed (with the
+  `#` of the issue you opened), dropped (say why it does not matter), or author
+  handles it in this PR. "Fine for now, follow up later" with none of the three
+  is where the item dies.
 - `#1234` creates a cross-reference on the other issue or PR. Use it when that
   link is intentional and adds value for someone landing on the other side (the
   issue this fixes, the PR this builds on or reverts, a sibling fix); write
