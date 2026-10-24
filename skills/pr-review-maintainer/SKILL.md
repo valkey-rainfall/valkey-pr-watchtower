@@ -70,9 +70,11 @@ not raw dumps. Each brief says which guide sections it covers.
 - CI status per check; anything red or flaky. Before calling a red check
   infrastructure, compare against `unstable`'s most recent run of the same
   workflow (guide, "Maintainer hat"). For a flaky candidate, bring the
-  build-history link the guide requires; once the flake ledger tooling
-  exists, that ledger is the canonical source (see the guide's
-  FLAKE-LEDGER note).
+  build-history link the guide requires; once the flaky-test tracking
+  dashboard exists, it is the reference for which flakes are currently
+  active (see the guide's FLAKE-LEDGER note).
+- Target branch and release: which release the PR would land in, and
+  whether anything in it is a breaking change (guide, item 2).
 
 ### Subagent B — Diff mechanics
 - The full diff, hunk by hunk: what actually changed vs. what the description
@@ -153,8 +155,9 @@ not boxes to check, and never demands to transmit to the contributor.
 6. **Is the PR the right size and shape for the project?** Would it be
    better split, or is asking to split it disproportionate?
 7. **Is this a major decision?** Run the guide's trigger list. If any fires,
-   the verdict routes to the TSC rather than approving, with an owner and a
-   revisit date on the thread (guide, item 3).
+   the verdict routes to the TSC rather than approving; note on the thread what
+   the decision waits on (guide, item 3). A breaking change aimed at a minor
+   release is blocking on its own (guide, item 2).
 8. **Which rung is this really on, and was the debt paid?** Take Subagent A's
    "claims rung N, artifact present/absent" and check it against the diff.
    Third or fourth rung with no artifact: the review is one comment, "please

@@ -31,8 +31,17 @@ project policy.
    - Bug fix that keeps the design: none.
    - Small additive feature, existing behavior unchanged: an issue is enough.
    - Changes an existing user experience: an issue with the design settled in it
-     (a one-pager at most) before line-by-line review.
+     (a one-pager at most) before line-by-line review. A behavior change beyond a
+     small bug fix is a major decision under GOVERNANCE.md ("changes that affect
+     backward compatibility", "new user visible fields"), so the TSC approves it;
+     item 3 below is how to route it.
    - New concept: a design discussion, usually TSC.
+   Separately from the ladder: a breaking change (one that alters documented
+   behavior an existing client could depend on) ships only in a major release
+   under the project's semantic versioning
+   ([releases](https://valkey.io/topics/releases/)). Check which branch the PR is
+   aimed at and which release it would land in; a breaking change aimed at a minor
+   release is a blocking finding on its own, before any design question.
    A PR on the third or fourth rung with no such artifact gets "please open the
    issue first" instead of a line-by-line review. The drift to catch is the inverse:
    a PR filed as a bug fix whose fix quietly changes the design has moved up a rung
@@ -49,10 +58,10 @@ project policy.
    tradeoff where one thing gets worse to gain another, and any one-way door (if
    undoing it later would be a major decision, it is one now). Action: `major-decision-pending`,
    don't approve, confirm a linked issue has TSC discussion, keep reviewing the code.
-   Parking needs an owner and a date: write on the thread who decides (TSC vote,
-   a named maintainer, the author after a measurement) and put a revisit date in
-   your own calendar. A parked item with neither is how a valid request sits
-   for months with everyone agreeing it is valid.
+   The TSC's timetable is its own; what you can do is note on the thread what the
+   decision is waiting on and, if you want to see it through, put a revisit date in
+   your own calendar. Without that, a parked item sits for months with everyone
+   agreeing it is valid.
 4. Mechanical: DCO on every commit, clang-format-18, test present, `src/commands`
    json for command changes (and the `key_specs` in it are right: they drive
    cluster routing and ACL key checks, so a wrong spec is a silent cluster bug),
@@ -232,9 +241,11 @@ without a build-history link, and record the flake before rerunning, not after:
 a rerun with no record is a data point lost, and the ledger of recorded flakes is
 what justifies fixing the suite instead of retrying it. Never fix a flake with a
 retry, a longer sleep, a relaxed assertion or a skip; those hide the signal the
-ledger exists to keep. <!-- FLAKE-LEDGER: when the flake tooling (Rain + Ranma)
-ships, name its output here as the canonical build-history link and point the
-skill's Subagent A at it. --> Before calling a red check infrastructure, open
+ledger exists to keep. <!-- FLAKE-LEDGER: Rain and Ranma are building a flaky-test
+tracking dashboard and datastore for Valkey, intended for upstreaming. Once it is
+live, name it here as the reference for currently active flaky tests and the
+canonical build-history link, and point the skill's Subagent A at it. --> Before
+calling a red check infrastructure, open
 `unstable`'s own most recent run of the same workflow: the same red there means
 infra (PR 4332's `build-debian-old` was a repo-wide mirror 404), a green there
 means the red is the PR's. Never merge your own PR on your own approval; it needs
