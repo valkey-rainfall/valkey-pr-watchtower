@@ -33,6 +33,7 @@ guides/
 skills/
   pr-review-maintainer/  # AI-agent operating procedure for drafting reviews against the guide;
                          # not published on the site, install by cloning or copying
+    pass-d-ledger.md     # running record of the adversarial-read experiment (Subagent D) and its stop rule
 
 tools/
   build_site.py          # assembles docs/ + rendered guides/ into _site/ (the published tree)
