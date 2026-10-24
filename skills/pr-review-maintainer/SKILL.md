@@ -49,9 +49,10 @@ check. Do not reproduce its content here; cite it.
 
 ## Phase 1 — Evidence gathering (subagent-dispatchable)
 
-Fan out up to 3 subagents when the PR is non-trivial; do it inline for small
-PRs (< ~50 lines, familiar area). Each subagent returns distilled findings,
-not raw dumps. Each brief says which guide sections it covers.
+Fan out subagents when the PR is non-trivial; do it inline for small PRs
+(< ~50 lines, familiar area). Each subagent returns distilled findings, not raw
+dumps. Each brief says which guide sections it covers. Three run at once: A, B
+and D go out as one batch; C, when warranted, goes out after B reports.
 
 ### Subagent A — History & context
 - PR description, full review/comment history: who asked for what, what was
@@ -101,6 +102,32 @@ not raw dumps. Each brief says which guide sections it covers.
 - For valkey changes touching call()/execution paths: does the verification
   need moduleapi/postnotifications? (CI does not gate that suite.)
 
+### Subagent D — Adversarial read (experiment; see `pass-d-ledger.md`)
+
+A, B and C split the evidence by type. D is independent by *framing*: a second
+read of the same diff with a prompt that cannot anchor on B's findings or the
+review threads, because it is never shown them. D receives the PR description
+and the diff, and nothing else. It answers two questions and stops:
+
+1. **Is the stated problem real, and what is the smallest change that would
+   fix it?** Then: does the diff do more than that, and what exactly?
+2. **Name every behavior in the diff that something could depend on.**
+   Wording of log or error text, defaults, reply shapes, ordering, timing,
+   what replicas, modules or clients observe; anything on the guide's
+   major-decision trigger list ("Before reading the diff", item 3).
+
+Output: at most five findings, each tagged `Q1` or `Q2`, one mechanism each,
+each pointing at a file and line. No severity calls and no prose for the
+contributor; those are the parent's (hard rules 1 and 2). Run D on a different
+model from the parent when the spawn mechanism allows a per-spawn model; when
+it does not, the brief alone is the experiment, since independence of prompt is
+the larger lever.
+
+D exists to answer one question: does a second framing find things the
+mechanics read misses, often enough to pay for the run? `pass-d-ledger.md`
+holds the rows and the stop rule. Until the stop rule fires, every non-trivial
+review runs D and writes a row.
+
 ### Per-language suspect lists
 
 **C (valkey core, benchmark):**
@@ -135,6 +162,12 @@ not raw dumps. Each brief says which guide sections it covers.
 
 Answer these with the evidence in hand. They are prompts for attention —
 not boxes to check, and never demands to transmit to the contributor.
+
+First, merge D into B: mark each D finding `unique` (B did not raise it) or
+`overlap`, and keep the counts for the ledger. D's `Q1` findings feed questions
+6 and 8 below; its `Q2` findings feed question 7. A `unique` finding is not
+automatically right: it is a prompt to re-read that hunk, and it gets the same
+severity call as any other finding.
 
 1. **What did prior reviewers already settle?** Don't re-litigate. If the
    author did what a maintainer asked, that's a point in favor, not a
@@ -189,6 +222,10 @@ Include the squash-commit check (guide, "Title and description as the squash
 commit"): proposed title and body edits for the merge dialog, if any.
 
 Offer the maintainer: a draft comment to post, or discussion of specific points.
+
+Then append one row to `pass-d-ledger.md` (columns and stop rule are in the
+file). Do it before offering the draft, not after the maintainer replies: the
+`posted` column is filled in later, the rest is known now.
 
 ## Maintenance note
 
