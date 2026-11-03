@@ -1,6 +1,20 @@
 {
   "articles": [
     {
+      "slug": "pr-description-guide.html",
+      "title": "Writing a Valkey PR Description",
+      "emoji": "✍️",
+      "date": "2026-11-02",
+      "updated": "2026-11-02",
+      "badge": "ai",
+      "summary": "Personal working notes on writing valkey-io/valkey PR descriptions: structure, evidence, what to leave out, and four merged PRs as examples. Not project policy.",
+      "tags": [
+        "prs",
+        "guide",
+        "contributors"
+      ]
+    },
+    {
       "slug": "review-guide.html",
       "title": "Valkey Review Guide",
       "emoji": "🔎",
@@ -68,6 +82,11 @@
     }
   ],
   "updates": [
+    {
+      "date": "2026-11-02",
+      "text": "New guide: Writing a Valkey PR Description — personal notes on structure, evidence and examples",
+      "href": "pr-description-guide.html"
+    },
     {
       "date": "2026-10-21",
       "text": "New guide: Valkey Review Guide — a maintainer's checklist derived from 981 merged PRs and 21 post-merge regressions",
