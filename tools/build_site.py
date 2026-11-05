@@ -5,6 +5,10 @@ Every page has exactly one canonical source, chosen by which file exists:
 
 * ``docs/<slug>.html``  -- hand-written HTML, copied as-is.
 * ``guides/<slug>.md``  -- markdown, rendered into ``<slug>.html`` here.
+* ``guides/<dir>/README.md`` -- markdown, rendered into ``<dir>.html``; every
+  other ``guides/<dir>/<name>.md`` becomes ``<dir>-<name>.html`` (lower case).
+  Only ``<dir>.html`` needs an entry in ``docs/articles.json``; the other pages
+  of the directory use its emoji and badge.
 
 A slug with both is an error, so neither copy can silently shadow the other.
 Rendered pages are never committed; the deploy workflow runs this script and
@@ -18,6 +22,18 @@ site-nav, sidebar, footer web components) and turns each ``##`` section into one
 panel. The page title comes from the markdown's first ``#`` heading; text before
 the first ``##`` becomes the intro panel. Emoji and attribution badge come from
 the page's entry in ``docs/articles.json``, which every page must have.
+
+Two conventions make markdown pages link to each other the same way on GitHub
+and on the site:
+
+* A relative link to another ``guides/`` markdown file (``triage.md``,
+  ``../review-guide.md#change-ladder``) is rewritten to that page's ``.html``
+  slug, keeping the fragment. A link to a markdown file that is not a page is
+  an error.
+* A ``##`` section whose body starts with ``<a id="name"></a>`` on its own line
+  gives that id to the section's panel, so ``page.html#name`` lands on the
+  panel header.
+
 Requires the ``markdown`` package.
 """
 
@@ -81,7 +97,7 @@ PAGE = """<!DOCTYPE html>
 </html>
 """
 
-PANEL = """  <div class="panel" style="margin-bottom:12px;">
+PANEL = """  <div class="panel"{panel_id} style="margin-bottom:12px;">
     <div class="panel-header">
       <span>{heading}</span>
       <attr-badge type="{badge}"></attr-badge>
@@ -95,6 +111,32 @@ PANEL = """  <div class="panel" style="margin-bottom:12px;">
 
 class BuildError(Exception):
     """A source-layout problem the author has to fix; reported without a traceback."""
+
+
+SECTION_ANCHOR = re.compile(r'^<a id="([A-Za-z][A-Za-z0-9_-]*)"></a>\s*(?:\n|$)')
+HREF = re.compile(r'href="([^"]*)"')
+EXTERNAL = re.compile(r"^[a-z][a-z0-9+.-]*:", re.IGNORECASE)
+
+
+def rewrite_md_links(rendered, md_path, slug_by_path):
+    """Point relative links to guides/ markdown files at their rendered pages."""
+
+    def fix(match):
+        href = html.unescape(match.group(1))
+        if not href or href.startswith("#") or href.startswith("//") or EXTERNAL.match(href):
+            return match.group(0)
+        path, _, fragment = href.partition("#")
+        if not path.endswith(".md"):
+            return match.group(0)
+        target = (md_path.parent / path).resolve()
+        if target not in slug_by_path:
+            raise BuildError(
+                f"{md_path.relative_to(ROOT)} links to '{path}', which is not a page under guides/"
+            )
+        new = slug_by_path[target] + (f"#{fragment}" if fragment else "")
+        return f'href="{html.escape(new)}"'
+
+    return HREF.sub(fix, rendered)
 
 
 def split_sections(text):
@@ -119,7 +161,7 @@ def split_sections(text):
     return title, "\n".join(intro).strip(), [(h, "\n".join(b).strip()) for h, b in sections]
 
 
-def render(md_text, badge, emoji, source_url):
+def render(md_text, badge, emoji, source_url, md_path=None, slug_by_path=None):
     """Render one markdown document into a full article page."""
     title, intro, sections = split_sections(md_text)
     md = markdown.Markdown(extensions=MD_EXTENSIONS)
@@ -127,6 +169,8 @@ def render(md_text, badge, emoji, source_url):
     def body(text):
         md.reset()
         rendered = md.convert(text)
+        if md_path is not None:
+            rendered = rewrite_md_links(rendered, md_path, slug_by_path or {})
         return "\n".join("      " + ln for ln in rendered.splitlines())
 
     heading = f"{emoji} {html.escape(title)}" if emoji else html.escape(title)
@@ -137,9 +181,13 @@ def render(md_text, badge, emoji, source_url):
         'target="_blank" rel="noopener noreferrer">markdown source on GitHub ↗</a>. '
         "This page is generated from it.</p>"
     )
-    panels = [PANEL.format(heading=heading, badge=badge, body=intro_html)]
+    panels = [PANEL.format(panel_id="", heading=heading, badge=badge, body=intro_html)]
     for h, b in sections:
-        panels.append(PANEL.format(heading=html.escape(h), badge=badge, body=body(b)))
+        anchor = SECTION_ANCHOR.match(b)
+        panel_id = f' id="{anchor.group(1)}"' if anchor else ""
+        if anchor:
+            b = b[anchor.end():].lstrip("\n")
+        panels.append(PANEL.format(panel_id=panel_id, heading=html.escape(h), badge=badge, body=body(b)))
     return PAGE.format(
         source=html.escape(source_url),
         title=html.escape(title),
@@ -228,21 +276,40 @@ def load_manifest():
     return manifest
 
 
+def find_md_pages():
+    """Return {slug: (md_path, manifest_slug)} for every markdown page under guides/."""
+    pages = {}
+    if not GUIDES.is_dir():
+        return pages
+    for md_path in sorted(GUIDES.glob("*.md")):
+        pages[md_path.stem] = (md_path, f"{md_path.stem}.html")
+    for sub in sorted(p for p in GUIDES.iterdir() if p.is_dir()):
+        if not (sub / "README.md").exists():
+            continue
+        for md_path in sorted(sub.glob("*.md")):
+            stem = md_path.stem.lower()
+            slug = sub.name if stem == "readme" else f"{sub.name}-{stem}"
+            if slug in pages:
+                raise BuildError(f"two markdown sources for '{slug}': {pages[slug][0].relative_to(ROOT)} and {md_path.relative_to(ROOT)}")
+            pages[slug] = (md_path, f"{sub.name}.html")
+    return pages
+
+
 def check_sources(manifest):
     """Every page has exactly one source; every manifest entry points at a page."""
     problems = []
-    md_pages = {p.stem: p for p in sorted(GUIDES.glob("*.md"))} if GUIDES.is_dir() else {}
-    for slug, md_path in md_pages.items():
+    md_pages = find_md_pages()
+    for slug, (md_path, entry_slug) in md_pages.items():
         html_path = DOCS / f"{slug}.html"
         if html_path.exists():
             problems.append(
                 f"two sources for '{slug}': {md_path.relative_to(ROOT)} and "
                 f"{html_path.relative_to(ROOT)}; keep one"
             )
-        if f"{slug}.html" not in manifest:
+        if entry_slug not in manifest:
             problems.append(
                 f"{md_path.relative_to(ROOT)} has no entry in docs/articles.json "
-                f"(slug '{slug}.html'); the badge and emoji come from there"
+                f"(slug '{entry_slug}'); the badge and emoji come from there"
             )
     for slug in manifest:
         stem = slug[: -len(".html")] if slug.endswith(".html") else slug
@@ -261,18 +328,21 @@ def build(out_dir):
         shutil.rmtree(out_dir)
     shutil.copytree(DOCS, out_dir)
 
-    for slug, md_path in md_pages.items():
-        entry = manifest[f"{slug}.html"]
-        source_url = SOURCE_URL_BASE + md_path.relative_to(ROOT).as_posix()
+    slug_by_path = {md_path.resolve(): f"{slug}.html" for slug, (md_path, _) in md_pages.items()}
+    for slug, (md_path, entry_slug) in md_pages.items():
+        entry = manifest[entry_slug]
+        source = md_path.relative_to(ROOT).as_posix()
         page = render(
             md_path.read_text(encoding="utf-8"),
             entry.get("badge", "approved"),
             entry.get("emoji", ""),
-            source_url,
+            SOURCE_URL_BASE + source,
+            md_path,
+            slug_by_path,
         )
         (out_dir / f"{slug}.html").write_text(page, encoding="utf-8")
         panels = page.count('class="panel"')
-        print(f"rendered guides/{slug}.md -> {out_dir.name}/{slug}.html ({panels} panels)")
+        print(f"rendered {source} -> {out_dir.name}/{slug}.html ({panels} panels)")
 
     copied = sum(1 for p in DOCS.rglob("*") if p.is_file())
     print(f"copied {copied} files from docs/ into {out_dir}/")

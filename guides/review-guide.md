@@ -2,6 +2,8 @@
 
 Derived from the project's written norms (CONTRIBUTING, the test READMEs, the governance docs) and a study of 981 PRs merged between 2025-10-16 and 2026-10-14, the 21 post-merge regressions traced back to PRs in that set, and about 160 deflake commits from 2022-03-20 onward ([where the numbers come from](#data-sources)). One maintainer's working checklist, not project policy.
 
+This page says what to check. How the review work is run, stage by stage, is in [the review pipelines](pipelines/README.md), which cite the sections below by their anchors.
+
 ## How review actually works here
 
 <a id="how-review-works"></a>
