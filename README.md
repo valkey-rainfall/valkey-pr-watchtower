@@ -29,6 +29,8 @@ docs/
 
 guides/
   review-guide.md        # markdown-canonical pages; rendered to <slug>.html at build time
+  pipelines/             # how the review work is run; README.md -> pipelines.html,
+                         # <name>.md -> pipelines-<name>.html
 
 skills/
   pr-review-maintainer/  # AI-agent operating procedure for drafting reviews against the guide;
@@ -70,6 +72,8 @@ Markdown page:
 1. Write `guides/your-slug.md`. The first `#` heading is the page title; each `##` section becomes one panel. Raw inline HTML passes through, so a `<details>` block or a custom table inside an otherwise-markdown page works.
 2. Same two `articles.json` entries as above. The entry's `emoji` and `badge` are what the rendered page shows; bump `updated` when the text changes.
 3. Commit the markdown only. The deploy workflow renders it; no HTML to commit or keep in sync.
+
+A group of markdown pages can live in a directory, `guides/<dir>/`, with a `README.md`. The README renders to `<dir>.html` and needs the `articles.json` entry; every other `<name>.md` there renders to `<dir>-<name>.html` and uses the README's emoji and badge. Link between pages with their markdown paths (`triage.md`, `../review-guide.md#change-ladder`): the links work on GitHub as written, and the build rewrites them to the rendered pages. To give a `##` section a stable anchor, start its body with `<a id="name"></a>` on its own line; on the site the id goes on the section's panel.
 
 Switching a page between formats is a normal git change: to go markdown -> HTML, run the build, `git add` the rendered page from `_site/` into `docs/`, and delete the `.md`; the reverse is writing the `.md` and deleting the `.html`. The build refuses a slug that has both.
 
