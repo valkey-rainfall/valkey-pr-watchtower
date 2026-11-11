@@ -7,14 +7,14 @@ Triage decides the route for one PR and sets its flags. It reads; it does not re
 <a id="reads"></a>
 
 - The PR: title, description, labels, file list and line counts, linked issues, every existing thread and review, approvals and the commit each one is on, and CI status on the current head.
-- For a re-review: the last staged review and the head SHA it was written for.
+- For a re-review: the last staged review and the head SHA it was written for, and lockkeeper's re-review list, which says whether a re-review is due and whether a pending review blocks it.
 - The [review guide](../review-guide.md) at the pinned commit.
 
 ## Steps
 
 <a id="steps"></a>
 
-1. Record the guide commit used and the PR head SHA.
+1. Claim the PR in [lockkeeper](README.md#lockkeeper): the first PR on its intake list. A refused claim is reported and does not stop the review; it goes on without lockkeeper and keeps its files locally. When the refusal is because no slot is free, no further PR is claimed until one opens. Other refusals are state reasons: a repository lockkeeper does not follow, a closed or merged PR, one the maintainer declined or finished, or a failed fetch, which is retried once. Record the guide commit used and the PR head SHA.
 2. Place the PR on the guide's [change ladder](../review-guide.md#change-ladder) and run the [release check](../review-guide.md#release-check). Note whether the PR has moved up a rung from what it was filed as.
 3. List any [major-decision triggers](../review-guide.md#major-decision) and [log wording](../review-guide.md#log-wording) changes visible from the file list and the description.
 4. For an old PR or a re-review, run the guide's [stale PR checks](../review-guide.md#stale-pr): approval on head, conflicts, base drift of the touched functions.
@@ -29,10 +29,10 @@ Triage decides the route for one PR and sets its flags. It reads; it does not re
 
 <a id="produces"></a>
 
-A triage record on the PR's status record: route and reason, ladder rung, release check result, triggers found, stale-PR results, performance flag and reason, "needs you" items, guide commit, and head SHA.
+A triage record on the PR's status record: route and reason, ladder rung, release check result, triggers found, stale-PR results, performance flag and reason, "needs you" items, guide commit, and head SHA. The stage change is recorded in lockkeeper with the head.
 
 ## Gate
 
 <a id="gate"></a>
 
-The route is set with a reason, and the guide commit and head SHA are recorded. A PR whose head moves during triage starts triage again.
+The PR is claimed, or its refusal is recorded; the route is set with a reason, and the guide commit and head SHA are recorded. A PR whose head moves during triage starts triage again.
